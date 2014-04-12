@@ -1,0 +1,7 @@
+Terminar matrix.h
+Corrijir window.h
+Renomear math.h - existe um header do C com esse nome.
+                  Podemos trabalhar com isso usando <cmath>, que ǽ a versão
+                  C++ deste header, mas prefiro não ter dois headers
+                  com mesmo nome.
+Terminar viewportTransform
