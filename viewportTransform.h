@@ -1,10 +1,12 @@
 /* viewportTransform.h
  * Classe responsável por fazer a transformada de viewport.
  */
+#ifndef VIEWPORT_TRANSFORM_H
+#define VIEWPORT_TRANSFORM_H
 
-#include "pixel.h"
+#include "view/pixel.h"
 #include "point.h"
-#include "viewport.h"
+#include "view/viewport.h"
 #include "window.h"
 #include "matrix.h"
 
@@ -30,4 +32,9 @@ public:
     /* Retorna uma referência para a window deste objeto. */
     Window& window() { return _window; }
     const Window& window() const { return _window; }
+
+    /* Retorna a densidade. TODO: documentar */
+    double density() const;
 };
+
+#endif // VIEWPORT_TRANSFORM_H

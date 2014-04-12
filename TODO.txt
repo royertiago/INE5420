@@ -1,10 +1,5 @@
-Criar GraphicObject, DrawablePoint, Line, Polygon
-    DrawablePoint irá, ao invés de pintar um pixel na tela apenas,
-    desenhar uma circunferência com um raio pequeno em relação à densidade,
-    esta última provida pelo transformador de viewport.
-Criar DisplayFile
-
-
+Remover as definições de métodos das definições da classe
+    Usar inline se necessário
 Terminar matrix.h:
     Implementar operator+, operator-, operator[]
 Renomear viewportTransform: esta classe não "é" a transformada, ela
@@ -96,3 +91,16 @@ matrix.h
     o vetor correspondente; assim, se o vetor tiver tamanho 1, podemos
     prover um operador de conversão para double, para que as expressões
     vetor[4][0] e vetor[4] ambas estejam definidas e façam sentido.
+
+DrawablePoint
+    Ao invés de codificar a rotação de DrawablePoint::draw no braço,
+    podemos usar as transformações lineares para isso.
+
+DisplayFile
+    - O contêiner que estamos usando agora é std::vector; ele não oferece
+    suporte à remoção eficiente de elementos. Para isso, talvez algo
+    como std::map, que também permite iteração em tempo linear, mas
+    remoção em tempo logarítmico - algo que std::vector não oferece.
+    - DisplayFile assume responsabilidade sobre o ponteiro. Se precisarmos
+    de vários DisplayFile isso seria problemático, pois podemos querer
+    compartilhar objetos entre DisplayFiles.

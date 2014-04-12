@@ -38,8 +38,19 @@ struct Matrix {
     Matrix() = default;
     Matrix( const Matrix& ) = default;
     Matrix( Matrix&& ) = default;
-    Matrix& operator=( const Matrix& ) = default;
-    Matrix& operator=( Matrix&& ) = default;
+    Matrix<M, N>& operator=( const Matrix<M, N>& ) = default;
+    Matrix<M, N>& operator=( Matrix<M, N>&& ) = default;
+
+    /* Pequena gambiarra para permitir uma sintaxe mais agradável
+     * na inicialização de vetores. Desta forma, construções como
+     *  Vector<2> p = {1.1, 2.5};
+     * são possíveis. */
+    template< typename std::enable_if< N == 1, bool >::type Enable = true >
+    Matrix( std::array< double, M > a ) {
+        for( int i = 0; i < M; i++ )
+            values[i][0] = a[0];
+    }
+
     ~Matrix() = default;
 
     /* Retorna uma referência para o elemento que está na linha row
@@ -64,8 +75,11 @@ struct Matrix {
         return values[index][0];
     }
 
-    template< int O, int P >
+/*    template< int O, int P >
     friend Matrix<M, P> operator*( const Matrix<M, N>&, const Matrix<O, P>& );
+
+    friend Matrix<M, N> operator+( const Matrix<M, N>&, const Matrix<M, N>& );
+    */
 };
 
 /* Aqui, o fato de typedef ser não-estrito é uma propriedade bastante
@@ -92,6 +106,15 @@ Matrix<M, P> operator*( const Matrix<M, N>& lhs, const Matrix<O, P>& rhs ) {
                 r(i,j) += lhs(i,j) * rhs(i,j);
         }
     }
+    return r;
+}
+
+template< int M, int N >
+Matrix<M, N> operator+( const Matrix<M, N>& lhs, const Matrix<M, N>& rhs ) {
+    Matrix<M, N> r;
+    for( int i = 0; i < M; i++ )
+        for( int j = 0; j < N; j++ )
+            r(i, j) = lhs(i, j) + rhs(i, j);
     return r;
 }
 

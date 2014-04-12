@@ -13,6 +13,10 @@
  * a mais; dessa forma, podemos usar asserções para garantir que
  * o vetor "codifica" um ponto válido.
  */
+#ifndef POINT_H
+#define POINT_H
+
+#include <array>
 
 #include "matrix.h"
 
@@ -34,13 +38,32 @@ public:
     /* Converte um vetor n-dimensional num ponto n-dimensional. */
     Point( const Math::Vector<N>& );
 
-    Point( const Point& ) = default;
-    Point( Point&& ) = default;
-    Point& operator=( const Point& ) = default;
-    Point& operator=( Point&& ) = default;
+    /* Converte um array n-dimensional num ponto n-dimensional. */
+    Point( std::array< double, N > );
+
+    Point( const Point<N>& ) = default;
+    Point( Point<N>&& ) = default;
+    Point<N>& operator=( const Point<N>& ) = default;
+    Point<N>& operator=( Point<N>&& ) = default;
     ~Point() = default;
 
     double& operator[]( size_t index ) {
         return vector( index );
     }
 };
+
+template< int N >
+Point<N>::Point( const Math::Vector<N>& source ) {
+    for( int i = 0; i < N; i++ )
+        vector(i) = source(i);
+    vector(N) = 1.0;
+}
+
+template< int N >
+Point<N>::Point( std::array<double, N> source ) {
+    for( int i = 0; i < N; i++ )
+        vector(i) = source[i];
+    vector(N) = 1.0;
+}
+
+#endif // POINT_H

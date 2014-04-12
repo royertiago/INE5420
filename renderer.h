@@ -1,41 +1,38 @@
 /* renderer.h
- * Classe responsável por transportar objetos do modelo interno
- * do sistema gráfico para o modelo externo.
+ * Classe abstrata que representa qualquer objeto capaz de fazer
+ * renderização.
  *
- * Esta é a classe responsável por fazer a transformada de viewport.
+ * Um exemplo de implementação concreta é ScreenRenderer, que é 
+ * capaz de renderizar para um drawable.h
  */
+#ifndef RENDERER_H
+#define RENDERER_H
 
-#include "viewportTransform.h"
-#include "drawable.h"
-#include "pixel.h"
+#include "point.h"
+#include "window.h"
 
 class Renderer {
-    ViewportTransform transform; // Transform
-    Drawable * screen; // Screen
-
 public:
-    /* Constrói um renderizador que utilizará a tela screen para
-     * desenhar o que lhe for ordenado, de acordo com o transformador
-     * passado.
+    /* Desenha na tela o segmento de reta que passa pelos 
+     * referidos pontos. */
+    virtual void drawLine( Point<2> origin, Point<2> destiny ) = 0;
+
+    /* Obtém a densidade da tela.
      *
-     * Esta classe não é a "proprietária" do Drawable passado; ela
-     * não irá limpar o ponteiro na deleção. */
-    Renderer( ViewportTransform transform, Drawable * screen );
+     * A densidade é a quantidade de pixels que são utilizados
+     * para representar um quadrado de lado 1 alinhado aos eixos.
+     *
+     * Esta informação pode ser utilizada pelos objetos que usam
+     * este renderizador para calibrar o detalhamento do desenho. */
+    virtual double density() = 0;
+    
+    /* Retorna a window que está sendo desenhada por este renderizador.
+     *
+     * Esta informação pode ser utilizada por objetos mais complexos
+     * para determinar se ele será desenhado, para evitar desperdiçar
+     * ciclos de processamento com objetos que não serão mostrados. */
+    virtual Window window() = 0;
 
-    /* Desenha na tela a reta que passa pelos referidos pontos,
-     * de acordo com a posição decidida pela transformada de viewport
-     * escolhida no construtor. */
-    template< int N >
-    void drawLine( const Point<N>& origin, const Point<N>& destiny );
-
-    /* Retorna o transformador de viewport deste objeto. */
-    ViewportTransform& viewportTransform() { return transform; }
-    const ViewportTransform& viewportTransform() const { return transform; }
+    virtual ~Renderer() = default;
 };
-
-template< int N >
-void Renderer::drawLine( const Point<N>& origin, const Point<N>& destiny ) {
-    Pixel a = transform.transform( origin );
-    Pixel b = transform.transform( destiny );
-    screen->paint( a, b );
-}
+#endif // RENDERER_H

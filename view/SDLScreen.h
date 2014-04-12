@@ -10,7 +10,7 @@
 #ifndef SDL_SCREEN_H
 #define SDL_SCREEN_H
 
-#include "../drawable.h"
+#include "drawable.h"
 
 struct SDL_Window;
 struct SDL_Renderer;

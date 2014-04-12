@@ -20,15 +20,15 @@ void Window::move( double x, double y ) {
 }
 
 void Window::hscale( double factor ) {
-    double center = (xmin + xmax)/2;
-    double distance = (xmin - xmax)/2; //Distância até o centro
+    double center = (xmax + xmin)/2;
+    double distance = (xmax - xmin)/2; //Distância até o centro
     xmin = center - factor*distance;
     xmax = center + factor*distance;
 }
 
 void Window::vscale( double factor ) {
-    double center = (ymin + ymax)/2;
-    double distance = (ymin - ymax)/2; //Distância até o centro
+    double center = (ymax + ymin)/2;
+    double distance = (ymax - ymin)/2; //Distância até o centro
     ymin = center - factor*distance;
     ymax = center + factor*distance;
 }
