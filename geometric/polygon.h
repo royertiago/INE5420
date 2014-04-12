@@ -7,8 +7,6 @@
 #ifndef POLYGON_H
 #define POLYGON_H
 
-#include "variadic.h" //SFINAE no construtor
-
 #include "geometricObject.h"
 #include "point.h"
 

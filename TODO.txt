@@ -1,15 +1,15 @@
 Remover as definições de métodos das definições da classe
     Usar inline se necessário
 Terminar matrix.h:
-    Implementar operator+, operator-, operator[]
+    Implementar operator+, operator[]
 Renomear viewportTransform: esta classe não "é" a transformada, ela
     realiza a transformada.
 Renomear pixel.h: esta classe não representa um pixel. O pixel é constituído
     de uma coordenada e de uma cor; a classe não guarda esta última
     informação, sendo mais pixelCoordinate do que pixel.
 Implementar testes
-Construir LinearTransform
-Modificar Makefile para descobrir novos diretórios automaticamente
+
+Possíveis problemas de performance nas transformações lineares.
 
         Decisões questionáveis de engenharia:
 
@@ -104,3 +104,8 @@ DisplayFile
     - DisplayFile assume responsabilidade sobre o ponteiro. Se precisarmos
     de vários DisplayFile isso seria problemático, pois podemos querer
     compartilhar objetos entre DisplayFiles.
+
+LinearOperator
+    Atualmente, operadores lineares estão implementados mantendo
+    como atributo um objeto da classe Matrix. Uma possível otimização
+    é manter um ponteiro para tal objeto.
