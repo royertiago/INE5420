@@ -1,8 +1,9 @@
 /* pixel.h
  * Tipo POD que representa um pixel.
  *
- * O único propósito de existência desta estrutura é agrupar
- * as variáveis de retorno da transformada de viewport.
+ * Este tipo é usado para passar dados entre as classes que estão
+ * em contato direto com a interface gráfica (da viewport para
+ * frente).
  */
 
 #ifndef PIXEL_H

@@ -6,5 +6,5 @@
 #include "drawable.h"
 
 Viewport Viewport::generateViewport( Drawable * d ) {
-    return Viewport{ 0, d->width(), 0, d->height() };
+    return Viewport{ 0, 0, d->width(), d->height() };
 }

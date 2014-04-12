@@ -25,7 +25,7 @@ SDLScreen::SDLScreen( int width, int height, const char * title ) :
                 + SDL_GetError() );
     }
 
-    renderer = SDL_CreateRenderer( window, -1, 0 );
+    renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
     if( renderer == nullptr ) {
         throw runtime_error( string("SDL_CreateRenderer(): ")
                 + SDL_GetError() );
@@ -38,8 +38,12 @@ void SDLScreen::setColor( int r, int g, int b, int a ) {
             uint8_t(b), uint8_t(a) );
 }
 
-void SDLScreen::pixel( int x, int y ) {
-    SDL_RenderDrawPoint( renderer, x, y );
+void SDLScreen::paint( Pixel p ) {
+    SDL_RenderDrawPoint( renderer, p.x, p.y );
+}
+
+void SDLScreen::paint( Pixel a, Pixel b ) {
+    SDL_RenderDrawLine( renderer, a.x, a.y, b.x, b.y );
 }
 
 int SDLScreen::height() const {

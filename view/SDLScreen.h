@@ -10,7 +10,7 @@
 #ifndef SDL_SCREEN_H
 #define SDL_SCREEN_H
 
-#include "drawable.h"
+#include "../drawable.h"
 
 struct SDL_Window;
 struct SDL_Renderer;
@@ -23,7 +23,8 @@ public:
     SDLScreen( int width, int height, const char * title );
 
     virtual void setColor( int r, int g, int b, int a ) override;
-    virtual void pixel( int x, int y ) override;
+    virtual void paint( Pixel p ) override;
+    virtual void paint( Pixel a, Pixel b ) override;
     virtual int height() const override;
     virtual int width() const override;
     virtual void update() override;

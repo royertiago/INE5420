@@ -1,7 +1,98 @@
-Terminar matrix.h
-Corrijir window.h
-Renomear math.h - existe um header do C com esse nome.
-                  Podemos trabalhar com isso usando <cmath>, que ǽ a versão
-                  C++ deste header, mas prefiro não ter dois headers
-                  com mesmo nome.
-Terminar viewportTransform
+Criar GraphicObject, DrawablePoint, Line, Polygon
+    DrawablePoint irá, ao invés de pintar um pixel na tela apenas,
+    desenhar uma circunferência com um raio pequeno em relação à densidade,
+    esta última provida pelo transformador de viewport.
+Criar DisplayFile
+
+
+Terminar matrix.h:
+    Implementar operator+, operator-, operator[]
+Renomear viewportTransform: esta classe não "é" a transformada, ela
+    realiza a transformada.
+Renomear pixel.h: esta classe não representa um pixel. O pixel é constituído
+    de uma coordenada e de uma cor; a classe não guarda esta última
+    informação, sendo mais pixelCoordinate do que pixel.
+Implementar testes
+Construir LinearTransform
+Modificar Makefile para descobrir novos diretórios automaticamente
+
+        Decisões questionáveis de engenharia:
+
+    Window e Viewport são estruturas POD; elas não possuem semântica
+associada. A Window é uma entidade abstrata na representação interna
+do mundo; a Viewport representa uma área delimitada na tela de desenho.
+Entretanto, não há relação entre elas; a classe ViewportTransform
+é responsável por parte da tradução entre Window e Viewport. Ela conhece
+uma Window e uma Viewport e, dado um ponto do mundo, ela sabe qual é
+o pixel na viewport que corresponde a esse ponto.
+    Entretanto, ela não faz ideia de como pintar este pixel; isto é
+responsabilidade do Renderer. Ele conhece um transformador de viewport
+e uma tela. Quando ordenado desenhar alguma reta, ele usa o transformador
+dele para descobrir que pixels da dela correspondem aos pontos do mundo
+passados.
+    Entretanto, o próprio renderizador não conhece nada a respeito da
+Window sobre a qual o transformador está atuando; se, por algum motivo
+quisermos ter algum controle sobre os pontos em que o renderizador pode
+atuar (por exemplo, delimitar um canto da tela para um mini-mapa),
+haverá informação duplicada: tanto o renderizador quanto o transformador
+possuem cópias da viewport.
+
+    As classes do namespace Math e Viewport e Window possuem seus membros
+publicamente disponíveis, pelo fato de o importante a respeito delas
+ser os dados que elas carregam, e não as transformações que podem ser
+feitas com elas. Entretanto, ViewportTransform disponibiliza seus membros
+via funções públicas, então, talvez poderiamos deixá-los como públicos.
+    Similarmente com o Renderer: a viewportTransform - que é de propriedade
+do renderer - é disponibilizada publicamente. Neste caso, outra solução
+é possível: extrair uma interface do Renderer.
+
+
+        Problemas / possíveis aprimoramentos:
+
+Geral
+    - A maior parte das funções-membro pequenas (1 ou 2 linhas)
+    possuem sua definição junto da classe. Poderíamos deslocá-las
+    para fora da definição da classe.
+    - Objetos privados possuem nomes iniciados com underscore para
+    evitar conflito com as funções-membro de mesmo nome que proveem
+    acesso a eles. (Estas funções não são nomeadas getAlgumaCoisa
+    porque elas retornam referências para o referido objeto, podendo
+    o chamador modificá-los; não sei até que ponto esta distinção
+    é útil. )
+
+Point
+    O vetor interno se chama vector; seria interessante ter um nome
+    diferente.
+
+Window
+    Como a window é um objeto da representação interna do mundo, podemos
+    implementar algo como "class Retângulo" e fazer a Window ser
+    um retângulo.
+
+ViewportTransform
+    - Caso esta classe seja um gargalo de execução, dá para armazenar
+    a razão entre a window e a viewport num atributo adicional.
+    - No futuro (~2 semanas) criar algo como getPixelDensity().
+
+Namespace Math
+    Existe um header do C com o nome math.h.
+    Podemos trabalhar com isso usando <cmath>, que é a versão
+    C++ deste header, mas prefiro não ter este choque de
+    nomes. A solução emergencial (enquanto outra ideia melhor
+    não aparecer) é deixar tudo no header matrix.h
+
+matrix.h
+    - Podemos usar expression templates.
+    - Podemos usar constexpr
+    - Atualmente, o único atributo é um std::array; entretanto, este
+    array possui cópia e troca custosa, então seria melhor
+    trocá-lo por um ponteiro caso esteja muito lento.
+    - Ou então podemos deixar tudo para a classe TransformaçãoLinear.
+    - Matrix::operator* pode ser acelerado usando algoritmos melhores.
+    - As definições atuais de muitos dos funções da matriz estão
+    diretamente na classe - principalmente por serem pequenas.
+    - Podemos alterar o design das matrizes: uma matriz MxN conterá
+    M vetores de dimensão N dentro de si. Usar o operator[] retornará
+    o vetor correspondente; assim, se o vetor tiver tamanho 1, podemos
+    prover um operador de conversão para double, para que as expressões
+    vetor[4][0] e vetor[4] ambas estejam definidas e façam sentido.

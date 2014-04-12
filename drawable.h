@@ -10,13 +10,15 @@
  * significa deslocar-se à direita, enquanto aumentar o y significa deslocar-
  * -se para baixo.
  *
- * Simplesmente executar o método Desenhavel::pixel pode não ser suficiente
- * para forçar a interface a desenhar alguma coisa. A tela pode esperar
- * que o método Desenhavel::atualizar seja invocado.
+ * Simplesmente executar o método Drawable::paint pode não ser 
+ * suficiente para forçar a interface a desenhar alguma coisa.
+ * A tela pode esperar que o método Drawable::update seja invocado.
  */
 
 #ifndef DRAWABLE_H
 #define DRAWABLE_H
+
+#include "pixel.h"
 
 class Drawable {
 public:
@@ -32,13 +34,21 @@ public:
      */
     virtual void setColor( int r, int g, int b, int a ) = 0;
 
-    /* Pinta o pixel (x, y) na tela, com a cor (e transparência)
-     * definidos anteriormente por Desenhavel::alterarCor.
+    /* Pinta o pixel na tela, com a cor (e transparência)
+     * definidos anteriormente por Drawable::setColor.
      *
-     * x deve estar entre 0 (inclusive) e Drawable::width() (exclusive); e
-     * y deve estar entre 0 (inclusive) e Drawable::height() (exclusive).
+     * p.x deve estar entre 0 (inclusive) e Drawable::width() (exclusive); e
+     * p.y deve estar entre 0 (inclusive) e Drawable::height() (exclusive).
      */
-    virtual void pixel( int x, int y ) = 0;
+    virtual void paint( Pixel p ) = 0;
+
+    /* Pinta na tela o segmento de reta que une os pontos a e b,
+     * na cor (e transparência) definidos anteriormente por
+     * Drawable::setColor.
+     *
+     * a e b devem se submeter às mesmas exigências do parâmetro
+     * do método Drawable::paint( Pixel ). */
+    virtual void paint( Pixel a, Pixel b ) = 0;
 
     /* Retorna a altura da tela.
      *

@@ -2,9 +2,13 @@
  * Tipo POD que representará a window ("virtual").
  *
  * Optou-se por guardar na window os valores xmin/ymin/xmax/ymax
- * por eles serem necessários mais frequentemente do que
- * movimentações/zoom na window.
+ * ao invés de centro/altura/largura por eles serem necessários
+ * mais frequentemente do que movimentações/zoom na window.
  */
+#ifndef WINDOW_H
+#define WINDOW_H
+
+#include "matrix.h"
 
 struct Window {
     double xmin;
@@ -14,8 +18,7 @@ struct Window {
 
     /* Movimenta a window no sentido desejado. */
     void move( double x, double y );
-
-    //TODO: possivelmente algo como move(Vector<2>)
+    void move( Math::Vector<2> v );
 
     /* vertical scale: Multiplica a altura da window pelo fator
      * desejado sem alterar seu centro. */
@@ -27,3 +30,5 @@ struct Window {
 
     //TODO: scale(Vector<2>);
 };
+
+#endif // WINDOW_H

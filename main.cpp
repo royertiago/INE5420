@@ -1,5 +1,6 @@
 #include <SDL.h>
-#include "SDLScreen.h"
+#include "view/SDLScreen.h"
+#include "pixel.h"
 
 int main() {
     SDLScreen t( 800, 600, "Teste" );
@@ -7,12 +8,16 @@ int main() {
     t.setColor( 255, 255, 255, 255 );
     for( int i = 0; i < t.width(); i++ )
         for( int j = 0; j < t.height(); j++ )
-            t.pixel( i, j ); //Pinta a tela de branco
+            t.paint( {i, j} ); //Pinta a tela de branco
 
     t.setColor( 255, 0, 255, 255 );
     for( int i = 0; i < 100; i++ )
         for( int j = i; j < 100; j++ )
-            t.pixel( 100 + i, 100 + j );
+            t.paint( {100 + i, 100 + j} );
+
+    t.setColor( 255, 255, 0, 255 );
+    for( int i = 0; i <= 20; i++ )
+        t.paint( {300, 200 + 10*i}, {400, 300} );
 
     t.update();
 
