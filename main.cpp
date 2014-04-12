@@ -11,6 +11,7 @@
 #include "displayFile.h"
 #include "geometric/polygon.h"
 #include "geometric/drawablePoint.h"
+#include "linearOperator.h"
 
 void waitEnter() {
     SDL_Event e;
@@ -21,6 +22,17 @@ void waitEnter() {
                     goto melga;
 
 melga: return;
+}
+
+void clear( Drawable& d, DisplayFile& df, ScreenRenderer& renderer ) {
+    //GAMBIARRRRRA
+    d.setColor( 255, 255, 255, 255 );
+    for( int i = 0; i < d.width(); i++ )
+        for( int j = 0; j < d.height(); j++ )
+            d.paint({ i, j });
+    d.setColor( 0, 0, 0, 255 );
+    df.draw( &renderer );
+    d.update();
 }
 
 int main() {
@@ -38,14 +50,22 @@ int main() {
 
     DisplayFile df;
 
-    Polygon * p1 = new Polygon( new Point<2>[3] {
-            Point<2>({1.0, 1.0}), Point<2>({1.0, 2.0}), Point<2>({2.0, 1.0})
-            }, 3);
-    Polygon * p2 = new Polygon( new Point<2>[4] {
-            Point<2>({2.0, 2.0}), Point<2>({3.0, 2.0}), Point<2>({3.0, 3.0}), Point<2> ({2.0, 3.0}) //TODO: sintaxe horrível
-            }, 4);
+    Point<2>* pv1 = new Point<2>[3] {
+            {1.0, 1.0}, 
+            {1.0, 2.0}, 
+            {2.0, 1.0}
+            };
+    Polygon * p1 = new Polygon( pv1, 3 );
 
-    DrawablePoint * p3 = new DrawablePoint( Point<2>({2.5, 2.5}) );
+    Point<2>* pv2 = new Point<2>[4] {
+            {2.0, 2.0}, 
+            {3.0, 2.0}, 
+            {3.0, 3.0}, 
+            {2.0, 3.0}
+            }; 
+    Polygon * p2 = new Polygon( pv2, 4 );
+
+    DrawablePoint * p3 = new DrawablePoint( {2, 1.5} );
 
     df.addObject( p1 );
     df.addObject( p2 );
@@ -55,54 +75,26 @@ int main() {
     sdl.update();
     waitEnter();
     
-    renderer.viewportTransform().window().hscale( 2.0 );
-    sdl.setColor( 255, 255, 255, 255 ); //clear - devemos pôr isto num método
-    for( int i = 0; i < sdl.width(); i++ )
-        for( int j = 0; j < sdl.height(); j++ )
-            sdl.paint({ i, j });
-    sdl.setColor( 0, 0, 0, 255 );
-    df.draw( &renderer );
-    sdl.update();
-    waitEnter();
+    LinearOperator<2> scale = make2DScale( 0.75, {2, 1.5} );
+    for( int k = 0; k < 2; k++ ) {
+        for( int i = 0; i < 3; i++ )
+            pv1[i] = scale(pv1[i]);
+        for( int i = 0; i < 4; i++ )
+            pv2[i] = scale(pv2[i]);
 
-    renderer.viewportTransform().window().vscale( 2.0 );
-    sdl.setColor( 255, 255, 255, 255 ); //clear - devemos pôr isto num método
-    for( int i = 0; i < sdl.width(); i++ )
-        for( int j = 0; j < sdl.height(); j++ )
-            sdl.paint({ i, j });
-    sdl.setColor( 0, 0, 0, 255 );
-    df.draw( &renderer );
-    sdl.update();
-    waitEnter();
+        clear( sdl, df, renderer );
+        waitEnter();
+    }
 
-    renderer.viewportTransform().window().move( -0.5, -0.5 );
-    sdl.setColor( 255, 255, 255, 255 ); //clear - devemos pôr isto num método
-    for( int i = 0; i < sdl.width(); i++ )
-        for( int j = 0; j < sdl.height(); j++ )
-            sdl.paint({ i, j });
-    sdl.setColor( 0, 0, 0, 255 );
-    df.draw( &renderer );
-    sdl.update();
-    waitEnter();
+    LinearOperator<2> rotate = make2DRotation( -Math::PI/3, {2, 1.5} );
+    for( int k = 0; k < 3; k++ ) {
+        for( int i = 0; i < 3; i++ )
+            pv1[i] = rotate(pv1[i]);
+        for( int i = 0; i < 4; i++ )
+            pv2[i] = rotate(pv2[i]);
 
-    renderer.viewportTransform().window().move( -0.5, -0.5 );
-    sdl.setColor( 255, 255, 255, 255 ); //clear - devemos pôr isto num método
-    for( int i = 0; i < sdl.width(); i++ )
-        for( int j = 0; j < sdl.height(); j++ )
-            sdl.paint({ i, j });
-    sdl.setColor( 0, 0, 0, 255 );
-    df.draw( &renderer );
-    sdl.update();
-    waitEnter();
-    //GAMBIRARRA:
-    /*bool quit = false;
-    while( !quit ) {
-        SDL_Event e;
-        while( SDL_PollEvent(&e) != 0 )
-            if( e.type == SDL_QUIT )
-                quit = true;
-        SDL_Delay( 20 ); //Não torrar o processador
-    } //TODO: descobrir uma forma de tirar este tipo de código do main. */
-
+        clear( sdl, df, renderer );
+        waitEnter();
+    }
     return 0;
 }

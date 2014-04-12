@@ -16,9 +16,11 @@
 #ifndef POINT_H
 #define POINT_H
 
-#include <array>
+#include <initializer_list>
 
 #include "matrix.h"
+
+template <int N> class LinearOperator;
 
 template <int N>
 class Point {
@@ -36,10 +38,25 @@ public:
     }
 
     /* Converte um vetor n-dimensional num ponto n-dimensional. */
-    Point( const Math::Vector<N>& );
+    explicit Point( const Math::Vector<N>& );
 
-    /* Converte um array n-dimensional num ponto n-dimensional. */
-    Point( std::array< double, N > );
+    /* Encapsula o vetor n+1-dimensional neste ponto.
+     * Atenção: nenhuma checagem de valores é feita para garatir que a
+     * última dimensão é válida. */
+    Point( const Math::Vector<N+1>& v ) :
+        vector(v)
+    {}
+
+    /* Listas de inicialização.
+     * Inicializa todas as dimensões disponíveis para o valor correspondente
+     * e o que restar para zero; dimensões extras serão ignoradas.
+     * Note que a dimensão N está oculta, portanto, será ignorada. 
+     *
+     * Exemplo:
+     *  Point<2> x{1.1, 2.2, 3.3};
+     * O úlitmo double é ignorado.
+     */
+    Point( std::initializer_list<double> );
 
     Point( const Point<N>& ) = default;
     Point( Point<N>&& ) = default;
@@ -50,6 +67,17 @@ public:
     double& operator[]( size_t index ) {
         return vector( index );
     }
+    const double& operator[]( size_t index ) const {
+        return vector( index );
+    }
+    double& operator()( size_t index ) {
+        return vector( index );
+    }
+    const double& operator()( size_t index ) const {
+        return vector( index );
+    }
+
+    friend class LinearOperator< N >;
 };
 
 template< int N >
@@ -60,10 +88,13 @@ Point<N>::Point( const Math::Vector<N>& source ) {
 }
 
 template< int N >
-Point<N>::Point( std::array<double, N> source ) {
-    for( int i = 0; i < N; i++ )
-        vector(i) = source[i];
+Point<N>::Point( std::initializer_list<double> source ) {
+    int i = 0;
+    auto it = source.begin();
+    for( ; i < N && it != source.end(); ++i, ++it )
+        vector(i) = *it;
+    for( ; i < N; ++i )
+        vector(i) = 0;
     vector(N) = 1.0;
 }
-
 #endif // POINT_H

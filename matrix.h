@@ -18,9 +18,11 @@
 #define MATRIX_H
 
 #include <array>
-#include <type_traits> //SFINAE em operator()
 
 namespace Math {
+
+/* Constante matemática PI */    
+const long double PI = 3.141592653589793238462643383;
 
 template< int M, int N >
 struct Matrix {
@@ -45,8 +47,8 @@ struct Matrix {
      * na inicialização de vetores. Desta forma, construções como
      *  Vector<2> p = {1.1, 2.5};
      * são possíveis. */
-    template< typename std::enable_if< N == 1, bool >::type Enable = true >
     Matrix( std::array< double, M > a ) {
+        static_assert( N == 1, "Construtor disponível apenas para vetores." );
         for( int i = 0; i < M; i++ )
             values[i][0] = a[0];
     }
@@ -66,20 +68,24 @@ struct Matrix {
      * especificada.
      *
      * Disponível apenas caso a matriz possua apenas uma coluna. */
-    typename std::enable_if< N == 1, double& >::type 
-    operator()( size_t index ) {
+    double& operator()( size_t index ) {
+        static_assert( N == 1, "Operador disponível apenas para vetores." );
         return values[index][0];
     }
-    typename std::enable_if< N == 1, const double& >::type
-    operator()( size_t index ) const {
+    const double& operator()( size_t index ) const {
+        static_assert( N == 1, "Operador disponível apenas para vetores." );
         return values[index][0];
     }
-
-/*    template< int O, int P >
-    friend Matrix<M, P> operator*( const Matrix<M, N>&, const Matrix<O, P>& );
-
-    friend Matrix<M, N> operator+( const Matrix<M, N>&, const Matrix<M, N>& );
-    */
+    
+    /* Operador unário -; retorna uma matriz com os mesmos valores
+     * desta, mas com sinal trocado. */
+    Matrix<M, N> operator-() {
+        Matrix<M, N> r;
+        for( int i = 0; i < M; i++ )
+            for( int j = 0; j < N; j++ )
+                r( i, j ) = -values[i][j];
+        return r;
+    }
 };
 
 /* Aqui, o fato de typedef ser não-estrito é uma propriedade bastante
@@ -103,7 +109,7 @@ Matrix<M, P> operator*( const Matrix<M, N>& lhs, const Matrix<O, P>& rhs ) {
         for( int j = 0; j < P; j++ ) {
             r(i,j) = 0.0;
             for( int k = 0; k < N; k++ )
-                r(i,j) += lhs(i,j) * rhs(i,j);
+                r(i,j) += lhs(i,k) * rhs(k,j);
         }
     }
     return r;
