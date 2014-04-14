@@ -8,7 +8,8 @@
 #include <initializer_list>
 
 #include "point.h"
-#include "matrix.h"
+#include "math/matrix.h"
+#include "math/vector.h"
 
 template <int N>
 class LinearOperator {
@@ -108,11 +109,11 @@ LinearOperator<N>::LinearOperator(
         auto jt = it->begin();
         int j = 0;
         for( ; jt != it->end() && j <= N; ++j, ++jt )
-            matrix(i, j) = *jt;
+            matrix[i][j] = *jt;
         for( ; j <= N; ++j )
-            matrix(i, j) = 0.0;
+            matrix[i][j] = 0.0;
     }
     for( ; i <= N; ++i )
         for( int j = 0; j <= N; ++j )
-            matrix(i, j) = 0.0;
+            matrix[i][j] = 0.0;
 }

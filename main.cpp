@@ -12,6 +12,7 @@
 #include "geometric/polygon.h"
 #include "geometric/drawablePoint.h"
 #include "linearOperator.h"
+#include "math/constant.h"
 
 void waitEnter() {
     SDL_Event e;

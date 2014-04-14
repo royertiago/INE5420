@@ -8,7 +8,6 @@
 #include "point.h"
 #include "view/viewport.h"
 #include "window.h"
-#include "matrix.h"
 
 class ViewportTransform {
     Viewport _viewport;

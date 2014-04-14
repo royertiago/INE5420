@@ -5,7 +5,6 @@
 #include "view/pixel.h"
 #include "view/viewport.h"
 #include "window.h"
-#include "matrix.h"
 #include "point.h"
 
 ViewportTransform::ViewportTransform( Viewport v, Window w ) :
@@ -37,8 +36,9 @@ Point<2> ViewportTransform::transform( Pixel p ) const {
 
 double ViewportTransform::density() const {
     return (_viewport.xmax - _viewport.xmin) *
-           (_viewport.ymax - _viewport.ymin) / (
-            (_window.xmax - _window.xmin ) *
-            (_window.ymax - _window.ymin )
-           );
+           (_viewport.ymax - _viewport.ymin)
+        / (
+           (_window.xmax - _window.xmin ) *
+           (_window.ymax - _window.ymin )
+          );
 }

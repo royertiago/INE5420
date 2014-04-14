@@ -18,7 +18,8 @@
 
 #include <initializer_list>
 
-#include "matrix.h"
+#include "math/vector.h"
+#include "math/matrixLine.h"
 
 template <int N> class LinearOperator;
 
@@ -34,7 +35,7 @@ public:
      * A única inicialização feita é da última coordenada: ela é
      * alterada para 1. As demais coordenadas não são inicializadas. */
     Point() {
-        vector(N) = 1.0; //TODO: implementar vector[N];
+        vector[N] = 1.0;
     }
 
     /* Converte um vetor n-dimensional num ponto n-dimensional. */
@@ -64,17 +65,11 @@ public:
     Point<N>& operator=( Point<N>&& ) = default;
     ~Point() = default;
 
-    double& operator[]( size_t index ) {
-        return vector( index );
+    Math::MatrixLine<1> operator[]( size_t index ) {
+        return vector[ index ];
     }
-    const double& operator[]( size_t index ) const {
-        return vector( index );
-    }
-    double& operator()( size_t index ) {
-        return vector( index );
-    }
-    const double& operator()( size_t index ) const {
-        return vector( index );
+    Math::ConstMatrixLine<1> operator[]( size_t index ) const {
+        return vector[ index ];
     }
 
     friend class LinearOperator< N >;
@@ -83,7 +78,7 @@ public:
 template< int N >
 Point<N>::Point( const Math::Vector<N>& source ) {
     for( int i = 0; i < N; i++ )
-        vector(i) = source(i);
+        vector[i] = source[i];
     vector(N) = 1.0;
 }
 
@@ -92,9 +87,9 @@ Point<N>::Point( std::initializer_list<double> source ) {
     int i = 0;
     auto it = source.begin();
     for( ; i < N && it != source.end(); ++i, ++it )
-        vector(i) = *it;
+        vector[i] = *it;
     for( ; i < N; ++i )
-        vector(i) = 0;
-    vector(N) = 1.0;
+        vector[i] = 0;
+    vector[N] = 1.0;
 }
 #endif // POINT_H

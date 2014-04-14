@@ -1,14 +1,16 @@
 /* matrix.h
- * Este arquivo contém classes, no namespace Math, que representam
- * matrizes e vetores e são capazes de efetuar operações com eles.
+ * Este arquivo contém classes que representam matrizes bidimensionais.
  *
  * As matrizes internas destas classes utilizam double. Os valores
  * internos da matriz podem ser acessados diretamente, através do
- * operator().
+ * operator[]. A primeira invocação de operator[] retorna uma MatrixLine;
+ * este objeto, por sua vez, pode ter seu operator[] invocado para obter
+ * o valor desejado.
+ * Isto é, comandos como matrix[5][7] = 5 tem o efeito esperado.
  *
  * Caso a matriz seja unidimensional (isto é, uma de suas dimensões
- * possui valor 1), uma versão sobrecarregada do operator() que
- * toma apenas um argumento estará disponível para uso.
+ * possui valor 1), o objeto MatrixLine pode ser usado para modificar
+ * o valor da linha diretamente.
  *
  * Parâmetros do template:
  *  M - quantidade de linhas
@@ -18,11 +20,9 @@
 #define MATRIX_H
 
 #include <array>
+#include "matrixLine.h"
 
 namespace Math {
-
-/* Constante matemática PI */    
-const long double PI = 3.141592653589793238462643383;
 
 template< int M, int N >
 struct Matrix {
@@ -55,26 +55,13 @@ struct Matrix {
 
     ~Matrix() = default;
 
-    /* Retorna uma referência para o elemento que está na linha row
-     * e coluna column. */
-    double& operator()( size_t row, size_t column ) {
-        return values[row][column];
-    }
-    const double& operator()( size_t row, size_t column ) const {
-        return values[row][column];
+    //TODO: documentar
+    ConstMatrixLine<N> operator[]( size_t column ) const {
+        return ConstMatrixLine<N>( values[column] );
     }
 
-    /* Retorna uma referência para o elemento que está na posição
-     * especificada.
-     *
-     * Disponível apenas caso a matriz possua apenas uma coluna. */
-    double& operator()( size_t index ) {
-        static_assert( N == 1, "Operador disponível apenas para vetores." );
-        return values[index][0];
-    }
-    const double& operator()( size_t index ) const {
-        static_assert( N == 1, "Operador disponível apenas para vetores." );
-        return values[index][0];
+    MatrixLine<N> operator[]( size_t column ) {
+        return MatrixLine<N>( values[column] );
     }
     
     /* Operador unário -; retorna uma matriz com os mesmos valores
@@ -83,19 +70,10 @@ struct Matrix {
         Matrix<M, N> r;
         for( int i = 0; i < M; i++ )
             for( int j = 0; j < N; j++ )
-                r( i, j ) = -values[i][j];
+                r[i][j] = -values[i][j];
         return r;
     }
 };
-
-/* Aqui, o fato de typedef ser não-estrito é uma propriedade bastante
- * útil: a função de multiplicação, por exemplo, toma uma matriz MxN
- * e outra NxP e devolve uma MxP. Caso P seja 1, o valor retornado
- * será uma matriz Mx1 - o que, de acordo com a seguinte definição,
- * é um vetor: */
-template <int M>
-using Vector = Matrix<M, 1>;
-
 
 //      Implementações
 
@@ -107,9 +85,9 @@ Matrix<M, P> operator*( const Matrix<M, N>& lhs, const Matrix<O, P>& rhs ) {
     Matrix<M, P> r; //retorno
     for( int i = 0; i < M; i++ ) {
         for( int j = 0; j < P; j++ ) {
-            r(i,j) = 0.0;
+            r[i][j] = 0.0;
             for( int k = 0; k < N; k++ )
-                r(i,j) += lhs(i,k) * rhs(k,j);
+                r[i][j] += lhs[i][k] * rhs[k][j];
         }
     }
     return r;
@@ -120,7 +98,7 @@ Matrix<M, N> operator+( const Matrix<M, N>& lhs, const Matrix<M, N>& rhs ) {
     Matrix<M, N> r;
     for( int i = 0; i < M; i++ )
         for( int j = 0; j < N; j++ )
-            r(i, j) = lhs(i, j) + rhs(i, j);
+            r[i][j] = lhs[i][j] + rhs[i][j];
     return r;
 }
 

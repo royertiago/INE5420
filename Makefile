@@ -10,8 +10,13 @@ LIBS := $(shell sdl2-config --cflags) -I./
 	de performance por chamar o shell repetidas vezes.
 
 #Lista de object files e dependências
-SOURCES = $(wildcard *.cpp view/*.cpp geometric/*.cpp) #Expandir o *.cpp
-OBJ = $(SOURCES:.cpp=.o) #Substitui .cpp para .o no fim das palavras
+
+SOURCES = $(wildcard *.cpp view/*.cpp geometric/*.cpp math/*.cpp)
+#A função wildcard força a expansão dos *
+
+OBJ = $(SOURCES:.cpp=.o)
+#Substitui .cpp para .o no fim das palavras
+
 OBJDEPS = $(SOURCES:.cpp=.d)
 
 #Agora, temos: \
@@ -57,4 +62,4 @@ include $(OBJDEPS)
 .PHONY: clean
 
 clean:
-	-rm $(OBJ)$(OBJDEPS)
+	-rm $(OBJ) $(OBJDEPS)

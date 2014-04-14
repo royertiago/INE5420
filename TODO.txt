@@ -1,7 +1,8 @@
 Remover as definições de métodos das definições da classe
     Usar inline se necessário
 Terminar matrix.h:
-    Implementar operator+, operator[]
+    Implementar operator+, testar encadeamento de operator[]
+    documentar operator[]
 Renomear viewportTransform: esta classe não "é" a transformada, ela
     realiza a transformada.
 Renomear pixel.h: esta classe não representa um pixel. O pixel é constituído
@@ -55,6 +56,13 @@ Geral
     o chamador modificá-los; não sei até que ponto esta distinção
     é útil. )
 
+Namespace Math
+
+    Os pontos de definição de função estão bastante inconsistentes:
+    enquanto que em matrix.h as definições estão dentro do namespace
+    (e algumas até dentro da classe), todas as definições de matrixLine.h
+    estão fora do namsepace.
+
 Point
     O vetor interno se chama vector; seria interessante ter um nome
     diferente.
@@ -67,7 +75,6 @@ Window
 ViewportTransform
     - Caso esta classe seja um gargalo de execução, dá para armazenar
     a razão entre a window e a viewport num atributo adicional.
-    - No futuro (~2 semanas) criar algo como getPixelDensity().
 
 Namespace Math
     Existe um header do C com o nome math.h.
@@ -109,3 +116,10 @@ LinearOperator
     Atualmente, operadores lineares estão implementados mantendo
     como atributo um objeto da classe Matrix. Uma possível otimização
     é manter um ponteiro para tal objeto.
+
+MatrixLine
+    Caso façamos escalonamento de matrizes, podemos adicionar suporte
+    a atribuições entre linhas de matrizes.
+
+Point
+    Atualmente, Point<N>::operator[] retorna uma MatrixLine<N>.

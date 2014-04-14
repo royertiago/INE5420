@@ -2,13 +2,13 @@
  * Implementação de window.h */
 
 #include "window.h"
-#include "matrix.h"
+#include "math/vector.h"
 
 void Window::move( Math::Vector<2> v ) {
-    xmin += v(0);
-    xmax += v(0);
-    ymin += v(1);
-    ymax += v(1);
+    xmin += v[0];
+    xmax += v[0];
+    ymin += v[1];
+    ymax += v[1];
 }
 
 void Window::move( double x, double y ) {

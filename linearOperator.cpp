@@ -8,12 +8,13 @@ using std::sin;
 using std::cos;
 
 #include "linearOperator.h"
-#include "matrix.h"
+#include "math/matrix.h"
+#include "math/vector.h"
 #include "point.h"
 
 LinearOperator<2> make2DTranslation( Math::Vector<2> v ) {
-    return LinearOperator<2>{ {1, 0, v(0)},
-             {0, 1, v(1)},
+    return LinearOperator<2>{ {1, 0, v[0]},
+             {0, 1, v[1]},
              {0, 0, 1}
            };
 }
@@ -34,8 +35,8 @@ LinearOperator<2> make2DRotation( double t ) {
 
 LinearOperator<2> make2DScale( double d, Point<2> center ) {
     Math::Vector<2> c;
-    c(0) = center(0);
-    c(1) = center(1);
+    c[0] = center[0];
+    c[1] = center[1];
     LinearOperator<2> o = make2DTranslation( c );
     o.frontComposeWith( make2DScale( d ) );
     o.frontComposeWith( make2DTranslation( -c ) );
@@ -45,8 +46,8 @@ LinearOperator<2> make2DScale( double d, Point<2> center ) {
 
 LinearOperator<2> make2DRotation( double d, Point<2> center ) {
     Math::Vector<2> c;
-    c(0) = center(0);
-    c(1) = center(1);
+    c[0] = center[0];
+    c[1] = center[1];
     LinearOperator<2> o = make2DTranslation( c );
     o.frontComposeWith( make2DRotation( d ) );
     o.frontComposeWith( make2DTranslation( -c ) );

@@ -8,7 +8,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "matrix.h"
+#include "math/vector.h"
 
 struct Window {
     double xmin;
