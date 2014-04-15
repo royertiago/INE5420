@@ -16,6 +16,14 @@ struct Viewport {
      * que engloba todos os pixels desenháveis do desenhável.
      */
     static Viewport generateViewport( Drawable* );
+
+    double area() const;
 };
+
+//Implementação de area()
+
+inline double Viewport::area() const {
+    return (xmax - xmin) * (ymax - ymin);
+}
 
 #endif // VIEWPORT_H

@@ -47,11 +47,7 @@ struct Matrix {
      * na inicialização de vetores. Desta forma, construções como
      *  Vector<2> p = {1.1, 2.5};
      * são possíveis. */
-    Matrix( std::array< double, M > a ) {
-        static_assert( N == 1, "Construtor disponível apenas para vetores." );
-        for( int i = 0; i < M; i++ )
-            values[i][0] = a[0];
-    }
+    Matrix( std::initializer_list< double > a );
 
     ~Matrix() = default;
 
@@ -77,6 +73,16 @@ struct Matrix {
 
 //      Implementações
 
+template< int M, int N >
+Matrix<M, N>::Matrix( std::initializer_list< double > source ) {
+    static_assert( N == 1, "Construtor disponível apenas para vetores." );
+    int i = 0;
+    auto it = source.begin();
+    for( ; i < M && it != source.end(); ++i, ++it )
+        values[i][0] = *it;
+    for( ; i < M; ++i )
+        values[i][0] = 0;
+}
 
 /* Implementação ingênua da multiplicação de matrizez. */
 template< int M, int N, int O, int P >

@@ -13,6 +13,8 @@
 #include "geometric/drawablePoint.h"
 #include "linearOperator.h"
 #include "math/constant.h"
+#include "windowTransform.h"
+#include "clippingArea.h"
 
 void waitEnter() {
     SDL_Event e;
@@ -44,29 +46,29 @@ int main() {
             sdl.paint({ i, j });
     sdl.setColor( 0, 0, 0, 255 );
 
-    ViewportTransform vptransform( Viewport::generateViewport( &sdl ),
-            {0, 0, 4, 3} );
 
-    ScreenRenderer renderer( vptransform, &sdl );
+    WindowTransform wt( ClippingArea::normalized );
+    Viewport v = Viewport::generateViewport( &sdl );
+    ScreenRenderer renderer( v, wt, sdl );
 
     DisplayFile df;
 
     Point<2>* pv1 = new Point<2>[3] {
-            {1.0, 1.0}, 
-            {1.0, 2.0}, 
-            {2.0, 1.0}
+            {.25, .25}, 
+            {0.25, 0.5}, 
+            {0.5, 0.25}
             };
     Polygon * p1 = new Polygon( pv1, 3 );
 
     Point<2>* pv2 = new Point<2>[4] {
-            {2.0, 2.0}, 
-            {3.0, 2.0}, 
-            {3.0, 3.0}, 
-            {2.0, 3.0}
+            {0.5, 0.5}, 
+            {0.75, 0.5}, 
+            {0.75, 0.75}, 
+            {0.5, 0.75}
             }; 
     Polygon * p2 = new Polygon( pv2, 4 );
 
-    DrawablePoint * p3 = new DrawablePoint( {2, 1.5} );
+    DrawablePoint * p3 = new DrawablePoint( {0.4, 0.4} );
 
     df.addObject( p1 );
     df.addObject( p2 );
@@ -76,7 +78,7 @@ int main() {
     sdl.update();
     waitEnter();
     
-    LinearOperator<2> scale = make2DScale( 0.75, {2, 1.5} );
+    LinearOperator<2> scale = make2DScale( 0.75, {0.4, 0.4} );
     for( int k = 0; k < 2; k++ ) {
         for( int i = 0; i < 3; i++ )
             pv1[i] = scale(pv1[i]);
@@ -87,7 +89,7 @@ int main() {
         waitEnter();
     }
 
-    LinearOperator<2> rotate = make2DRotation( -Math::PI/3, {2, 1.5} );
+    LinearOperator<2> rotate = make2DRotation( -Math::PI/3, {0.4, 0.4} );
     for( int k = 0; k < 3; k++ ) {
         for( int i = 0; i < 3; i++ )
             pv1[i] = rotate(pv1[i]);

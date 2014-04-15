@@ -14,11 +14,8 @@ public:
     /* Desenha este objeto geométrico no renderizador passado.
      *
      * O objeto não precisa cuidar de desenhar apenas na área
-     * disponível na window; o renderizador cuidará disso.
-     *
-     * Note que, se o objeto estiver fora da window, pode ser
-     * que o renderizador não se altere em virtude do desenho. */
-    virtual void draw( Renderer* ) = 0;
+     * disponível na window; o renderizador cuidará disso. */
+    virtual void draw( Renderer * ) = 0;
 
     virtual ~GeometricObject() = default;
 };

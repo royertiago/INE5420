@@ -4,6 +4,8 @@
  *
  * Neste caso, o operador linear transforma pontos.
  */
+#ifndef LINEAR_OPERATOR_H
+#define LINEAR_OPERATOR_H
 
 #include <initializer_list>
 
@@ -32,6 +34,8 @@ public:
     LinearOperator() = default;
     LinearOperator( const LinearOperator<N>& ) = default;
     LinearOperator( LinearOperator<N>&& ) = default;
+    LinearOperator<N>& operator=( const LinearOperator<N>& ) = default;
+    LinearOperator<N>& operator=( LinearOperator<N>&& ) = default;
 
     /* Aplica a transformação linear no ponto passado. */
     Point<N> transform( const Point<N>& p ) const {
@@ -94,6 +98,10 @@ LinearOperator<2> make2DRotation( double angle );
  * O ângulo será tratado em radianos. */
 LinearOperator<2> make2DRotation( double angle, Point<2> center );
 
+
+
+// Implementações
+
 template <int N>
 LinearOperator<N>::LinearOperator( const Math::Matrix<N+1, N+1>& m ) :
     matrix(m)
@@ -117,3 +125,5 @@ LinearOperator<N>::LinearOperator(
         for( int j = 0; j <= N; ++j )
             matrix[i][j] = 0.0;
 }
+
+#endif // LINEAR_OPERATOR_H

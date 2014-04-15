@@ -2,20 +2,22 @@
  * Implementação de screenRenderer.h
  */
 
-#include "viewportTransform.h"
-#include "view/drawable.h"
-#include "view/pixel.h"
-#include "window.h"
 #include "screenRenderer.h"
+#include "point.h"
+#include "viewportTransform.h"
+#include "windowTransform.h"
+#include "view/drawable.h"
 
-ScreenRenderer::ScreenRenderer( 
-        ViewportTransform transform, Drawable * screen ) :
-    transform(transform),
-    screen(screen)
-{}
+void ScreenRenderer::drawLine( Point<2> o, Point<2> d ) {
+    //Origin and Destiny
+    Point<2> wo = wt(o); //World-coordinates Origin point
+    Point<2> wd = wt(d); //World-coordinates Destiny point
+    /* Agora, temos ambas as extremidades da linha a ser desenhada
+     * em coordenadas da window.
+     * Aqui vai o código para o clipping, em relação à clippingArea
+     * de wt. */
+    Pixel vo = vpt(wo); //Viewport-cordinates Origin point
+    Pixel vd = vpt(wd); //Viewport-cordinates Origin point
 
-void ScreenRenderer::drawLine( Point<2> origin, Point<2> destiny ) {
-    Pixel a = transform.transform( origin );
-    Pixel b = transform.transform( destiny );
-    screen->paint( a, b );
+    screen.paint( vo, vd );
 }

@@ -38,7 +38,8 @@ public:
      * definidos anteriormente por Drawable::setColor.
      *
      * p.x deve estar entre 0 (inclusive) e Drawable::width() (exclusive); e
-     * p.y deve estar entre 0 (inclusive) e Drawable::height() (exclusive).
+     * p.y deve estar entre 0 (inclusive) e Drawable::height() (exclusive);
+     * isto é, o ponto deve estar dentro da tela de desenho.
      */
     virtual void paint( Pixel p ) = 0;
 
@@ -47,7 +48,8 @@ public:
      * Drawable::setColor.
      *
      * a e b devem se submeter às mesmas exigências do parâmetro
-     * do método Drawable::paint( Pixel ). */
+     * do método Drawable::paint( Pixel ); isto é, a reta já deve ter
+     * sofrido todos os procedimentos de clipping necessários. */
     virtual void paint( Pixel a, Pixel b ) = 0;
 
     /* Retorna a altura da tela.

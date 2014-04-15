@@ -1,103 +1,52 @@
+Testar rotações da window
 Remover as definições de métodos das definições da classe
     Usar inline se necessário
-Terminar matrix.h:
-    Implementar operator+, testar encadeamento de operator[]
-    documentar operator[]
-Renomear viewportTransform: esta classe não "é" a transformada, ela
-    realiza a transformada.
-Renomear pixel.h: esta classe não representa um pixel. O pixel é constituído
-    de uma coordenada e de uma cor; a classe não guarda esta última
-    informação, sendo mais pixelCoordinate do que pixel.
+matrix.h testar encadeamento de operator[] e documentar este operador
+Implementar ScreenRenderer::drawPolygon();
 Implementar testes
 
-Possíveis problemas de performance nas transformações lineares.
-
-        Decisões questionáveis de engenharia:
-
-    Window e Viewport são estruturas POD; elas não possuem semântica
-associada. A Window é uma entidade abstrata na representação interna
-do mundo; a Viewport representa uma área delimitada na tela de desenho.
-Entretanto, não há relação entre elas; a classe ViewportTransform
-é responsável por parte da tradução entre Window e Viewport. Ela conhece
-uma Window e uma Viewport e, dado um ponto do mundo, ela sabe qual é
-o pixel na viewport que corresponde a esse ponto.
-    Entretanto, ela não faz ideia de como pintar este pixel; isto é
-responsabilidade do Renderer. Ele conhece um transformador de viewport
-e uma tela. Quando ordenado desenhar alguma reta, ele usa o transformador
-dele para descobrir que pixels da dela correspondem aos pontos do mundo
-passados.
-    Entretanto, o próprio renderizador não conhece nada a respeito da
-Window sobre a qual o transformador está atuando; se, por algum motivo
-quisermos ter algum controle sobre os pontos em que o renderizador pode
-atuar (por exemplo, delimitar um canto da tela para um mini-mapa),
-haverá informação duplicada: tanto o renderizador quanto o transformador
-possuem cópias da viewport.
-
-    As classes do namespace Math e Viewport e Window possuem seus membros
-publicamente disponíveis, pelo fato de o importante a respeito delas
-ser os dados que elas carregam, e não as transformações que podem ser
-feitas com elas. Entretanto, ViewportTransform disponibiliza seus membros
-via funções públicas, então, talvez poderiamos deixá-los como públicos.
-    Similarmente com o Renderer: a viewportTransform - que é de propriedade
-do renderer - é disponibilizada publicamente. Neste caso, outra solução
-é possível: extrair uma interface do Renderer.
+    Alternativa para o design atual do renderer: empacotar objetos.
+Renderer conhece um Drawable e um ViewportTransform. Renderer passa
+para o Drawable uma lista de objetos a serem desenhados, e recebe
+exatamente a lista de pontos e retas, na viewport, que devem ser desenhados.
+A viewportTransform conhece um algoritmo de clipping e uma windowTransform.
+Ela repassa a lista de objetos a serem desenhados e espera uma lista de
+objetos em coordenadas de ClippingArea - então repassa para o algoritmo
+de clipping. A windowTransform, por último, conhece uma window e uma área
+de clipping, e usa estes dois para efetuar a transformação, em todos
+os objetos do mundo.
 
 
         Problemas / possíveis aprimoramentos:
 
 Geral
-    - A maior parte das funções-membro pequenas (1 ou 2 linhas)
-    possuem sua definição junto da classe. Poderíamos deslocá-las
-    para fora da definição da classe.
     - Objetos privados possuem nomes iniciados com underscore para
     evitar conflito com as funções-membro de mesmo nome que proveem
     acesso a eles. (Estas funções não são nomeadas getAlgumaCoisa
     porque elas retornam referências para o referido objeto, podendo
     o chamador modificá-los; não sei até que ponto esta distinção
-    é útil. )
+    é útil.) Isto gera uma n omeação inconsistente de atributos. 
+    Enquanto que ViewportTransform, por exemplo, utiliza nomes extensos, 
+    a Window possui nomes de um ou dois caracteres. 
+    Sugestão: trocar tudo para nomes de um ou dois caracteres.
 
-Namespace Math
+    Existe uma possibilidade de confusão entre Point e Vector, uma
+    vez que, na matemática, ambos os termos são intercambiáveis.
 
-    Os pontos de definição de função estão bastante inconsistentes:
-    enquanto que em matrix.h as definições estão dentro do namespace
-    (e algumas até dentro da classe), todas as definições de matrixLine.h
-    estão fora do namsepace.
+WindowTransform
+    Uma chamada ao método window() da transformada de window pode
+    criar uma referência externa ao objeto interno window que
+    pode ser usada para modificar este objeto sem o conhecimento
+    da transformada.
 
-Point
-    O vetor interno se chama vector; seria interessante ter um nome
-    diferente.
-
-Window
-    Como a window é um objeto da representação interna do mundo, podemos
-    implementar algo como "class Retângulo" e fazer a Window ser
-    um retângulo.
-
-ViewportTransform
-    - Caso esta classe seja um gargalo de execução, dá para armazenar
-    a razão entre a window e a viewport num atributo adicional.
-
-Namespace Math
-    Existe um header do C com o nome math.h.
-    Podemos trabalhar com isso usando <cmath>, que é a versão
-    C++ deste header, mas prefiro não ter este choque de
-    nomes. A solução emergencial (enquanto outra ideia melhor
-    não aparecer) é deixar tudo no header matrix.h
+    A WindowTransform é um operador linear: talvez poderíamos tratá-la
+    como tal.
 
 matrix.h
-    - Podemos usar expression templates.
-    - Podemos usar constexpr
-    - Atualmente, o único atributo é um std::array; entretanto, este
-    array possui cópia e troca custosa, então seria melhor
-    trocá-lo por um ponteiro caso esteja muito lento.
-    - Ou então podemos deixar tudo para a classe TransformaçãoLinear.
-    - Matrix::operator* pode ser acelerado usando algoritmos melhores.
-    - As definições atuais de muitos dos funções da matriz estão
-    diretamente na classe - principalmente por serem pequenas.
-    - Podemos alterar o design das matrizes: uma matriz MxN conterá
-    M vetores de dimensão N dentro de si. Usar o operator[] retornará
-    o vetor correspondente; assim, se o vetor tiver tamanho 1, podemos
-    prover um operador de conversão para double, para que as expressões
-    vetor[4][0] e vetor[4] ambas estejam definidas e façam sentido.
+    Embora a classe matriz possua construtores e métodos com semântica
+    de transferência (via rvalue references), as funções que oferecem
+    esta funcionalidade não tem desempenho superior às outras funções,
+    o que as torna inúteis.
 
 DrawablePoint
     Ao invés de codificar a rotação de DrawablePoint::draw no braço,
@@ -112,14 +61,6 @@ DisplayFile
     de vários DisplayFile isso seria problemático, pois podemos querer
     compartilhar objetos entre DisplayFiles.
 
-LinearOperator
-    Atualmente, operadores lineares estão implementados mantendo
-    como atributo um objeto da classe Matrix. Uma possível otimização
-    é manter um ponteiro para tal objeto.
-
-MatrixLine
-    Caso façamos escalonamento de matrizes, podemos adicionar suporte
-    a atribuições entre linhas de matrizes.
-
 Point
-    Atualmente, Point<N>::operator[] retorna uma MatrixLine<N>.
+    Atualmente, Point<N>::operator[] retorna uma MatrixLine<N>, 
+    o que não me parece um design bom.

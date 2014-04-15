@@ -1,20 +1,24 @@
 /* window.h
  * Tipo POD que representará a window ("virtual").
  *
- * Optou-se por guardar na window os valores xmin/ymin/xmax/ymax
- * ao invés de centro/altura/largura por eles serem necessários
- * mais frequentemente do que movimentações/zoom na window.
+ * A window é um objeto em coordenadas do mundo. Ela não possui
+ * semântica - assim como a viewport - e depende da windowTransform
+ * para mapear pontos do mundo para pontos numa área de clipping.
  */
 #ifndef WINDOW_H
 #define WINDOW_H
 
 #include "math/vector.h"
+#include "clippingArea.h"
 
 struct Window {
-    double xmin;
-    double ymin;
-    double xmax;
-    double ymax;
+    double x, y; // Coordenadas do centro da window
+    double w, h; // Largura e altura da window
+    double t; // Ângulo (theta) do view-up vector, em radianos.
+
+    /* Constrói uma window cujos valores iniciais corresponderão
+     * aos valores da área de clipping. */
+    Window( const ClippingArea& );
 
     /* Movimenta a window no sentido desejado. */
     void move( double x, double y );
@@ -28,7 +32,42 @@ struct Window {
      * fator desejado sem alterar seu centro. */
     void hscale( double factor );
 
-    //TODO: scale(Vector<2>);
+    /* Rotaciona a window no sentido desejado.
+     * angle está em radianos; ângulo positivo significa rotação
+     * em sentido anti-horário. */
+    void rotate( double angle );
+
+    /* Informa a área da window. */
+    double area() const;
 };
 
+//Implementações das funções mais simples
+
+inline void Window::move( double x, double y ) {
+    this->x += x;
+    this->y += y;
+}
+
+inline void Window::move( Math::Vector<2> v ) {
+    x += v[0];
+    y += v[1];
+}
+
+inline void Window::vscale( double factor ) {
+    h *= factor;
+}
+
+inline void Window::hscale( double factor ) {
+    w *= factor;
+}
+/* Cuidado com a nomenclatura: apesar do nome hscale, quem
+ * mexe na variável h é vscale. */
+
+inline void Window::rotate( double angle ) {
+    t += angle;
+}
+
+inline double Window::area() const {
+    return w * h;
+}
 #endif // WINDOW_H

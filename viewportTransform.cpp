@@ -4,41 +4,27 @@
 #include "viewportTransform.h"
 #include "view/pixel.h"
 #include "view/viewport.h"
-#include "window.h"
+#include "clippingArea.h"
 #include "point.h"
-
-ViewportTransform::ViewportTransform( Viewport v, Window w ) :
-    _viewport( v ),
-    _window( w )
-{}
 
 Pixel ViewportTransform::transform( Point<2> p ) const {
     Pixel r; // Valor de retorno
-    double xratio = (p[0] - _window.xmin)/(_window.xmax - _window.xmin);
-    r.x = _viewport.xmin + xratio * (_viewport.xmax - _viewport.xmin);
+    double xratio = (p[0] - ca.xmin)/(ca.xmax - ca.xmin);
+    r.x = vp.xmin + xratio * (vp.xmax - vp.xmin);
 
-    double yratio = (p[1] - _window.ymin)/(_window.ymax - _window.ymin);
-    r.y = _viewport.ymin + (1 - yratio) * (_viewport.ymax - _viewport.ymin);
+    double yratio = (p[1] - ca.ymin)/(ca.ymax - ca.ymin);
+    r.y = vp.ymin + (1 - yratio) * (vp.ymax - vp.ymin);
     return r;
 }
 
-Point<2> ViewportTransform::transform( Pixel p ) const {
+Point<2> ViewportTransform::reverseTransform( Pixel p ) const {
     Point<2> r; // Valor de retorno
-    double xratio = double(p.x - _viewport.xmin) /
-                    double(_viewport.xmax - _viewport.xmin);
-    r[0] = _window.xmin + xratio * (_window.xmax - _window.xmin);
+    double xratio = double(p.x - vp.xmin) /
+                    double(vp.xmax - vp.xmin);
+    r[0] = ca.xmin + xratio * (ca.xmax - ca.xmin);
 
-    double yratio = double(p.y - _viewport.ymin) /
-                    double(_viewport.ymax - _viewport.ymin);
-    r[1] = _window.ymin + yratio * (_window.ymax - _window.ymin);
+    double yratio = double(p.y - vp.ymin) /
+                    double(vp.ymax - vp.ymin);
+    r[1] = ca.ymin + yratio * (ca.ymax - ca.ymin);
     return r;
-}
-
-double ViewportTransform::density() const {
-    return (_viewport.xmax - _viewport.xmin) *
-           (_viewport.ymax - _viewport.ymin)
-        / (
-           (_window.xmax - _window.xmin ) *
-           (_window.ymax - _window.ymin )
-          );
 }
