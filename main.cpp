@@ -39,7 +39,7 @@ void clear( Drawable& d, DisplayFile& df, ScreenRenderer& renderer ) {
 }
 
 int main() {
-    SDLScreen sdl( 800, 600, "Teste" );
+    SDLScreen sdl( 600, 600, "Teste" );
     sdl.setColor( 255, 255, 255, 255 );
     for( int i = 0; i < sdl.width(); i++ )
         for( int j = 0; j < sdl.height(); j++ )
@@ -78,26 +78,31 @@ int main() {
     sdl.update();
     waitEnter();
     
-    LinearOperator<2> scale = make2DScale( 0.75, {0.4, 0.4} );
-    for( int k = 0; k < 2; k++ ) {
-        for( int i = 0; i < 3; i++ )
-            pv1[i] = scale(pv1[i]);
-        for( int i = 0; i < 4; i++ )
-            pv2[i] = scale(pv2[i]);
-
+    for( int i = 0; i < 6; i++ ) {
+        wt.window().rotate( Math::PI/12 );
         clear( sdl, df, renderer );
         waitEnter();
     }
 
-    LinearOperator<2> rotate = make2DRotation( -Math::PI/3, {0.4, 0.4} );
-    for( int k = 0; k < 3; k++ ) {
-        for( int i = 0; i < 3; i++ )
-            pv1[i] = rotate(pv1[i]);
-        for( int i = 0; i < 4; i++ )
-            pv2[i] = rotate(pv2[i]);
-
+    for( int i = 0; i < 3; i++ ) {
+        wt.window().moveUp({ 0, 0.15 });
         clear( sdl, df, renderer );
         waitEnter();
     }
+
+    for( int i = 0; i < 3; i++ ) {
+        wt.window().hscale( 1.15 );
+        clear( sdl, df, renderer );
+        waitEnter();
+    }
+
+    //TesteDeUnidadeDix:
+    Math::Vector<2> vec{1.0, 2.0};
+    printf( "%lf %lf\n", vec[0][0], vec[1][0] ); //1.0 2.0
+    vec[0] = vec[1] = 3.0;
+    printf( "%lf %lf\n", vec[0][0], vec[1][0] ); //3.0 3.0
+    vec[0] = 1 + (vec[1] = 2.5);
+    printf( "%lf %lf\n", vec[0][0], vec[1][0] ); //3.5 2.5
+
     return 0;
 }

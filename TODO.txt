@@ -1,7 +1,5 @@
-Testar rotações da window
 Remover as definições de métodos das definições da classe
     Usar inline se necessário
-matrix.h testar encadeamento de operator[] e documentar este operador
 Implementar ScreenRenderer::drawPolygon();
 Implementar testes
 

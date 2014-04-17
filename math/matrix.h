@@ -51,13 +51,37 @@ struct Matrix {
 
     ~Matrix() = default;
 
-    //TODO: documentar
-    ConstMatrixLine<N> operator[]( size_t column ) const {
-        return ConstMatrixLine<N>( values[column] );
+    /* Retorna um objeto proxy que representa a linha da matriz
+     * de índice line. Este objeto também sobrecarrega o operator[],
+     * portanto é possível usar chamadas como
+     *  matrix[2][5]
+     * para acessar o elemento da terceira linha e sexta coluna
+     * diretamente.
+     *
+     * Note que o endereçamento é feito a partir do zero.
+     *
+     * Caso N seja 1, MatrixLine<N> suporta operações semelhantes
+     * às do tipo nativo double, fazendo com que
+     *  vector[7] = 4;
+     * seja um código válido que faça o que ele aparentemente faz.
+     *
+     * Entretanto, para permitir que estas modificações sejam
+     * propagadas na matriz originária, objetos desta classe devem 
+     * manter ponteiros para as linhas da classe. Isto é, vector[7]
+     * não é apenas um double. Portando, código como 
+     *  printf("%lf\n", vector[7] );
+     * não funciona como esperado. 
+     *
+     * Aparentemente, 
+     *  printf("%lf\n", vector[7][0] );
+     * produz o resultado esperado (e similarmente para matrizes);
+     * não sei o porquê deste comportamento, entretanto. */
+    ConstMatrixLine<N> operator[]( size_t line ) const {
+        return ConstMatrixLine<N>( values[line] );
     }
 
-    MatrixLine<N> operator[]( size_t column ) {
-        return MatrixLine<N>( values[column] );
+    MatrixLine<N> operator[]( size_t line ) {
+        return MatrixLine<N>( values[line] );
     }
     
     /* Operador unário -; retorna uma matriz com os mesmos valores

@@ -20,9 +20,22 @@ struct Window {
      * aos valores da área de clipping. */
     Window( const ClippingArea& );
 
-    /* Movimenta a window no sentido desejado. */
-    void move( double x, double y );
+    /* Movimenta a window no sentido desejado.
+     *
+     * Note que a movimentação será a mesma, independente da
+     * orientação da window - isto é, a movimentação é independente
+     * do ângulo. Caso o ângulo seja importante, use Window::moveUp. */
     void move( Math::Vector<2> v );
+
+    /* Movimenta a window no sentido desejado, tendo como referência
+     * o ângulo da window.
+     *
+     * moveUp nem sempre move a window para cima; por exemplo, se o
+     * ângulo do view-up vector for Pi/2, uma chamada como
+     *  window.moveUp({ 0, -2 });
+     * moverá a window 2 unidades para a direita, do ponto de vista
+     * do mundo. */
+    void moveUp( Math::Vector<2> v );
 
     /* vertical scale: Multiplica a altura da window pelo fator
      * desejado sem alterar seu centro. */
@@ -42,11 +55,6 @@ struct Window {
 };
 
 //Implementações das funções mais simples
-
-inline void Window::move( double x, double y ) {
-    this->x += x;
-    this->y += y;
-}
 
 inline void Window::move( Math::Vector<2> v ) {
     x += v[0];
