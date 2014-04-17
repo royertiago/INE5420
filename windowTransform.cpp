@@ -9,6 +9,9 @@
 #include "clippingArea.h"
 #include "window.h"
 
+using LinearFactory::make2DTranslation;
+using LinearFactory::make2DRotation;
+
 void WindowTransform::computeTransform() const {
     ClippingArea ca = this->clippingArea();
     Math::Vector<2> CAcenter = {(ca.xmax - ca.xmin) / 2,

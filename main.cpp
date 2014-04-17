@@ -53,20 +53,18 @@ int main() {
 
     DisplayFile df;
 
-    Point<2>* pv1 = new Point<2>[3] {
+    Polygon * p1 = new Polygon( new Point<2>[3]{
             {.25, .25}, 
             {0.25, 0.5}, 
             {0.5, 0.25}
-            };
-    Polygon * p1 = new Polygon( pv1, 3 );
+            }, 3 );
 
-    Point<2>* pv2 = new Point<2>[4] {
+    Polygon * p2 = new Polygon( new Point<2>[4]{
             {0.5, 0.5}, 
             {0.75, 0.5}, 
             {0.75, 0.75}, 
             {0.5, 0.75}
-            }; 
-    Polygon * p2 = new Polygon( pv2, 4 );
+            }, 4); 
 
     DrawablePoint * p3 = new DrawablePoint( {0.4, 0.4} );
 

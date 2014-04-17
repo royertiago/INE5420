@@ -74,29 +74,35 @@ public:
     }
 };
 
-/* Constrói um operador linear que desloca os pontos
- * na direção especificada. */
-LinearOperator<2> make2DTranslation( Math::Vector<2> direction );
+/* Namespace que contém funções para construir operadores lineares
+ * capazes de efetuar operações específicas. */
+namespace LinearFactory {
 
-/* Constrói um operador linear que amplia os pontos
- * pelo fator especificado. Note que esta transformação de escala
- * ocorre em relação à origem do mundo. */
-LinearOperator<2> make2DScale( double factor );
+    /* Constrói um operador linear que desloca os pontos
+     * na direção especificada. */
+    LinearOperator<2> make2DTranslation( Math::Vector<2> direction );
 
-/* Constrói um operador linear que amplia os pontos pelo
- * fator especificado, em relação ao centro especificado. */
-LinearOperator<2> make2DScale( double factor, Point<2> center );
+    /* Constrói um operador linear que amplia os pontos
+     * pelo fator especificado. Note que esta transformação de escala
+     * ocorre em relação à origem do mundo. */
+    LinearOperator<2> make2DScale( double factor );
 
-/* Constrói um operador linear que rotaciona os pontos
- * em sentido anti-horário, em relação ao mundo.
- * O ângulo será tratado em radianos. */
-LinearOperator<2> make2DRotation( double angle );
+    /* Constrói um operador linear que amplia os pontos pelo
+     * fator especificado, em relação ao centro especificado. */
+    LinearOperator<2> make2DScale( double factor, Point<2> center );
 
-/* Constrói um operador linear que rotaciona os pontos
- * com relação ao centro especificado, em sentido anti-horário,
- * pelo ângulo especificado.
- * O ângulo será tratado em radianos. */
-LinearOperator<2> make2DRotation( double angle, Point<2> center );
+    /* Constrói um operador linear que rotaciona os pontos
+     * em sentido anti-horário, em relação ao mundo.
+     * O ângulo será tratado em radianos. */
+    LinearOperator<2> make2DRotation( double angle );
+
+    /* Constrói um operador linear que rotaciona os pontos
+     * com relação ao centro especificado, em sentido anti-horário,
+     * pelo ângulo especificado.
+     * O ângulo será tratado em radianos. */
+    LinearOperator<2> make2DRotation( double angle, Point<2> center );
+
+} // namespace LinearFactory
 
 
 

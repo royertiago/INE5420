@@ -41,6 +41,11 @@ struct MatrixLine {
      * Disponível apenas caso haja um único valor na linha (N==1). */
     double & operator=( double d );
 
+    /* Divide o valor do primeiro elemento da linha por d e retorna
+     * uma referência para este elemento.
+     * Disponível apenas caso haja um único valor na linha (N==1). */
+    double & operator/=( double d );
+
     /* Copia a linha passada para esta. */
     MatrixLine<N>& operator=( const MatrixLine& );
 };
@@ -88,6 +93,12 @@ template< int N >
 double& MatrixLine<N>::operator=( double d ) {
     static_assert( N == 1, "operator=(double) disponível apenas para N == 1" );
     return line[0] = d;
+}
+
+template< int N >
+double& MatrixLine<N>::operator/=( double d ) {
+    static_assert( N == 1, "operator=(double) disponível apenas para N == 1" );
+    return line[0] /= d;
 }
 
 template< int N >

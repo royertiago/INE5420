@@ -1,3 +1,10 @@
+GeometricObject::draw() pode ser const.
+Adicionar um "NamedDisplayFile", que permite nomear os nomes dos objetos.
+    Incluir métodos como add( TransformableObject * obj, string name ),
+    transform( string name, const LinearTransform<2> * ),
+    remove( string name ),
+    propagate( string name, void (*visitor)( TransformableObject * ) ).
+Organizar em subdiretórios
 Remover as definições de métodos das definições da classe
     Usar inline se necessário
 Implementar ScreenRenderer::drawPolygon();

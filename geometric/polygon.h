@@ -7,12 +7,13 @@
 #ifndef POLYGON_H
 #define POLYGON_H
 
-#include "geometricObject.h"
+#include "transformableObject.h"
+#include "linearOperator.h"
 #include "point.h"
 
 class Renderer;
 
-class Polygon : public GeometricObject {
+class Polygon : public TransformableObject<2> {
     Point<2> * vertices;
     int vertexCount;
 
@@ -54,7 +55,27 @@ public:
     /* O destrutor deletará o vetor que lhe foi passado no construtor. */
     ~Polygon();
 
+
+    // Métodos herdados
     virtual void draw( Renderer * ) override;
+    virtual void transform( const LinearOperator<2>& ) override;
+    virtual Point<2> center() const override;
 };
+
+
+
+//Implementação das funções mais simples 
+
+inline Polygon::Polygon( Polygon&& p ) :
+    vertices( p.vertices ),
+    vertexCount( p.vertexCount )
+{
+    p.vertices = nullptr;
+    p.vertexCount = 0;
+}
+
+inline Polygon::~Polygon() {
+    delete vertices;
+}
 
 #endif // POLYGON_H

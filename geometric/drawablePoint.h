@@ -7,12 +7,13 @@
 #ifndef DRAWABLE_POINT_H
 #define DRAWABLE_POINT_H
 
-#include "geometricObject.h"
+#include "transformableObject.h"
+#include "linearOperator.h"
 #include "point.h"
 
 class Renderer;
 
-class DrawablePoint : public GeometricObject {
+class DrawablePoint : public TransformableObject<2> {
     Point<2> p;
 
 public:
@@ -24,7 +25,22 @@ public:
 
     virtual ~DrawablePoint() = default;
 
+    //Métodos herdados
     virtual void draw( Renderer* ) override;
+    virtual void transform( const LinearOperator<2>& ) override;
+    virtual Point<2> center() const;
 };
+
+
+
+//Definição das funções mais simples
+
+inline void DrawablePoint::transform( const LinearOperator<2>& op ) {
+    p = op( p );
+}
+
+inline Point<2> DrawablePoint::center() const {
+    return p;
+}
 
 #endif // DRAWABLE_POINT_H

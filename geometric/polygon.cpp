@@ -6,6 +6,7 @@
 
 #include "polygon.h"
 #include "point.h"
+#include "linearOperator.h"
 #include "renderer.h"
 
 Polygon::Polygon( const Polygon& p ) :
@@ -14,18 +15,6 @@ Polygon::Polygon( const Polygon& p ) :
 {
     for( int i = 0; i < vertexCount; i++ )
         vertices[i] = p.vertices[i];
-}
-
-Polygon::Polygon( Polygon&& p ) :
-    vertices( p.vertices ),
-    vertexCount( p.vertexCount )
-{
-    p.vertices = nullptr;
-    p.vertexCount = 0;
-}
-
-Polygon::~Polygon() {
-    delete vertices;
 }
 
 Polygon& Polygon::operator=( const Polygon& p ) {
@@ -40,6 +29,22 @@ Polygon& Polygon::operator=( Polygon&& p ) {
     std::swap( vertices, p.vertices );
     std::swap( vertexCount, p.vertexCount );
     return *this;
+}
+
+Point<2> Polygon::center() const {
+   Point<2> c = vertices[0];
+   for( int i = 1; i < vertexCount; ++i ) {
+       c[0] = vertices[i][0];
+       c[1] = vertices[i][1];
+   }
+   c[0] /= vertexCount;
+   c[1] /= vertexCount;
+   return c;
+}
+
+void Polygon::transform( const LinearOperator<2>& op ) {
+    for( int i = 0; i < vertexCount; ++i )
+        vertices[i] = op( vertices[i] );
 }
 
 void Polygon::draw( Renderer * renderer ) {
