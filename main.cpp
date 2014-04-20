@@ -15,6 +15,7 @@
 #include "math/constant.h"
 #include "windowTransform.h"
 #include "clippingArea.h"
+#include "test/testList.h"
 
 void waitEnter() {
     SDL_Event e;
@@ -39,6 +40,11 @@ void clear( Drawable& d, DisplayFile& df, ScreenRenderer& renderer ) {
 }
 
 int main() {
+    if( Test::run() == false ) {
+        printf( "Erro n'algum teste.\n" );
+        return 1;
+    }
+
     SDLScreen sdl( 600, 600, "Teste" );
     sdl.setColor( 255, 255, 255, 255 );
     for( int i = 0; i < sdl.width(); i++ )
