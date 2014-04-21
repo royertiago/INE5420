@@ -15,7 +15,7 @@
 #include "math/constant.h"
 #include "windowTransform.h"
 #include "clippingArea.h"
-#include "test/testList.h"
+#include "test/lib/testList.h"
 
 void waitEnter() {
     SDL_Event e;

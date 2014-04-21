@@ -2,9 +2,9 @@
 
 #include "window.h"
 
-#include "testerDouble.h"
-#include "testFunction.h"
-#include "declarationMacros.h"
+#include "test/lib/testerDouble.h"
+#include "test/lib/testFunction.h"
+#include "test/lib/declarationMacros.h"
 
 #include "clippingArea.h"
 #include "math/constant.h"

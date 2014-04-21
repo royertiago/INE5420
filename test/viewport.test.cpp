@@ -5,9 +5,9 @@
 #include <cstdio>
 using std::printf;
 
-#include "declarationMacros.h"
-#include "testFunction.h"
-#include "testerDrawable.h"
+#include "test/lib/declarationMacros.h"
+#include "test/lib/testFunction.h"
+#include "test/class/testerDrawable.h"
 
 DECLARE_TEST( ViewportTest ) {
     bool b = true;
