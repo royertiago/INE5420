@@ -8,7 +8,22 @@ Organizar em subdiretórios
 Remover as definições de métodos das definições da classe
     Usar inline se necessário
 Implementar ScreenRenderer::drawPolygon();
-Implementar testes
+Implementar testes:
+    ClippingArea
+    DisplayFile
+    LinearOperator
+    Point
+    ScreenRenderer
+    ViewportTransform
+    WindowTransform
+    Window
+    DrawablePoint
+    Polygon
+    Matrix
+    Vector
+    MatrixLine
+    Viewport
+    TesterDrawable
 
     Alternativa para o design atual do renderer: empacotar objetos.
 Renderer conhece um Drawable e um ViewportTransform. Renderer passa

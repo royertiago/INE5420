@@ -3,20 +3,33 @@
  */
 
 #include <vector>
+#include <cstdio>
 #include "testFunction.h"
 #include "testList.h"
 
-using Test::TestFunction;
+namespace Test {
 
-static std::vector< TestFunction > tests;
+using std::printf;
 
-void Test::addTest( TestFunction t ) {
-    tests.push_back( t );
+struct TestData {
+    TestFunction test;
+    const char * name;
+    const char * file;
+};
+
+static std::vector< TestData > tests;
+
+void addTest( TestFunction t, const char * n, const char * f ) {
+    tests.push_back( {t, n, f} );
 }
 
-bool Test::run() {
-    for( TestFunction t : tests )
-        if( t() == false )
+bool run() {
+    for( TestData t : tests )
+        if( t.test() == false ) {
+            printf( "Test %s at file %s failed.\n", t.name, t.file );
             return false;
+        }
     return true;
 }
+
+} // namespace Test

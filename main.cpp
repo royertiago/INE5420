@@ -41,7 +41,6 @@ void clear( Drawable& d, DisplayFile& df, ScreenRenderer& renderer ) {
 
 int main() {
     if( Test::run() == false ) {
-        printf( "Erro n'algum teste.\n" );
         return 1;
     }
 

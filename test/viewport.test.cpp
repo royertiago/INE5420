@@ -1,20 +1,40 @@
 /* Teste de unidade de view/viewport.h. */
 
+#include "view/viewport.h"
+
 #include <cstdio>
 using std::printf;
 
-#include "view/viewport.h"
-#include "registerTest.h"
+#include "declarationMacros.h"
+#include "testFunction.h"
+#include "testerDrawable.h"
 
-bool ViewportTest() {
-    Viewport v{5, 0, 10, 20};
+DECLARE_TEST( ViewportTest ) {
+    bool b = true;
 
-    if( v.area() != 100 ) {
-        printf( "Viewport failed test.\n" );
-        return false;
-    }
+    // Note que estas não são operações de curto-circuito.
+    b &= TEST_EQUALS( Viewport({5, 0, 10, 20}).area(), 100 );
 
-    return true;
+    /* TEST_EQUALS( Viewport{5, 0, 10, 20}.area(), 100 );
+     * Sem os parênteses, isto dá erro de compilação: o preprocessador
+     * pensa que estamos passando cinco parâmetros para a macro:
+     * Viewport{5
+     * 0
+     * 10
+     * 20}.area()
+     * 100
+     */
+
+    b &= TEST_EQUALS( Viewport({0, 0, 19, 23}).area(), 19*23 );
+
+    TesterDrawable pseudoScreen(13, 29);
+    Viewport vp = Viewport::generateViewport( &pseudoScreen );
+
+    b &= TEST_EQUALS( vp.xmin, 0 );
+    b &= TEST_EQUALS( vp.ymin, 0 );
+    b &= TEST_EQUALS( vp.xmax, 13 );
+    b &= TEST_EQUALS( vp.ymax, 29 );
+    b &= TEST_EQUALS( vp.area(), 13*29 );
+
+    return b;
 }
-
-REGISTER_TEST( ViewportTest )

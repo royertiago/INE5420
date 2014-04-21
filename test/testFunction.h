@@ -1,19 +1,30 @@
 /* testFunction.h
- * Typedef da assinatura das funções de testes.
+ * Funções para automatização de testes.
  */
+
 #ifndef TEST_FUNCTION_H
 #define TEST_FUNCTION_H
 
 namespace Test {
-    /* Função de teste.
-     * Uma função de teste não recebe parâmetro algum
-     * (deve apenas rodar o teste) e deve informar para
-     * a função se o código testado passou (true) ou não
-     * (false) no teste.
+
+    /* Testa se o valor actualValue é igual ao valor expectedValue.
+     * Caso seja, a função retorna true; caso contrário, a função
+     * imprime uma mensagem de erro na tela e retorna false.
      *
-     * As funções de teste são encorajadas a imprimir
-     * quando o código especificado passou no teste. */
-    typedef bool (* TestFunction )( void );
+     * A macro TEST_EQUALS constrói os dois últimos campos automaticamente.
+     *
+     * actualValue   é o valor que o código de teste produz.
+     * expectedValue é o valor esperado para aquele trecho de código.
+     * lineText      é o trecho de código que está sendo testado.
+     * lineNumber    é o número da linha em que este teste foi executado.
+     */
+    bool testEquals( int actualValue, int expectedValue, 
+            const char * lineText, int lineNumber );
 
 } // namespace Test
+
+/* Macro que auxilia a chamada da função testEquals. */
+#define TEST_EQUALS( testedCode, expectedValue ) \
+    Test::testEquals( testedCode, expectedValue, #testedCode, __LINE__ )
+
 #endif // TEST_FUNCTION_H
