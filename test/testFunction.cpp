@@ -20,4 +20,17 @@ namespace Test {
         return false;
     }
 
+    bool testEquals( double actualValue, double expectedValue,
+            const char * lineText, int lineNumber )
+    {
+        if( actualValue == expectedValue )
+            return true;
+
+        printf( "%s\nat line %i - "
+                "Value: %lf - Expected: %lf\n\n",
+                lineText, lineNumber,
+                actualValue, expectedValue );
+        return false;
+    }
+
 } // namespace Test

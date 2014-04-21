@@ -17,12 +17,13 @@ struct Viewport {
      */
     static Viewport generateViewport( Drawable* );
 
-    double area() const;
+    /* Quantidade de pixels na viewport. */
+    int area() const;
 };
 
 //Implementação de area()
 
-inline double Viewport::area() const {
+inline int Viewport::area() const {
     return (xmax - xmin) * (ymax - ymin);
 }
 

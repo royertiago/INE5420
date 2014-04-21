@@ -34,6 +34,8 @@ public:
     virtual void update() override;
 };
 
+
+
 // Implementações
 inline TesterDrawable::TesterDrawable( int w, int h ) :
     w(w),

@@ -20,11 +20,17 @@ namespace Test {
      */
     bool testEquals( int actualValue, int expectedValue, 
             const char * lineText, int lineNumber );
+    bool testEquals( double actualValue, double expectedValue, 
+            const char * lineText, int lineNumber );
 
 } // namespace Test
 
-/* Macro que auxilia a chamada da função testEquals. */
+/* Macro que auxilia a chamada da função testEquals. 
+ * Note que não há resolução de escopo; portanto, pode ser que seja
+ * necessário escrever
+ *  Test::TEST_EQUALS( , );
+ */
 #define TEST_EQUALS( testedCode, expectedValue ) \
-    Test::testEquals( testedCode, expectedValue, #testedCode, __LINE__ )
+    testEquals( testedCode, expectedValue, #testedCode, __LINE__ )
 
 #endif // TEST_FUNCTION_H

@@ -13,7 +13,7 @@ DECLARE_TEST( ViewportTest ) {
     bool b = true;
 
     // Note que estas não são operações de curto-circuito.
-    b &= TEST_EQUALS( Viewport({5, 0, 10, 20}).area(), 100 );
+    b &= Test::TEST_EQUALS( Viewport({5, 0, 10, 20}).area(), 100 );
 
     /* TEST_EQUALS( Viewport{5, 0, 10, 20}.area(), 100 );
      * Sem os parênteses, isto dá erro de compilação: o preprocessador
@@ -25,16 +25,16 @@ DECLARE_TEST( ViewportTest ) {
      * 100
      */
 
-    b &= TEST_EQUALS( Viewport({0, 0, 19, 23}).area(), 19*23 );
+    b &= Test::TEST_EQUALS( Viewport({0, 0, 19, 23}).area(), 19*23 );
 
     TesterDrawable pseudoScreen(13, 29);
     Viewport vp = Viewport::generateViewport( &pseudoScreen );
 
-    b &= TEST_EQUALS( vp.xmin, 0 );
-    b &= TEST_EQUALS( vp.ymin, 0 );
-    b &= TEST_EQUALS( vp.xmax, 13 );
-    b &= TEST_EQUALS( vp.ymax, 29 );
-    b &= TEST_EQUALS( vp.area(), 13*29 );
+    b &= Test::TEST_EQUALS( vp.xmin, 0 );
+    b &= Test::TEST_EQUALS( vp.ymin, 0 );
+    b &= Test::TEST_EQUALS( vp.xmax, 13 );
+    b &= Test::TEST_EQUALS( vp.ymax, 29 );
+    b &= Test::TEST_EQUALS( vp.area(), 13*29 );
 
     return b;
 }
