@@ -11,8 +11,9 @@ LIBS := $(shell sdl2-config --cflags) -I./
 
 #Lista de object files e dependências
 
-SOURCES = $(wildcard *.cpp view/*.cpp geometric/*.cpp math/*.cpp)
-#A função wildcard força a expansão dos *
+SOURCES = $(wildcard *.cpp */*.cpp */*/*.cpp)
+#A função wildcard força a expansão dos * até dois níveis de subdiretório. \
+	TODO: achar algum jeito de fazer isso sem usar esta gambiarra.
 
 OBJ = $(SOURCES:.cpp=.o)
 #Substitui .cpp para .o no fim das palavras

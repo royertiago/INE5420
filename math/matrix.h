@@ -46,7 +46,10 @@ struct Matrix {
     /* Pequena gambiarra para permitir uma sintaxe mais agradável
      * na inicialização de vetores. Desta forma, construções como
      *  Vector<2> p = {1.1, 2.5};
-     * são possíveis. */
+     * são possíveis.
+     * Construtor disponível apenas para N == 1.
+     * Valores extra serão descartados, valores faltantes serão
+     * preenchidos com zeros. */
     Matrix( std::initializer_list< double > a );
 
     ~Matrix() = default;

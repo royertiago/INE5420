@@ -16,6 +16,7 @@
 #include "windowTransform.h"
 #include "clippingArea.h"
 #include "geometric/geometricFactory.h"
+#include "test/lib/testList.h"
 
 void waitEnter() {
     SDL_Event e;
@@ -40,6 +41,10 @@ void clear( Drawable& d, DisplayFile& df, ScreenRenderer& renderer ) {
 }
 
 int main() {
+    if( Test::run() == false ) {
+        return 1;
+    }
+
     SDLScreen sdl( 600, 600, "Teste" );
     sdl.setColor( 255, 255, 255, 255 );
     for( int i = 0; i < sdl.width(); i++ )
@@ -87,14 +92,6 @@ int main() {
         clear( sdl, df, renderer );
         waitEnter();
     }
-
-    //TesteDeUnidadeDix:
-    Math::Vector<2> vec{1.0, 2.0};
-    printf( "%lf %lf\n", vec[0][0], vec[1][0] ); //1.0 2.0
-    vec[0] = vec[1] = 3.0;
-    printf( "%lf %lf\n", vec[0][0], vec[1][0] ); //3.0 3.0
-    vec[0] = 1 + (vec[1] = 2.5);
-    printf( "%lf %lf\n", vec[0][0], vec[1][0] ); //3.5 2.5
 
     return 0;
 }

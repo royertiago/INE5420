@@ -17,7 +17,9 @@ struct Window {
     double t; // Ângulo (theta) do view-up vector, em radianos.
 
     /* Constrói uma window cujos valores iniciais corresponderão
-     * aos valores da área de clipping. */
+     * aos valores da área de clipping.
+     *
+     * O view-up vector estará alinhado com o eixo y. */
     Window( const ClippingArea& );
 
     /* Movimenta a window no sentido desejado.

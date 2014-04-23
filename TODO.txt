@@ -8,7 +8,27 @@ Organizar em subdiretórios
 Remover as definições de métodos das definições da classe
     Usar inline se necessário
 Implementar ScreenRenderer::drawPolygon();
-Implementar testes
+Implementar testes:
+    ClippingArea
+    DisplayFile
+    LinearOperator
+    Point
+    ScreenRenderer
+    ViewportTransform
+    WindowTransform
+    DrawablePoint
+    Polygon
+    Matrix
+    MatrixLine
+    TesterDrawable
+
+Renomear test/lib/testFunction.h para algum nome decente.
+
+Os testes dependem do comando __attribute__, específico do GCC. 
+    Entretanto, a única solução alternativa que conheço (gambiarras
+    com objetos estáticos) depende do fato de o GCC escolher executar
+    o construtor destes objetos antes de executar o main(), algo
+    que não é garantido pelo C++.
 
     Alternativa para o design atual do renderer: empacotar objetos.
 Renderer conhece um Drawable e um ViewportTransform. Renderer passa
