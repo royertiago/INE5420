@@ -16,14 +16,13 @@ Implementar testes:
     ScreenRenderer
     ViewportTransform
     WindowTransform
-    Window
     DrawablePoint
     Polygon
     Matrix
-    Vector
     MatrixLine
-    Viewport
     TesterDrawable
+
+Renomear test/lib/testFunction.h para algum nome decente.
 
 Os testes dependem do comando __attribute__, específico do GCC. 
     Entretanto, a única solução alternativa que conheço (gambiarras

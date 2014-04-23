@@ -12,7 +12,8 @@
 DECLARE_TEST( WindowTest ) {
     bool b = true;
 
-    Window w( ClippingArea::normalized );
+    ClippingArea c{0, 0, 1, 1};
+    Window w( c );
     w.move({0.5, 0});
 
     b &= Test::TEST_EQUALS( w.x, 1.0 );
@@ -35,12 +36,17 @@ DECLARE_TEST( WindowTest ) {
     //Agora, devemos ter voltado para o ponto inicial.
 
     b &= d.TEST_EQUALS( w.x, 1.0 );
-    b &= d.TEST_EQUALS( w.y, 0.5 ); 
-    //Este teste não passa com epsilon de máquina.
-
+    b &= d.TEST_EQUALS( w.y, 0.5 ); //Este não passa com epsilon de máquina.
     b &= d.TEST_EQUALS( w.w, 1.0 );
     b &= d.TEST_EQUALS( w.h, 1.0 );
     b &= d.TEST_EQUALS( w.t, 0.0 );
+
+    //Testes de escala:
+    w.vscale( 2.0 );
+    w.hscale( 3.0 );
+    b &= Test::TEST_EQUALS( w.h, 2.0 );
+    b &= Test::TEST_EQUALS( w.w, 3.0 );
+    b &= Test::TEST_EQUALS( w.area(), 6.0 );
 
     return b;
 }

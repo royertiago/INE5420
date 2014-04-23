@@ -99,13 +99,5 @@ int main() {
         waitEnter();
     }
 
-    //TesteDeUnidadeDix:
-    Math::Vector<2> vec{1.0, 2.0};
-    printf( "%lf %lf\n", vec[0][0], vec[1][0] ); //1.0 2.0
-    vec[0] = vec[1] = 3.0;
-    printf( "%lf %lf\n", vec[0][0], vec[1][0] ); //3.0 3.0
-    vec[0] = 1 + (vec[1] = 2.5);
-    printf( "%lf %lf\n", vec[0][0], vec[1][0] ); //3.5 2.5
-
     return 0;
 }

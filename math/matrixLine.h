@@ -97,7 +97,7 @@ double& MatrixLine<N>::operator=( double d ) {
 
 template< int N >
 double& MatrixLine<N>::operator/=( double d ) {
-    static_assert( N == 1, "operator=(double) disponível apenas para N == 1" );
+    static_assert( N == 1,"operator/=(double) disponível apenas para N == 1" );
     return line[0] /= d;
 }
 
