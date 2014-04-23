@@ -8,13 +8,13 @@
 #define POLYGON_H
 
 #include "transformableObject.h"
-#include "linearOperator.h"
-#include "point.h"
+#include "math/linearOperator.h"
+#include "math/point.h"
 
 class Renderer;
 
 class Polygon : public TransformableObject<2> {
-    Point<2> * vertices;
+    Math::Point<2> * vertices;
     int vertexCount;
 
 public:
@@ -23,7 +23,7 @@ public:
      *
      * O polígono assumirá propriedade deste vetor de pontos e deletar-
      * -los-á junto consigo. */
-    Polygon( Point<2> * vertices, int vertexCount ) :
+    Polygon( Math::Point<2> * vertices, int vertexCount ) :
         vertices( vertices ),
         vertexCount( vertexCount )
     {}
@@ -48,8 +48,8 @@ public:
 
     // Métodos herdados
     virtual void draw( Renderer * ) override;
-    virtual void transform( const LinearOperator<2>& ) override;
-    virtual Point<2> center() const override;
+    virtual void transform( const Math::LinearOperator<2>& ) override;
+    virtual Math::Point<2> center() const override;
 };
 
 

@@ -12,9 +12,9 @@ using std::cos;
 #include "math/vector.h"
 #include "point.h"
 
-using namespace LinearFactory;
+using namespace Math;
 
-LinearOperator<2> LinearFactory::make2DTranslation( Math::Vector<2> v ) {
+LinearOperator<2> LinearFactory::make2DTranslation( Vector<2> v ) {
     return LinearOperator<2>{ {1, 0, v[0]},
              {0, 1, v[1]},
              {0, 0, 1}
@@ -36,7 +36,7 @@ LinearOperator<2> LinearFactory::make2DRotation( double t ) {
 }
 
 LinearOperator<2> LinearFactory::make2DScale( double d, Point<2> center ) {
-    Math::Vector<2> c;
+    Vector<2> c;
     c[0] = center[0];
     c[1] = center[1];
     LinearOperator<2> o = make2DTranslation( c );
@@ -47,7 +47,7 @@ LinearOperator<2> LinearFactory::make2DScale( double d, Point<2> center ) {
 }
 
 LinearOperator<2> LinearFactory::make2DRotation( double d, Point<2> center ) {
-    Math::Vector<2> c;
+    Vector<2> c;
     c[0] = center[0];
     c[1] = center[1];
     LinearOperator<2> o = make2DTranslation( c );

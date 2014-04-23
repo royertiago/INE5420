@@ -21,6 +21,8 @@
 #include "math/vector.h"
 #include "math/matrixLine.h"
 
+namespace Math {
+
 template <int N> class LinearOperator;
 
 template <int N>
@@ -92,4 +94,6 @@ Point<N>::Point( std::initializer_list<double> source ) {
         vector[i] = 0;
     vector[N] = 1.0;
 }
+
+} // namespace Math
 #endif // POINT_H

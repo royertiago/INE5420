@@ -14,7 +14,7 @@
 #define SCREEN_RENDERER_H
 
 #include "renderer.h"
-#include "point.h"
+#include "math/point.h"
 #include "viewportTransform.h"
 #include "windowTransform.h"
 #include "view/viewport.h"
@@ -37,8 +37,10 @@ public:
     virtual ~ScreenRenderer() = default;
     
     // Métodos herdados:
-    virtual void drawLine( Point<2> origin, Point<2> destiny ) override;
-    virtual void drawPolygon( Point<2> * points, int numPoints ) override;
+    virtual void drawLine( Math::Point<2> origin, 
+            Math::Point<2> destiny ) override;
+    virtual void drawPolygon( Math::Point<2> * points, 
+            int numPoints ) override;
     virtual double density() override;
 };
 
@@ -54,7 +56,7 @@ inline double ScreenRenderer::density() {
     return vpt.viewport().area()/wt.window().area();
 }
 
-inline void ScreenRenderer::drawPolygon( Point<2> *, int ) {
+inline void ScreenRenderer::drawPolygon( Math::Point<2> *, int ) {
     /* Gambiarra para que o código compile.
      * TODO: implementar este método. */
 }

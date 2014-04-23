@@ -9,9 +9,11 @@
 
 #include <initializer_list>
 
-#include "point.h"
+#include "math/point.h"
 #include "math/matrix.h"
 #include "math/vector.h"
+
+namespace Math {
 
 template <int N>
 class LinearOperator {
@@ -74,9 +76,12 @@ public:
     }
 };
 
+} // namespace Math
+
 /* Namespace que contém funções para construir operadores lineares
  * capazes de efetuar operações específicas. */
 namespace LinearFactory {
+    using Math::LinearOperator;
 
     /* Constrói um operador linear que desloca os pontos
      * na direção especificada. */
@@ -89,7 +94,7 @@ namespace LinearFactory {
 
     /* Constrói um operador linear que amplia os pontos pelo
      * fator especificado, em relação ao centro especificado. */
-    LinearOperator<2> make2DScale( double factor, Point<2> center );
+    LinearOperator<2> make2DScale( double factor, Math::Point<2> center );
 
     /* Constrói um operador linear que rotaciona os pontos
      * em sentido anti-horário, em relação ao mundo.
@@ -100,14 +105,14 @@ namespace LinearFactory {
      * com relação ao centro especificado, em sentido anti-horário,
      * pelo ângulo especificado.
      * O ângulo será tratado em radianos. */
-    LinearOperator<2> make2DRotation( double angle, Point<2> center );
+    LinearOperator<2> make2DRotation( double angle, Math::Point<2> center );
 
 } // namespace LinearFactory
 
 
 
 // Implementações
-
+namespace Math {
 template <int N>
 LinearOperator<N>::LinearOperator( const Math::Matrix<N+1, N+1>& m ) :
     matrix(m)
@@ -131,5 +136,5 @@ LinearOperator<N>::LinearOperator(
         for( int j = 0; j <= N; ++j )
             matrix[i][j] = 0.0;
 }
-
+} // Namespace math
 #endif // LINEAR_OPERATOR_H

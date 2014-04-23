@@ -13,19 +13,19 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include "point.h"
+#include "math/point.h"
 #include "window.h"
 
 class Renderer {
 public:
     /* Desenha na tela o segmento de reta que passa pelos 
      * referidos pontos. */
-    virtual void drawLine( Point<2> origin, Point<2> destiny ) = 0;
+    virtual void drawLine( Math::Point<2> origin, Math::Point<2> destiny ) = 0;
 
     /* Desenha na tela o polígono representado pelos pontos
      * passados.
      * Interpretaremos este polígono como sendo um polígono preenchido. */
-    virtual void drawPolygon( Point<2> * points, int numPoints ) = 0;
+    virtual void drawPolygon( Math::Point<2> * points, int numPoints ) = 0;
 
     /* Obtém a densidade da tela.
      *

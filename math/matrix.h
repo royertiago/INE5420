@@ -49,7 +49,7 @@ struct Matrix {
      * são possíveis.
      * Construtor disponível apenas para N == 1.
      * Valores extra serão descartados, valores faltantes serão
-     * preenchidos com zeros. */
+     * preenchidos com uns. */
     Matrix( std::initializer_list< double > a );
 
     ~Matrix() = default;
@@ -108,7 +108,7 @@ Matrix<M, N>::Matrix( std::initializer_list< double > source ) {
     for( ; i < M && it != source.end(); ++i, ++it )
         values[i][0] = *it;
     for( ; i < M; ++i )
-        values[i][0] = 0;
+        values[i][0] = 1;
 }
 
 /* Implementação ingênua da multiplicação de matrizez. */

@@ -9,8 +9,8 @@
 #define VIEWPORT_TRANSFORM_H
 
 #include "view/pixel.h"
-#include "point.h"
 #include "view/viewport.h"
+#include "math/point.h"
 #include "clippingArea.h"
 
 class ViewportTransform {
@@ -23,11 +23,11 @@ public:
     ViewportTransform( Viewport viewport, const ClippingArea& clippingArea );
 
     /* Computa a transformada de viewport para o dado ponto. */
-    Pixel transform( Point<2> ) const;
-    Pixel operator()( Point<2> ) const;
+    Pixel transform( Math::Point<2> ) const;
+    Pixel operator()( Math::Point<2> ) const;
 
     /* Computa as coordenadas de window para o dado pixel. */
-    Point<2> reverseTransform( Pixel ) const;
+    Math::Point<2> reverseTransform( Pixel ) const;
 
     /* Retorna a Viewport deste objeto. */
     const Viewport& viewport() const;
@@ -41,7 +41,7 @@ inline ViewportTransform::ViewportTransform( Viewport vp,
     ca( ca )
 {}
 
-inline Pixel ViewportTransform::operator()( Point<2> p ) const {
+inline Pixel ViewportTransform::operator()( Math::Point<2> p ) const {
     return transform( p );
 }
 

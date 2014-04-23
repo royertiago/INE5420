@@ -4,7 +4,7 @@
  */
 
 #include "windowTransform.h"
-#include "linearOperator.h"
+#include "math/linearOperator.h"
 #include "math/vector.h"
 #include "clippingArea.h"
 #include "window.h"
@@ -25,7 +25,7 @@ void WindowTransform::computeTransform() const {
     lo.backComposeWith( make2DRotation( -w.t ) );
     //Agora, os eixos de ambos estão na orientação correta.
 
-    LinearOperator<2> scale = { { (ca.xmax - ca.xmin)/w.w, 0, 0 },
+    Math::LinearOperator<2> scale = { { (ca.xmax - ca.xmin)/w.w, 0, 0 },
                                 { 0, (ca.ymax - ca.ymin)/w.h, 0 },
                                 { 0, 0, 1 }
                               };

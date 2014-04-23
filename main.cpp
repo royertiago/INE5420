@@ -11,7 +11,7 @@
 #include "displayFile.h"
 #include "geometric/polygon.h"
 #include "geometric/drawablePoint.h"
-#include "linearOperator.h"
+#include "math/linearOperator.h"
 #include "math/constant.h"
 #include "windowTransform.h"
 #include "clippingArea.h"

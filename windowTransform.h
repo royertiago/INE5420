@@ -23,11 +23,11 @@
 
 #include "window.h"
 #include "clippingArea.h"
-#include "point.h"
-#include "linearOperator.h"
+#include "math/point.h"
+#include "math/linearOperator.h"
 
 class WindowTransform {
-    mutable LinearOperator<2> lo;
+    mutable Math::LinearOperator<2> lo;
     /* Clean será alterado para false toda vez que a window tiver
      * mudado de lugar. Isto significa que temos de recalcular
      * o valor de lo. */
@@ -50,7 +50,7 @@ public:
     const Window& window() const;
 
     /* Aplica a transformada de window no ponto passado. */
-    Point<2> operator()( Point<2> ) const;
+    Math::Point<2> operator()( Math::Point<2> ) const;
 
     /* Informa a área de clipping alvejada por esta transformada
      * de window.
@@ -78,7 +78,7 @@ inline const Window& WindowTransform::window() const {
     return w;
 }
 
-inline Point<2> WindowTransform::operator()( Point<2> p ) const {
+inline Math::Point<2> WindowTransform::operator()( Math::Point<2> p ) const {
     if( !cached )
         computeTransform();
     return lo.transform( p );

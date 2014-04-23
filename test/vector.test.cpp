@@ -40,7 +40,7 @@ DECLARE_TEST( VectorTest ) {
     Math::Vector<3> u = {10.0, 11.0};
     b &= Test::TEST_EQUALS( u[0], 10.0 );
     b &= Test::TEST_EQUALS( u[1], 11.0 );
-    b &= Test::TEST_EQUALS( u[2], 0.0 );
+    b &= Test::TEST_EQUALS( u[2], 1.0 );
 
     return b;
 }

@@ -4,9 +4,9 @@
 #ifndef TRANSFORMABLE_OBJECT_H
 #define TRANSFORMABLE_OBJECT_H
 
-#include "geometricObject.h"
-#include "point.h"
-#include "linearOperator.h"
+#include "geometric/geometricObject.h"
+#include "math/point.h"
+#include "math/linearOperator.h"
 
 template< int N >
 class TransformableObject : public GeometricObject {
@@ -19,12 +19,12 @@ public:
      * entretanto, assumiremos que o que quer que o objeto
      * desenhe no renderizador, seja já com as devidas
      * transformações. */
-    virtual void transform( const LinearOperator< N >& ) = 0;
+    virtual void transform( const Math::LinearOperator< N >& ) = 0;
 
     /* Informa o centro do objeto em questão.
      * Esta informação pode ser usada para criar transformações
      * de escala e de rotação centradas no objeto. */
-    virtual Point<N> center() const = 0;
+    virtual Math::Point<N> center() const = 0;
 
     virtual ~TransformableObject() = default;
 };

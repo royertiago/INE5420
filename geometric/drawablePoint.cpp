@@ -6,9 +6,8 @@ using std::sqrt;
 using std::sin;
 using std::cos;
 
-#include "drawablePoint.h"
+#include "geometric/drawablePoint.h"
 #include "renderer.h"
-#include "point.h"
 
 static const double pi = 3.14159653589793238462643383;
 
@@ -27,10 +26,10 @@ void DrawablePoint::draw( Renderer * renderer ) {
     double theta = 2* pi / 12;
     for( int i = 0; i < 12; i++ ) {
         renderer->drawLine(
-            Point<2>({ p[0] + radius * cos(i*theta),
-                       p[1] + radius * sin(i*theta)}),
-            Point<2>({ p[0] + radius * cos((i+1)*theta), 
-                       p[1] + radius * sin((i+1)*theta)})
+            Math::Point<2>({ p[0] + radius * cos(i*theta),
+                             p[1] + radius * sin(i*theta)}),
+            Math::Point<2>({ p[0] + radius * cos((i+1)*theta), 
+                             p[1] + radius * sin((i+1)*theta)})
        );
     }
 }

@@ -10,7 +10,7 @@
 #include <type_traits>
 #include "variadic.h" // para asserts
 
-#include "point.h"
+#include "math/point.h"
 #include "polygon.h"
 
 namespace GeometricFactory {
@@ -35,7 +35,7 @@ Polygon * makePolygon( std::initializer_list<Ts> ... args ) {
             std::is_convertible< Ts, double >::value ...
         >::value, "Apenas listas de inicialização de tipos"
                   " convertíveis para double!" );
-    return new Polygon( new Point<2>[sizeof...(args)]{args...}, 
+    return new Polygon( new Math::Point<2>[sizeof...(args)]{args...}, 
             sizeof...(args) );
 }
 
