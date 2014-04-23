@@ -3,7 +3,7 @@
 
 #include "displayFile.h"
 
-#include "renderer.h"
+#include "render/renderer.h"
 #include "geometric/geometricObject.h"
 
 void DisplayFile::draw( Renderer * renderer ) {

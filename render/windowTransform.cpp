@@ -3,10 +3,10 @@
  * computeTransform()
  */
 
-#include "windowTransform.h"
+#include "render/windowTransform.h"
+#include "render/clipping/clippingArea.h"
 #include "math/linearOperator.h"
 #include "math/vector.h"
-#include "clippingArea.h"
 #include "window.h"
 
 using LinearFactory::make2DTranslation;

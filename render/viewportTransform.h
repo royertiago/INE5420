@@ -9,9 +9,9 @@
 #define VIEWPORT_TRANSFORM_H
 
 #include "view/pixel.h"
-#include "view/viewport.h"
+#include "render/viewport.h"
+#include "render/clipping/clippingArea.h"
 #include "math/point.h"
-#include "clippingArea.h"
 
 class ViewportTransform {
     Viewport vp;

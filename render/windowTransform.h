@@ -21,8 +21,8 @@
 #ifndef WINDOW_TRANSFORM_H
 #define WINDOW_TRANSFORM_H
 
-#include "window.h"
-#include "clippingArea.h"
+#include "render/window.h"
+#include "render/clipping/clippingArea.h"
 #include "math/point.h"
 #include "math/linearOperator.h"
 

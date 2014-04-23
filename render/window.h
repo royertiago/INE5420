@@ -9,7 +9,7 @@
 #define WINDOW_H
 
 #include "math/vector.h"
-#include "clippingArea.h"
+#include "render/clipping/clippingArea.h"
 
 struct Window {
     double x, y; // Coordenadas do centro da window

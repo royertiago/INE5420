@@ -13,11 +13,11 @@
 #ifndef SCREEN_RENDERER_H
 #define SCREEN_RENDERER_H
 
-#include "renderer.h"
+#include "render/renderer.h"
+#include "render/viewportTransform.h"
+#include "render/windowTransform.h"
+#include "render/viewport.h"
 #include "math/point.h"
-#include "viewportTransform.h"
-#include "windowTransform.h"
-#include "view/viewport.h"
 #include "view/drawable.h"
 
 class ScreenRenderer : public Renderer {

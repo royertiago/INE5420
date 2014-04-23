@@ -7,7 +7,7 @@
 #include "polygon.h"
 #include "math/point.h"
 #include "math/linearOperator.h"
-#include "renderer.h"
+#include "render/renderer.h"
 
 Polygon::Polygon( const Polygon& p ) :
     vertices( new Math::Point<2>[p.vertexCount] ),

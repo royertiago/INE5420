@@ -14,7 +14,7 @@
 #define RENDERER_H
 
 #include "math/point.h"
-#include "window.h"
+#include "render/window.h"
 
 class Renderer {
 public:

@@ -1,10 +1,10 @@
 /* vieportTransform.cpp
  * Implementação de viewportTransform.h */
 
-#include "viewportTransform.h"
+#include "render/viewportTransform.h"
+#include "render/viewport.h"
+#include "render/clipping/clippingArea.h"
 #include "view/pixel.h"
-#include "view/viewport.h"
-#include "clippingArea.h"
 #include "math/point.h"
 
 Pixel ViewportTransform::transform( Math::Point<2> p ) const {

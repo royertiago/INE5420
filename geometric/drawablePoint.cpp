@@ -7,7 +7,7 @@ using std::sin;
 using std::cos;
 
 #include "geometric/drawablePoint.h"
-#include "renderer.h"
+#include "render/renderer.h"
 
 static const double pi = 3.14159653589793238462643383;
 

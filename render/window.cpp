@@ -4,8 +4,8 @@
 
 #include <cmath>
 
-#include "window.h"
-#include "clippingArea.h"
+#include "render/window.h"
+#include "render/clipping/clippingArea.h"
 #include "math/vector.h"
 
 using std::sin;

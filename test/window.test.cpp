@@ -1,12 +1,12 @@
 /* Teste de unidade de window.h */
 
-#include "window.h"
+#include "render/window.h"
 
 #include "test/lib/testerDouble.h"
 #include "test/lib/testEquals.h"
 #include "test/lib/declarationMacros.h"
 
-#include "clippingArea.h"
+#include "render/clipping/clippingArea.h"
 #include "math/constant.h"
 
 DECLARE_TEST( WindowTest ) {

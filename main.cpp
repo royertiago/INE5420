@@ -2,21 +2,21 @@
 
 // Include *
 #include <SDL.h>
-#include "view/SDLScreen.h"
-#include "view/pixel.h"
-#include "view/viewport.h"
-#include "window.h"
-#include "viewportTransform.h"
-#include "screenRenderer.h"
 #include "displayFile.h"
-#include "geometric/polygon.h"
 #include "geometric/drawablePoint.h"
-#include "math/linearOperator.h"
-#include "math/constant.h"
-#include "windowTransform.h"
-#include "clippingArea.h"
 #include "geometric/geometricFactory.h"
+#include "geometric/polygon.h"
+#include "math/constant.h"
+#include "math/linearOperator.h"
+#include "render/screenRenderer.h"
+#include "render/viewport.h"
+#include "render/viewportTransform.h"
+#include "render/window.h"
+#include "render/windowTransform.h"
+#include "render/clipping/clippingArea.h"
 #include "test/lib/testList.h"
+#include "view/pixel.h"
+#include "view/SDLScreen.h"
 
 void waitEnter() {
     SDL_Event e;

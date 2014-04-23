@@ -2,10 +2,10 @@
  * Implementação de screenRenderer.h
  */
 
-#include "screenRenderer.h"
+#include "render/screenRenderer.h"
+#include "render/viewportTransform.h"
+#include "render/windowTransform.h"
 #include "math/point.h"
-#include "viewportTransform.h"
-#include "windowTransform.h"
 #include "view/drawable.h"
 
 void ScreenRenderer::drawLine( Math::Point<2> o, Math::Point<2> d ) {
