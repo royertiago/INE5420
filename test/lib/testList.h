@@ -6,8 +6,6 @@
 #ifndef TEST_LIST_H
 #define TEST_LIST_H
 
-#include "testFunction.h"
-
 namespace Test {
     /* Função de teste.
      * Uma função de teste não recebe parâmetro algum

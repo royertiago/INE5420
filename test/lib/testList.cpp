@@ -4,7 +4,6 @@
 
 #include <vector>
 #include <cstdio>
-#include "testFunction.h"
 #include "testList.h"
 
 namespace Test {

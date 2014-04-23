@@ -1,12 +1,8 @@
 /* Teste de unidade de view/viewport.h. */
 
 #include "view/viewport.h"
-
-#include <cstdio>
-using std::printf;
-
 #include "test/lib/declarationMacros.h"
-#include "test/lib/testFunction.h"
+#include "test/lib/testEquals.h"
 #include "test/class/testerDrawable.h"
 
 DECLARE_TEST( ViewportTest ) {

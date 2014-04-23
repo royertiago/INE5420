@@ -3,7 +3,7 @@
 #include "window.h"
 
 #include "test/lib/testerDouble.h"
-#include "test/lib/testFunction.h"
+#include "test/lib/testEquals.h"
 #include "test/lib/declarationMacros.h"
 
 #include "clippingArea.h"

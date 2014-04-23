@@ -1,4 +1,4 @@
-/* testFunction.h
+/* testEquals.h
  * Funções para automatização de testes.
  */
 
@@ -21,6 +21,8 @@ namespace Test {
     bool testEquals( int actualValue, int expectedValue, 
             const char * lineText, int lineNumber );
     bool testEquals( double actualValue, double expectedValue, 
+            const char * lineText, int lineNumber );
+    bool testEquals( bool actualValue, bool expectedValue, 
             const char * lineText, int lineNumber );
 
 } // namespace Test

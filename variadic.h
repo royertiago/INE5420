@@ -46,6 +46,6 @@ struct logical_or<> {
 
 template< bool b, bool ... bs >
 struct logical_or< b, bs... > {
-    const static bool value = b || logical_and< bs... >::value;
+    const static bool value = b || logical_or< bs... >::value;
 };
 #endif // VARIADIC_H

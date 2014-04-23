@@ -1,8 +1,8 @@
-/* testFunction.cpp
- * Implementação de testFunction.h
+/* testEquals.cpp
+ * Implementação de testEquals.h
  */
 #include <cstdio>
-#include "testFunction.h"
+#include "testEquals.h"
 
 namespace Test {
     using std::printf;
@@ -30,6 +30,20 @@ namespace Test {
                 "Value: %lf - Expected: %lf\n\n",
                 lineText, lineNumber,
                 actualValue, expectedValue );
+        return false;
+    }
+
+    bool testEquals( bool actualValue, bool expectedValue,
+            const char * lineText, int lineNumber )
+    {
+        if( actualValue == expectedValue )
+            return true;
+
+        printf( "%s\nat line %i - "
+                "Value: %s - Expected: %s\n\n",
+                lineText, lineNumber,
+                actualValue ? "true":"false",
+                expectedValue ? "true":"false" );
         return false;
     }
 
