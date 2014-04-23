@@ -28,16 +28,6 @@ public:
         vertexCount( vertexCount )
     {}
 
-    /* Constrói o polígono com os pontos desejados, na ordem desejada.
-     *
-     * Tenha certeza de que os tipos passados são convertíves para Point<2>;
-     * o compilador pode ser um pouco grosso caso isso não ocorra. */
-    template< typename ... Types >
-    Polygon( Types... ts ) :
-        vertices( new Point<2>[sizeof...(Types)] { ts... } ),
-        vertexCount( sizeof...(Types) )
-    {}
-
     /* Copia o conteúdo do poligono passado para este. */
     Polygon( const Polygon& );
 

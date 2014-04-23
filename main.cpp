@@ -15,6 +15,7 @@
 #include "math/constant.h"
 #include "windowTransform.h"
 #include "clippingArea.h"
+#include "geometric/geometricFactory.h"
 
 void waitEnter() {
     SDL_Event e;
@@ -53,18 +54,11 @@ int main() {
 
     DisplayFile df;
 
-    Polygon * p1 = new Polygon( new Point<2>[3]{
-            {.25, .25}, 
-            {0.25, 0.5}, 
-            {0.5, 0.25}
-            }, 3 );
+    Polygon * p1 = GeometricFactory::makePolygon(
+            {.25, .25}, {0.25, 0.5}, {0.5, 0.25} );
 
-    Polygon * p2 = new Polygon( new Point<2>[4]{
-            {0.5, 0.5}, 
-            {0.75, 0.5}, 
-            {0.75, 0.75}, 
-            {0.5, 0.75}
-            }, 4); 
+    Polygon * p2 = GeometricFactory::makePolygon(
+            {0.5, 0.5}, {0.75, 0.5}, {0.75, 0.75}, {0.5, 0.75} ); 
 
     DrawablePoint * p3 = new DrawablePoint( {0.4, 0.4} );
 
