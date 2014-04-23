@@ -11,8 +11,6 @@ Implementar ScreenRenderer::drawPolygon();
 Implementar testes:
     ClippingArea
     DisplayFile
-    LinearOperator
-    Point
     ScreenRenderer
     ViewportTransform
     WindowTransform
@@ -21,8 +19,7 @@ Implementar testes:
     Matrix
     MatrixLine
     TesterDrawable
-
-Renomear test/lib/testFunction.h para algum nome decente.
+    LineClipper
 
 Os testes dependem do comando __attribute__, específico do GCC. 
     Entretanto, a única solução alternativa que conheço (gambiarras
@@ -30,33 +27,15 @@ Os testes dependem do comando __attribute__, específico do GCC.
     o construtor destes objetos antes de executar o main(), algo
     que não é garantido pelo C++.
 
-    Alternativa para o design atual do renderer: empacotar objetos.
-Renderer conhece um Drawable e um ViewportTransform. Renderer passa
-para o Drawable uma lista de objetos a serem desenhados, e recebe
-exatamente a lista de pontos e retas, na viewport, que devem ser desenhados.
-A viewportTransform conhece um algoritmo de clipping e uma windowTransform.
-Ela repassa a lista de objetos a serem desenhados e espera uma lista de
-objetos em coordenadas de ClippingArea - então repassa para o algoritmo
-de clipping. A windowTransform, por último, conhece uma window e uma área
-de clipping, e usa estes dois para efetuar a transformação, em todos
-os objetos do mundo.
+Embora lineClipper seja uma interface templatizada, o método setArea
+    trabalha com ClippingArea, que é bidimensional. Se possível,
+    generalizar a área de clipping para ser n-dimensional.
+
+Implementar Matrix::operator=( initializer_list<initializer_list<double>> )
+
 
 
         Problemas / possíveis aprimoramentos:
-
-Geral
-    - Objetos privados possuem nomes iniciados com underscore para
-    evitar conflito com as funções-membro de mesmo nome que proveem
-    acesso a eles. (Estas funções não são nomeadas getAlgumaCoisa
-    porque elas retornam referências para o referido objeto, podendo
-    o chamador modificá-los; não sei até que ponto esta distinção
-    é útil.) Isto gera uma n omeação inconsistente de atributos. 
-    Enquanto que ViewportTransform, por exemplo, utiliza nomes extensos, 
-    a Window possui nomes de um ou dois caracteres. 
-    Sugestão: trocar tudo para nomes de um ou dois caracteres.
-
-    Existe uma possibilidade de confusão entre Point e Vector, uma
-    vez que, na matemática, ambos os termos são intercambiáveis.
 
 WindowTransform
     Uma chamada ao método window() da transformada de window pode
@@ -67,25 +46,6 @@ WindowTransform
     A WindowTransform é um operador linear: talvez poderíamos tratá-la
     como tal.
 
-matrix.h
-    Embora a classe matriz possua construtores e métodos com semântica
-    de transferência (via rvalue references), as funções que oferecem
-    esta funcionalidade não tem desempenho superior às outras funções,
-    o que as torna inúteis.
-
 DrawablePoint
     Ao invés de codificar a rotação de DrawablePoint::draw no braço,
     podemos usar as transformações lineares para isso.
-
-DisplayFile
-    - O contêiner que estamos usando agora é std::vector; ele não oferece
-    suporte à remoção eficiente de elementos. Para isso, talvez algo
-    como std::map, que também permite iteração em tempo linear, mas
-    remoção em tempo logarítmico - algo que std::vector não oferece.
-    - DisplayFile assume responsabilidade sobre o ponteiro. Se precisarmos
-    de vários DisplayFile isso seria problemático, pois podemos querer
-    compartilhar objetos entre DisplayFiles.
-
-Point
-    Atualmente, Point<N>::operator[] retorna uma MatrixLine<N>, 
-    o que não me parece um design bom.

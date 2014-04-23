@@ -32,7 +32,7 @@ public:
     virtual ~SDLScreen();
 
 private:
-    const int _width, _height;
+    const int w, h; // width, height
     SDL_Window * window;
     SDL_Renderer * renderer;
 };

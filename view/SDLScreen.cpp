@@ -9,8 +9,8 @@ using std::runtime_error;
 #include "SDLScreen.h"
 
 SDLScreen::SDLScreen( int width, int height, const char * title ) :
-    _width( width ),
-    _height( height )
+    w( width ),
+    h( height )
 {
     if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
         throw runtime_error( string("SDL_Init(): ") + SDL_GetError() );
@@ -47,11 +47,11 @@ void SDLScreen::paint( Pixel a, Pixel b ) {
 }
 
 int SDLScreen::height() const {
-    return _height;
+    return h;
 }
 
 int SDLScreen::width() const {
-    return _width;
+    return w;
 }
 
 void SDLScreen::update() {
