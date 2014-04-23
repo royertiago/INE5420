@@ -49,8 +49,12 @@ struct Matrix {
      * são possíveis.
      * Construtor disponível apenas para N == 1.
      * Valores extra serão descartados, valores faltantes serão
-     * preenchidos com uns. */
-    Matrix( std::initializer_list< double > a );
+     * preenchidos com zeros. */
+    Matrix( std::initializer_list< double > );
+
+    /* Permite inicialização de matrizes de tamanho arbitrário.
+     * Posições faltantes serão inicalizadas para zero. */
+    Matrix( std::initializer_list< std::initializer_list<double> > );
 
     ~Matrix() = default;
 
@@ -86,6 +90,28 @@ struct Matrix {
     MatrixLine<N> operator[]( size_t line ) {
         return MatrixLine<N>( values[line] );
     }
+
+    /* Matrizes são a representação computacional perfeita
+     * para transformações lineares. Aqui, trataremos-nas
+     * como sinônimos. */
+    template <int P>
+    Matrix< M, P > transform( const Matrix<N, P>& ) const;
+    template <int P>
+    Matrix< M, P > operator()( const Matrix<N, P>& ) const;
+    
+    /* Compõe esta matriz com a matriz passada. As operações comportar-
+     * -se-ão como se os objetos passados sejam dados antes ao operador op
+     *  e o resultado alimentado este operador. */
+    void frontComposeWith( const Matrix<N, N>& op ) {
+        *this = *this * op;
+    }
+
+    /* Compõe o operador linear passado com este. As operações comportar-
+     * -se-ão como se os vetores passados sejam dados a este operador
+     *  e o resultado entregue ao operador op. */
+    void backComposeWith( const Matrix<M, M>& op ) {
+        *this = op * *this;
+    }
     
     /* Operador unário -; retorna uma matriz com os mesmos valores
      * desta, mas com sinal trocado. */
@@ -108,7 +134,34 @@ Matrix<M, N>::Matrix( std::initializer_list< double > source ) {
     for( ; i < M && it != source.end(); ++i, ++it )
         values[i][0] = *it;
     for( ; i < M; ++i )
-        values[i][0] = 1;
+        values[i][0] = 1.0;
+}
+
+template< int M, int N >
+Matrix<M, N>::Matrix( std::initializer_list<std::initializer_list<double>> a) {
+    auto it = a.begin();
+    int i = 0;
+    for( ; it != a.end() && i < M; ++i, ++it ) {
+        auto jt = it->begin();
+        int j = 0;
+        for( ; jt != it->end() && j < N; ++j, ++jt )
+            values[i][j] = *jt;
+        for( ; j < N; ++j )
+            values[i][j] = 0.0;
+    }
+    for( ; i < M; ++i )
+        for( int j = 0; j < N; ++j )
+            values[i][j] = 0.0;
+}
+
+template< int M, int N > template< int P >
+Matrix<M, P> Matrix<M, N>::transform( const Matrix<N, P>& rhs ) const {
+    return *this * rhs;
+}
+
+template< int M, int N > template< int P >
+Matrix<M, P> Matrix<M, N>::operator()( const Matrix<N, P>& rhs ) const {
+    return transform( rhs );
 }
 
 /* Implementação ingênua da multiplicação de matrizez. */
