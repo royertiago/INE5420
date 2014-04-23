@@ -41,10 +41,10 @@ public:
 
     /* Aplica a transformação linear no ponto passado. */
     Point<N> transform( const Point<N>& p ) const {
-        return matrix * (p.vector);
+        return matrix * p;
     }
     Point<N> transform( Point<N>&& p ) const {
-        return matrix * (p.vector);
+        return matrix * p;
     }
 
     /* Aplica a transformação linear no ponto passado. */
