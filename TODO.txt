@@ -25,6 +25,12 @@ Implementar testes:
     Viewport
     TesterDrawable
 
+Os testes dependem do comando __attribute__, específico do GCC. 
+    Entretanto, a única solução alternativa que conheço (gambiarras
+    com objetos estáticos) depende do fato de o GCC escolher executar
+    o construtor destes objetos antes de executar o main(), algo
+    que não é garantido pelo C++.
+
     Alternativa para o design atual do renderer: empacotar objetos.
 Renderer conhece um Drawable e um ViewportTransform. Renderer passa
 para o Drawable uma lista de objetos a serem desenhados, e recebe

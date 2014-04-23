@@ -23,12 +23,10 @@
  */
 #define REGISTER_TEST( test )                                           \
 namespace Test {                                                        \
-    struct TEST_ADDER_ ## test {                                        \
-        TEST_ADDER_ ## test () {                                        \
+    void TEST_ADDER_ ## test() __attribute__((constructor));            \
+    void TEST_ADDER_ ## test() {                                        \
             Test::addTest( test, #test, __FILE__ );                     \
-        }                                                               \
-    };                                                                  \
-    const static TEST_ADDER_ ## test instance = TEST_ADDER_ ## test (); \
+    }                                                                   \
 }
 
 /* Declara um teste e o adiciona à lista de testes.
