@@ -25,9 +25,15 @@ public:
     
 private:
     /* Funções privadas que auxiliam o clipping */
-    enum Region { TOP_LEFT, TOP, TOP_RIGHT,
-                  MIDDLE_LEFT, MIDDLE, MIDDLE_RIGHT,
-                  BOTTOM_LEFT, BOTTOM, BOTTOM_RIGHT };
+    enum Region { TOP_LEFT     = 0x1100,
+                  TOP          = 0x1000,
+                  TOP_RIGHT    = 0x1010,
+                  MIDDLE_LEFT  = 0x0100,
+                  MIDDLE       = 0x0000,
+                  MIDDLE_RIGHT = 0x0010,
+                  BOTTOM_LEFT  = 0x0101,
+                  BOTTOM       = 0x0001,
+                  BOTTOM_RIGHT = 0x0011 };
     
     // Retorna uma das constantes definidas no enum Region
     int regionOf( Math::Point<2>& );

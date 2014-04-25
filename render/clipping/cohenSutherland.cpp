@@ -10,7 +10,7 @@ using std::fabs;
 const double epsilon = 1e-10;
 
 CohenSutherland::CohenSutherland( ClippingArea a ): 
-    clippingArea(a)
+    clippingArea( a )
 {}
 
 void CohenSutherland::setArea( ClippingArea a ) {
@@ -35,12 +35,14 @@ bool CohenSutherland::clip( Math::Point<2>& p1, Math::Point<2>& p2 )
     /* Primeiro caso patológico: um ponto está acima do outro, 
      * formando uma reta vertical, não uma função afim. */
     if( fabs( p1[0] == p2[0] ) < epsilon ) {
-        if( p1[0] < a.xmin || p1[0] > a.xmax ) // fora da área de clipping
+        if(    p1[0] < clippingArea.xmin 
+            || p1[0] > clippingArea.xmax ) // fora da área de clipping
             return false;
-        p1[1] = fmax( p[1], a.ymax );
-        p1[1] = fmin( p[1], a.ymin );
-        p2[1] = fmax( p[1], a.ymax );
-        p2[1] = fmin( p[1], a.ymin ); // Aparar por cima e por baixo
+        p1[1] = fmax( p1[1], clippingArea.ymax );
+        p1[1] = fmin( p1[1], clippingArea.ymin );
+        p2[1] = fmax( p2[1], clippingArea.ymax );
+        p2[1] = fmin( p2[1], clippingArea.ymin ); 
+        // Aparar por cima e por baixo
         return true;
     }
 
