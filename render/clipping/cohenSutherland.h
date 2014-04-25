@@ -25,7 +25,12 @@ public:
     
 private:
     /* Funções privadas que auxiliam o clipping */
-    bool isInsideMyClippingArea( Math::Point<2>& );
+    enum Region { TOP_LEFT, TOP, TOP_RIGHT,
+                  MIDDLE_LEFT, MIDDLE, MIDDLE_RIGHT,
+                  BOTTOM_LEFT, BOTTOM, BOTTOM_RIGHT };
+    
+    // Retorna uma das constantes definidas no enum Region
+    int regionOf( Math::Point<2>& );
 };
 
 #endif // COHEN_SUTHERLAND_H
