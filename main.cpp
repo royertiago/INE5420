@@ -14,6 +14,7 @@
 #include "render/window.h"
 #include "render/windowTransform.h"
 #include "render/clipping/clippingArea.h"
+#include "render/clipping/cohenSutherland.h"
 #include "test/lib/testList.h"
 #include "view/pixel.h"
 #include "view/SDLScreen.h"
@@ -41,9 +42,7 @@ void clear( Drawable& d, DisplayFile& df, ScreenRenderer& renderer ) {
 }
 
 int main() {
-    if( Test::run() == false ) {
-        return 1;
-    }
+    Test::run();
 
     SDLScreen sdl( 600, 600, "Teste" );
     sdl.setColor( 255, 255, 255, 255 );
@@ -55,7 +54,12 @@ int main() {
 
     WindowTransform wt( ClippingArea::normalized );
     Viewport v = Viewport::generateViewport( &sdl );
-    ScreenRenderer renderer( v, wt, sdl );
+    v.xmin += 10;
+    v.ymin += 10;
+    v.xmax -= 10;
+    v.ymax -= 10;
+    CohenSutherland NLN( ClippingArea::normalized );
+    ScreenRenderer renderer( v, wt, NLN, sdl );
 
     DisplayFile df;
 

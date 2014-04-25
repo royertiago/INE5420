@@ -1,30 +1,31 @@
-/* nichollLeeNicholl.h
+/* cohenSutherland.h
+ * 
+ * Algoritmo de clipping de linhas; implementa LineClipper.
  */
-#ifndef NICHOLL_LEE_NICHOLL_H
-#define NICHOLL_LEE_NICHOLL_H
+#ifndef COHEN_SUTHERLAND_H
+#define COHEN_SUTHERLAND_H
 
-#include "lineClipper.h"
-
-#include "clippingArea.h"
+#include "render/clipping/lineClipper.h"
+#include "render/clipping/clippingArea.h"
 #include "math/point.h"
 
-class NichollLeeNicholl : public LineClipper<2> {
+class CohenSutherland : public LineClipper<2> {
 private:
     ClippingArea clippingArea;
 
 public:
     /* Construtores */
     /* Cria e vincula à área de clipping 'a' */
-    NichollLeeNicholl( ClippingArea a );
+    CohenSutherland( ClippingArea a );
 
     virtual void setArea( ClippingArea ) override;
     virtual bool clip( Math::Point<2>&, Math::Point<2>& ) override;
 
-    virtual ~NichollLeeNicholl() = default;
+    virtual ~CohenSutherland() = default;
     
 private:
     /* Funções privadas que auxiliam o clipping */
     bool isInsideMyClippingArea( Math::Point<2>& );
 };
 
-#endif // NICHOLL_LEE_NICHOLL_H
+#endif // COHEN_SUTHERLAND_H

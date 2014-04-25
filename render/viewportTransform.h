@@ -4,6 +4,11 @@
  *
  * Objetos deste tipo são normalmente usados após o clipping
  * já ter sido feito.
+ *
+ * Objetos desta classe mantêm referência para uma área de clipping;
+ * embora objetos desta classe não modifiquem esta área, externamente,
+ * esta área pode ser modificada, por outros objetos. Tais mudanças
+ * refletirão na transformação de pontos feita por esta classe.
  */
 #ifndef VIEWPORT_TRANSFORM_H
 #define VIEWPORT_TRANSFORM_H

@@ -2,13 +2,13 @@
  * Implementação de renderer.h; esta classe utiliza-se de objetos
  * Drawable para transportar para a tela os resultados da renderização.
  *
- * Objetos desta classe possuem referências para Drawable, Viewport e
- * WindowTransform. Embora as referências para transformadas são constantes
- * (isto é, este objeto não as modificará), os objetos podem ser modificados
- * externamente, fora do controle do ScreenRenderer. Objetos desta
- * classe assumirão que qualquer alteração feita nestes objetos seja
- * consistente; isto é, as transformadas devem se referir à mesma
- * área de clipping.
+ * Objetos desta classe possuem referências para Drawable e
+ * WindowTransform. Embora as referências para a transformada é constantes
+ * (isto é, este objeto não as modificará), este objeto pode ser modificado
+ * externamente, fora do controle do ScreenRenderer. 
+ *
+ * Esta classe depende de classes que implementem a interface LineClipper
+ * para fazer clipping de linhas.
  */
 #ifndef SCREEN_RENDERER_H
 #define SCREEN_RENDERER_H
@@ -17,21 +17,23 @@
 #include "render/viewportTransform.h"
 #include "render/windowTransform.h"
 #include "render/viewport.h"
+#include "render/clipping/lineClipper.h"
 #include "math/point.h"
 #include "view/drawable.h"
 
 class ScreenRenderer : public Renderer {
     const ViewportTransform vpt;
     const WindowTransform& wt;
-    Drawable& screen; 
+    LineClipper<2>& clipper;
+    Drawable& screen;
 
 public:
     /* Constrói um renderizador que utilizará a tela screen para
-     * desenhar o que lhe for ordenado, de acordo com o transformador
-     * passado.
+     * desenhar o que lhe for ordenado, de acordo com a viewport
+     * e transformada de window passadas.
      * A transformada de viewport é gerada automaticamente com base
      * na viewport passada. */
-    ScreenRenderer( Viewport, const WindowTransform&,
+    ScreenRenderer( Viewport, const WindowTransform&, LineClipper<2>&,
             Drawable& screen );
 
     virtual ~ScreenRenderer() = default;
@@ -46,9 +48,10 @@ public:
 
 // Implementação dos métodos mais simples
 inline ScreenRenderer::ScreenRenderer( Viewport v, const WindowTransform& wt,
-        Drawable& s ) :
+        LineClipper<2>& clipper, Drawable& s ) :
     vpt( v, wt.clippingArea() ),
     wt( wt ),
+    clipper( clipper ),
     screen( s )
 {}
 
