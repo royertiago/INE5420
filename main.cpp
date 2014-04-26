@@ -42,7 +42,8 @@ void clear( Drawable& d, DisplayFile& df, ScreenRenderer& renderer ) {
 }
 
 int main() {
-    Test::run();
+    if( !Test::run() )
+        return 1;
 
     SDLScreen sdl( 600, 600, "Teste" );
     sdl.setColor( 255, 255, 255, 255 );

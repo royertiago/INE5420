@@ -34,7 +34,7 @@ namespace Test {
             return true;
 
         printf( "%s\nat line %i - "
-                "Value: %le - Expected: %le\n"
+                "Value: %lf - Expected: %lf\n"
                 "The value is within %le of expected. Epsilon is %le\n\n",
                 lineText, lineNumber,
                 actualValue, expectedValue,

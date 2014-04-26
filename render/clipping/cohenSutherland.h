@@ -59,6 +59,17 @@ private:
     
     /* Retorna a região do ponto passado. */
     unsigned char regionOf( Math::Point<2>& );
+
+    /* Efetua clipping no ponto passado, para que se enquadre na
+     * área de clipping.
+     *
+     * c é o coeficiente angular. Esta função modificará o ponto
+     * passado para que fique na extremidade mais próxima da área
+     * de clipping, mas ainda dentro de sua reta.
+     *
+     * Caso não haja interseção entre a reta e a área de clipping,
+     * false é retornado; caso contrário, o método retorna true. */
+    bool clip( Math::Point<2>&, double c );
 };
 
 #endif // COHEN_SUTHERLAND_H

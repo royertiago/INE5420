@@ -69,6 +69,30 @@ inline bool testLineClipper( LineClipper<2> * clipper, int precision ) {
     y = Math::Point<2>{30, 70};
     b &= Test::TEST_EQUALS( clipper->clip( x, y ), false );
 
+
+    // Testes com área de clipping normalizada
+    clipper->setArea( {0, 0, 1, 1} );
+
+    /* Reta vertical parcialmente dentro da área de clipping,
+     * com ambos os pontos fora da área de clipping. */
+    x = Math::Point<2>{0.5, -0.5};
+    y = Math::Point<2>{0.5, 1.5};
+    b &= Test::TEST_EQUALS( clipper->clip( x, y ), true );
+    b &= d.TEST_EQUALS( x[0], 0.5 );
+    b &= d.TEST_EQUALS( x[1], 0.0 );
+    b &= d.TEST_EQUALS( y[0], 0.5 );
+    b &= d.TEST_EQUALS( y[1], 1.0 );
+
+    /* Reta horizondal parcialmente dentro da área de clipping,
+     * com ambos os pontos fora da área de clipping. */
+    x = Math::Point<2>{-0.5, 0.5};
+    y = Math::Point<2>{1.5, 0.5};
+    b &= Test::TEST_EQUALS( clipper->clip( x, y ), true );
+    b &= d.TEST_EQUALS( x[0], 0.0 );
+    b &= d.TEST_EQUALS( x[1], 0.5 );
+    b &= d.TEST_EQUALS( y[0], 1.0 );
+    b &= d.TEST_EQUALS( y[1], 0.5 );
+
     return b;
 }
 
