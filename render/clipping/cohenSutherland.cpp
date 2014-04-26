@@ -112,7 +112,7 @@ bool CohenSutherland::clip( Math::Point<2>& p, double c ) {
     }
     else if( code & BOTTOM ) {
         p[1] = ca.ymin;
-        p[0] = s(ca.ymax);
+        p[0] = s(ca.ymin);
     }
 
     /* Pode ser que, ainda assim, o ponto não está em MIDDLE;

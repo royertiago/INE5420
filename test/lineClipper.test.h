@@ -93,6 +93,86 @@ inline bool testLineClipper( LineClipper<2> * clipper, int precision ) {
     b &= d.TEST_EQUALS( y[0], 1.0 );
     b &= d.TEST_EQUALS( y[1], 0.5 );
 
+    /* Reta com um ponto dentro da área de clipping e um a sudoeste,
+     * com interseção no vértice da área de clipping. */
+    x = Math::Point<2>{-0.5, -0.5};
+    y = Math::Point<2>{0.5, 0.5};
+    b &= Test::TEST_EQUALS( clipper->clip( x, y ), true );
+    b &= d.TEST_EQUALS( x[0], 0.0 );
+    b &= d.TEST_EQUALS( x[1], 0.0 );
+    b &= d.TEST_EQUALS( y[0], 0.5 );
+    b &= d.TEST_EQUALS( y[1], 0.5 );
+
+    /* Reta com um ponto dentro da área de clipping e um a sudeste,
+     * com interseção no vértice da área de clipping. */
+    x = Math::Point<2>{1.5, -0.5};
+    y = Math::Point<2>{0.5, 0.5};
+    b &= Test::TEST_EQUALS( clipper->clip( x, y ), true );
+    b &= d.TEST_EQUALS( x[0], 1.0 );
+    b &= d.TEST_EQUALS( x[1], 0.0 );
+    b &= d.TEST_EQUALS( y[0], 0.5 );
+    b &= d.TEST_EQUALS( y[1], 0.5 );
+    
+    /* Reta com um ponto dentro da área de clipping e um a noroeste,
+     * com interseção no vértice da área de clipping. */
+    x = Math::Point<2>{-0.5, 1.5};
+    y = Math::Point<2>{0.5, 0.5};
+    b &= Test::TEST_EQUALS( clipper->clip( x, y ), true );
+    b &= d.TEST_EQUALS( x[0], 0.0 );
+    b &= d.TEST_EQUALS( x[1], 1.0 );
+    b &= d.TEST_EQUALS( y[0], 0.5 );
+    b &= d.TEST_EQUALS( y[1], 0.5 );
+    
+    /* Reta com um ponto dentro da área de clipping e um a nordeste,
+     * com interseção no vértice da área de clipping. */
+    x = Math::Point<2>{1.5, 1.5};
+    y = Math::Point<2>{0.5, 0.5};
+    b &= Test::TEST_EQUALS( clipper->clip( x, y ), true );
+    b &= d.TEST_EQUALS( x[0], 1.0 );
+    b &= d.TEST_EQUALS( x[1], 1.0 );
+    b &= d.TEST_EQUALS( y[0], 0.5 );
+    b &= d.TEST_EQUALS( y[1], 0.5 );
+
+    /* Reta inclinada parcialmente dentro da área de clipping,
+     * com ambos os pontos fora. */
+    x = Math::Point<2>{0, 2};
+    y = Math::Point<2>{1, -1};
+    b &= Test::TEST_EQUALS( clipper->clip( x, y ), true );
+    b &= d.TEST_EQUALS( x[0], 1.0/3.0 );
+    b &= d.TEST_EQUALS( x[1], 1.0 );
+    b &= d.TEST_EQUALS( y[0], 2.0/3.0 );
+    b &= d.TEST_EQUALS( y[1], 0.0 );
+
+    /* Reta inclinada parcialmente dentro da área de clipping,
+     * com ambos os pontos fora. */
+    x = Math::Point<2>{0, -1};
+    y = Math::Point<2>{1, 2};
+    b &= Test::TEST_EQUALS( clipper->clip( x, y ), true );
+    b &= d.TEST_EQUALS( x[0], 1.0/3.0 );
+    b &= d.TEST_EQUALS( x[1], 0.0 );
+    b &= d.TEST_EQUALS( y[0], 2.0/3.0 );
+    b &= d.TEST_EQUALS( y[1], 1.0 );
+
+    /* Reta inclinada parcialmente dentro da área de clipping,
+     * com um ponto a noroeste e outro a leste da área de clipping */
+    x = Math::Point<2>{-0.5, -0.5};
+    y = Math::Point<2>{1.5, 0.5};
+    b &= Test::TEST_EQUALS( clipper->clip( x, y ), true );
+    b &= d.TEST_EQUALS( x[0], 0.5 );
+    b &= d.TEST_EQUALS( x[1], 0.0 );
+    b &= d.TEST_EQUALS( y[0], 1.0 );
+    b &= d.TEST_EQUALS( y[1], 0.25 );
+
+    /* Reta inclinada parcialmente dentro da área de clipping,
+     * com um ponto a noroeste e outro a nordeste da área de clipping */
+    x = Math::Point<2>{-0.5, -0.5};
+    y = Math::Point<2>{3.5, 1.5};
+    b &= Test::TEST_EQUALS( clipper->clip( x, y ), true );
+    b &= d.TEST_EQUALS( x[0], 0.5 );
+    b &= d.TEST_EQUALS( x[1], 0.0 );
+    b &= d.TEST_EQUALS( y[0], 1.0 );
+    b &= d.TEST_EQUALS( y[1], 0.25 );
+
     return b;
 }
 
