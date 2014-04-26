@@ -11,10 +11,9 @@
 
 class CohenSutherland : public LineClipper<2> {
 private:
-    ClippingArea clippingArea;
+    ClippingArea ca;
 
 public:
-    /* Construtores */
     /* Cria e vincula à área de clipping 'a' */
     CohenSutherland( ClippingArea a );
 
@@ -24,13 +23,42 @@ public:
     virtual ~CohenSutherland() = default;
     
 private:
-    /* Funções privadas que auxiliam o clipping */
-    enum Region { TOP_LEFT, TOP, TOP_RIGHT,
-                  MIDDLE_LEFT, MIDDLE, MIDDLE_RIGHT,
-                  BOTTOM_LEFT, BOTTOM, BOTTOM_RIGHT };
+    /* Códigos da região em que se encontra o ponto, em relação
+     * à área de clipping.
+     *             |        |
+     *  LEFT_TOP   |  TOP   | RIGHT_TOP
+     * ------------+--------+-------------
+     *             |        |
+     *        LEFT | MIDDLE | RIGHT
+     *             |        |
+     * ------------+--------+-------------
+     * LEFT_BOTTOM | BOTTOM | RIGHT_BOTTOM
+     *             |        |
+     * O quadrado central é delimitado pela área de clipping,
+     * de forma que um ponto que esteja dentro da área de clipping
+     * possuirá código MIDDLE.
+     *
+     * Os códigos das regiões é definido de forma que seja possível
+     * fazer operações bit-a-bit com eles e obter resultados corretos.
+     * Por exemplo, LEFT | TOP == TOP_LEFT, e
+     *  unsigned char code = regionOf( v );
+     *  if( code & TOP )
+     * testa se v está no topo da área de clipping.
+     */
+    enum {
+        MIDDLE       = 0x00,
+        LEFT         = 0x01,
+        RIGHT        = 0x02,
+        TOP          = 0x10,
+        BOTTOM       = 0x20,
+        TOP_LEFT     = 0x11,
+        TOP_RIGHT    = 0x12,
+        BOTTOM_LEFT  = 0x21,
+        BOTTOM_RIGHT = 0x22
+    };
     
-    // Retorna uma das constantes definidas no enum Region
-    int regionOf( Math::Point<2>& );
+    /* Retorna a região do ponto passado. */
+    unsigned char regionOf( Math::Point<2>& );
 };
 
 #endif // COHEN_SUTHERLAND_H

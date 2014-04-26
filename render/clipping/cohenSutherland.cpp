@@ -5,11 +5,11 @@
 #include "cohenSutherland.h"
 
 CohenSutherland::CohenSutherland( ClippingArea a ): 
-    clippingArea(a)
+    ca(a)
 {}
 
 void CohenSutherland::setArea( ClippingArea a ) {
-    clippingArea = a;
+    ca = a;
 }
 
 
@@ -23,31 +23,17 @@ bool CohenSutherland::clip( Math::Point<2>& p1, Math::Point<2>& p2 )
     }
 }
 
-int CohenSutherland::regionOf( Math::Point<2>& p )
-{
-    if( p[0] < clippingArea.xmin ) // O ponto está à esquerda
-    {
-        if( p[1] > clippingArea.ymax )
-            return TOP_LEFT;
-        if( p[1] < clippingArea.ymin )
-            return BOTTOM_LEFT;
-        
-        return MIDDLE_LEFT;
-    }
-    if( p[0] > clippingArea.xmax ) // O ponto está à direita
-    {
-        if( p[1] > clippingArea.ymax )
-            return TOP_RIGHT;
-        if( p[1] < clippingArea.ymin )
-            return BOTTOM_RIGHT;
-        
-        return MIDDLE_RIGHT;
-    }
-    // O ponto está ao meio
-        if( p[1] > clippingArea.ymax )
-            return TOP;
-        if( p[1] < clippingArea.ymin )
-            return BOTTOM;
-            
-    return MIDDLE;
+unsigned char CohenSutherland::regionOf( Math::Point<2>& p ) {
+    unsigned char code = MIDDLE;
+    if( p[0] < ca.xmin )
+        code |= LEFT;
+    if( p[0] > ca.xmax )
+        code |= RIGHT;
+
+    if( p[1] < ca.ymin )
+        code |= BOTTOM;
+    if( p[1] > ca.ymax )
+        code |= TOP;
+
+    return code;
 }
