@@ -37,12 +37,6 @@ struct Matrix {
      * no template externo - mesmo que pareça invertido na declaração. */
     std::array< std::array<double, N>, M > values;
 
-    Matrix() = default;
-    Matrix( const Matrix& ) = default;
-    Matrix( Matrix&& ) = default;
-    Matrix<M, N>& operator=( const Matrix<M, N>& ) = default;
-    Matrix<M, N>& operator=( Matrix<M, N>&& ) = default;
-
     /* Pequena gambiarra para permitir uma sintaxe mais agradável
      * na inicialização de vetores. Desta forma, construções como
      *  Vector<2> p = {1.1, 2.5};
@@ -56,6 +50,11 @@ struct Matrix {
      * Posições faltantes serão inicalizadas para zero. */
     Matrix( std::initializer_list< std::initializer_list<double> > );
 
+    Matrix() = default;
+    Matrix( const Matrix& ) = default;
+    Matrix( Matrix&& ) = default;
+    Matrix<M, N>& operator=( const Matrix<M, N>& ) = default;
+    Matrix<M, N>& operator=( Matrix<M, N>&& ) = default;
     ~Matrix() = default;
 
     /* Retorna um objeto proxy que representa a linha da matriz
@@ -95,14 +94,16 @@ struct Matrix {
     Matrix< M, P > operator()( const Matrix<N, P>& ) const;
     
     /* Compõe esta matriz com a matriz passada. As operações comportar-
-     * -se-ão como se os objetos passados sejam dados antes ao operador op
-     *  e o resultado alimentado este operador. */
-    void frontComposeWith( const Matrix<N, N>& op );
+     * -se-ão como se os objetos passados sejam dados antes à transformação
+     * linear tr e o resultado alimentado esta transformação; isto é,
+     * a transformação passada vai ficar "na frente" desta. */
+    void frontComposeWith( const Matrix<N, N>& tr );
 
-    /* Compõe o operador linear passado com este. As operações comportar-
-     * -se-ão como se os vetores passados sejam dados a este operador
-     *  e o resultado entregue ao operador op. */
-    void backComposeWith( const Matrix<M, M>& op );
+    /* Compõe a matriz passada com esta matriz. As operações comportar-
+     * -se-ão como se os vetores passados sejam dados a esta transformação
+     *  linear e o resultado entregue à transformação tr; isto é,
+     *  a transformação passada vai ficar "atrás" desta. */
+    void backComposeWith( const Matrix<M, M>& tr );
     
     /* Operador unário -; retorna uma matriz com os mesmos valores
      * desta, mas com sinal trocado. */

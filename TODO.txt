@@ -16,8 +16,6 @@ Implementar testes:
     WindowTransform
     DrawablePoint
     Polygon
-    Matrix
-    MatrixLine
     TesterDrawable
     LineClipper
 
