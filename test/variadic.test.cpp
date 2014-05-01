@@ -2,8 +2,9 @@
  * Teste de unidade das classes de variadic.h */
 
 #include "variadic.h"
-#include "test/lib/testEquals.h"
 #include "test/lib/declarationMacros.h"
+#include "test/lib/testEquals.h"
+#include "test/lib/testMacro.h"
 
 DECLARE_TEST( VariadicTest ) {
     bool b = true;

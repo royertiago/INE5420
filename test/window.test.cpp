@@ -2,9 +2,10 @@
 
 #include "render/window.h"
 
-#include "test/lib/testerDouble.h"
-#include "test/lib/testEquals.h"
 #include "test/lib/declarationMacros.h"
+#include "test/lib/testEquals.h"
+#include "test/lib/testMacro.h"
+#include "test/lib/testerDouble.h"
 
 #include "render/clipping/clippingArea.h"
 #include "math/constant.h"

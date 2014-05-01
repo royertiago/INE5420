@@ -11,7 +11,8 @@ namespace Test {
      * Caso seja, a função retorna true; caso contrário, a função
      * imprime uma mensagem de erro na tela e retorna false.
      *
-     * A macro TEST_EQUALS constrói os dois últimos campos automaticamente.
+     * A macro TEST_EQUALS, de testMacro.h, constrói os dois últimos
+     * campos automaticamente.
      *
      * actualValue   é o valor que o código de teste produz.
      * expectedValue é o valor esperado para aquele trecho de código.
@@ -26,13 +27,5 @@ namespace Test {
             const char * lineText, int lineNumber );
 
 } // namespace Test
-
-/* Macro que auxilia a chamada da função testEquals. 
- * Note que não há resolução de escopo; portanto, pode ser que seja
- * necessário escrever
- *  Test::TEST_EQUALS( , );
- */
-#define TEST_EQUALS( testedCode, expectedValue ) \
-    testEquals( testedCode, expectedValue, #testedCode, __LINE__ )
 
 #endif // TEST_FUNCTION_H

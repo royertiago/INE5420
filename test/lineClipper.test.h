@@ -12,6 +12,7 @@
 #include "render/clipping/clippingArea.h"
 #include "math/point.h"
 #include "test/lib/testEquals.h"
+#include "test/lib/testMacro.h"
 #include "test/lib/testerDouble.h"
 
 /* Teste de unidade para o LineClipper clipper.

@@ -30,9 +30,8 @@ public:
      * Caso seja, a função retorna true; caso contrário, a função
      * imprime uma mensagem de erro na tela e retorna false.
      *
-     * A "assinatura" deste método é compatível com a da função
-     * Test::testEquals, de testFunction.h; portanto, a macro
-     * TEST_EQUALS também pode ser usada aqui.
+     * A assinatura deste método é compatível com a macro TEST_EQUALS,
+     * de testMacro.h
      *
      * actualValue   é o valor que o código de teste produz.
      * expectedValue é o valor esperado para aquele trecho de código.

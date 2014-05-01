@@ -8,6 +8,7 @@
 #include "math/vector.h"
 #include "test/lib/declarationMacros.h"
 #include "test/lib/testEquals.h"
+#include "test/lib/testMacro.h"
 
 DECLARE_TEST( VectorTest ) {
     bool b = true;

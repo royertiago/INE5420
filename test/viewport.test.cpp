@@ -2,8 +2,9 @@
 
 #include "render/viewport.h"
 #include "test/lib/declarationMacros.h"
+#include "test/lib/testMacro.h"
 #include "test/lib/testEquals.h"
-#include "test/class/testerDrawable.h"
+#include "test/mock/testerDrawable.h"
 
 DECLARE_TEST( ViewportTest ) {
     bool b = true;
