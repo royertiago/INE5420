@@ -22,16 +22,16 @@ public:
     /* Constrói o testador com um múltiplo do epsilon de máquina. */
     explicit TesterDouble( int );
 
+
     /* Altera o epsilon do testador. */
     void setEpsilon( double epsilon );
 
-    /* Determina se a diferença entre o valor atual e o valor
+    /* Determina se a diferença entre o valor obtido e o valor
      * esperado é inferior ao epsilon especificado.
      * Caso seja, a função retorna true; caso contrário, a função
      * imprime uma mensagem de erro na tela e retorna false.
      *
-     * A assinatura deste método é compatível com a macro TEST_EQUALS,
-     * de testMacro.h
+     * A assinatura é compatível com a macro TEST_EQUALS, de testMacro.h.
      *
      * actualValue   é o valor que o código de teste produz.
      * expectedValue é o valor esperado para aquele trecho de código.
@@ -39,7 +39,7 @@ public:
      * lineNumber    é o número da linha em que este teste foi executado.
      */
     bool testEquals( double actualValue, double expectedValue,
-            const char * lineText, int lineNumber );
+            const char * lineText, int lineNumber ) const;
 };
 
 } // namespace Test

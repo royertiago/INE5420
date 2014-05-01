@@ -57,3 +57,7 @@ WindowTransform
 DrawablePoint
     Ao invés de codificar a rotação de DrawablePoint::draw no braço,
     podemos usar as transformações lineares para isso.
+
+TesterMatrix
+    Este header inclui cstdio, o que não me parece ser muito bonito.
+    Veja testerDouble, por exemplo: cstdio só é incluído no .cpp.

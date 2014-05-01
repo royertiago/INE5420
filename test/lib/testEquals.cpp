@@ -14,7 +14,7 @@ namespace Test {
             return true;
 
         printf( "%s\nat line %i - "
-                "Value: %i - Expected: %i\n\n",
+                "Actual: %i - Expected: %i\n\n",
                 lineText, lineNumber,
                 actualValue, expectedValue );
         return false;
@@ -27,7 +27,7 @@ namespace Test {
             return true;
 
         printf( "%s\nat line %i - "
-                "Value: %lf - Expected: %lf\n\n",
+                "Actual: %lf - Expected: %lf\n\n",
                 lineText, lineNumber,
                 actualValue, expectedValue );
         return false;
@@ -40,7 +40,7 @@ namespace Test {
             return true;
 
         printf( "%s\nat line %i - "
-                "Value: %s - Expected: %s\n\n",
+                "Actual: %s - Expected: %s\n\n",
                 lineText, lineNumber,
                 actualValue ? "true":"false",
                 expectedValue ? "true":"false" );
