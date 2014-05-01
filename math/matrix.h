@@ -77,19 +77,14 @@ struct Matrix {
      * manter ponteiros para as linhas da classe. Isto é, vector[7]
      * não é apenas um double. Portando, código como 
      *  printf("%lf\n", vector[7] );
-     * não funciona como esperado. 
-     *
-     * Aparentemente, 
-     *  printf("%lf\n", vector[7][0] );
-     * produz o resultado esperado (e similarmente para matrizes);
-     * não sei o porquê deste comportamento, entretanto. */
-    ConstMatrixLine<N> operator[]( size_t line ) const {
-        return ConstMatrixLine<N>( values[line] );
-    }
+     * não funciona como esperado; use
+     *  printf("%lf\n", vector[7][0] ). */
+    ConstMatrixLine<N> operator[]( size_t line ) const;
+    MatrixLine<N> operator[]( size_t line );
 
-    MatrixLine<N> operator[]( size_t line ) {
-        return MatrixLine<N>( values[line] );
-    }
+    /* Informa a quantidade de linhas/colunas da matriz. */
+    int rows() const;
+    int columns() const;
 
     /* Matrizes são a representação computacional perfeita
      * para transformações lineares. Aqui, trataremos-nas
@@ -102,30 +97,22 @@ struct Matrix {
     /* Compõe esta matriz com a matriz passada. As operações comportar-
      * -se-ão como se os objetos passados sejam dados antes ao operador op
      *  e o resultado alimentado este operador. */
-    void frontComposeWith( const Matrix<N, N>& op ) {
-        *this = *this * op;
-    }
+    void frontComposeWith( const Matrix<N, N>& op );
 
     /* Compõe o operador linear passado com este. As operações comportar-
      * -se-ão como se os vetores passados sejam dados a este operador
      *  e o resultado entregue ao operador op. */
-    void backComposeWith( const Matrix<M, M>& op ) {
-        *this = op * *this;
-    }
+    void backComposeWith( const Matrix<M, M>& op );
     
     /* Operador unário -; retorna uma matriz com os mesmos valores
      * desta, mas com sinal trocado. */
-    Matrix<M, N> operator-() {
-        Matrix<M, N> r;
-        for( int i = 0; i < M; i++ )
-            for( int j = 0; j < N; j++ )
-                r[i][j] = -values[i][j];
-        return r;
-    }
+    Matrix<M, N> operator-() const;
 };
 
 //      Implementações
 
+
+// Construtores
 template< int M, int N >
 Matrix<M, N>::Matrix( std::initializer_list< double > source ) {
     static_assert( N == 1, "Construtor disponível apenas para vetores." );
@@ -154,6 +141,28 @@ Matrix<M, N>::Matrix( std::initializer_list<std::initializer_list<double>> a) {
             values[i][j] = 0.0;
 }
 
+// Acesso a dados (getters and setters)
+template< int M, int N >
+ConstMatrixLine<N> Matrix<M, N>::operator[]( size_t line ) const {
+    return ConstMatrixLine<N>( values[line] );
+}
+
+template< int M, int N >
+MatrixLine<N> Matrix<M, N>::operator[]( size_t line ) {
+    return MatrixLine<N>( values[line] );
+}
+
+template< int M, int N >
+int Matrix<M, N>::rows() const {
+    return M;
+}
+
+template< int M, int N >
+int Matrix<M, N>::columns() const {
+    return N;
+}
+
+// Transformações de elementos
 template< int M, int N > template< int P >
 Matrix<M, P> Matrix<M, N>::transform( const Matrix<N, P>& rhs ) const {
     return *this * rhs;
@@ -163,6 +172,19 @@ template< int M, int N > template< int P >
 Matrix<M, P> Matrix<M, N>::operator()( const Matrix<N, P>& rhs ) const {
     return transform( rhs );
 }
+
+// Composição
+template< int M, int N >
+void Matrix<M, N>::frontComposeWith( const Matrix<N, N>& op ) {
+    *this = *this * op;
+}
+
+template< int M, int N >
+void Matrix<M, N>::backComposeWith( const Matrix<M, M>& op ) {
+    *this = op * *this;
+}
+
+// Operações algébricas
 
 /* Implementação ingênua da multiplicação de matrizez. */
 template< int M, int N, int O, int P >
@@ -185,6 +207,15 @@ Matrix<M, N> operator+( const Matrix<M, N>& lhs, const Matrix<M, N>& rhs ) {
     for( int i = 0; i < M; i++ )
         for( int j = 0; j < N; j++ )
             r[i][j] = lhs[i][j] + rhs[i][j];
+    return r;
+}
+
+template< int M, int N >
+Matrix<M, N> Matrix<M, N>::operator-() const {
+    Matrix<M, N> r;
+    for( int i = 0; i < M; i++ )
+        for( int j = 0; j < N; j++ )
+            r[i][j] = -values[i][j];
     return r;
 }
 
