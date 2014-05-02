@@ -56,5 +56,21 @@ DECLARE_TEST( MatrixTest ) {
                                     {-1, 2}} );
     b &= t.TEST_EQUALS( m, (Matrix<2, 3>{{ 8, 17,  -3},
                                          {14, 33, -11}}) );
+
+    // Soma
+    Matrix<2, 3> n{{ -7, -16, 4},
+                   {-13, -32, 12}};
+    b &= t.TEST_EQUALS( m + n, (Matrix<2, 3>{{1, 1, 1},
+                                             {1, 1, 1}}) );
+
+    // Subtração
+    Matrix<2, 3> o{{1, 1, 0},
+                   {2, 1, 0}};
+    b &= t.TEST_EQUALS( m + n - o, (Matrix<2, 3>{{ 0, 0, 1},
+                                                 {-1, 0, 1}}) );
+
+    // Multiplicação por escalar
+    b &= t.TEST_EQUALS( (m + n - o)*3, (Matrix<2, 3>{{ 0, 0, 3},
+                                                     {-3, 0, 3}}) );
     return b;                                   
 }              
