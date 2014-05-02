@@ -4,6 +4,13 @@
  
 #include "weilerAtherton.h"
 
+#include "render/clipping/clippingArea.h"
+
+#include <vector>  // std::vector
+
+#include "geometric/polygon.h"
+#include "geometric/geometricFactory.h"
+
 WeilerAtherton::WeilerAtherton( ClippingArea a ):
     ca(a)
 {}
@@ -12,6 +19,10 @@ void WeilerAtherton::setArea( ClippingArea a) {
     ca = a;
 }
 
-bool WeilerAtherton::clip(Math::Point<2> * v, int vertexCount) {
-    return false;
+std::vector<Polygon> WeilerAtherton::clip( Polygon& pol ) {
+
+    std::vector<Polygon> afterClippingPolygons;
+    afterClippingPolygons.push_back(pol);
+    
+    return afterClippingPolygons;
 }

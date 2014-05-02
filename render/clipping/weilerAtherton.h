@@ -7,8 +7,13 @@
 #define WEILER_ATHERTON_H
 
 #include "render/clipping/polygonClipper.h"
+
 #include "render/clipping/clippingArea.h"
-#include "math/point.h"
+
+#include <vector>  // std::vector
+
+#include "geometric/polygon.h"
+#include "geometric/geometricFactory.h"
 
 class WeilerAtherton : public PolygonClipper<2> {
 private:
@@ -19,7 +24,7 @@ public:
     WeilerAtherton( ClippingArea a);
     
     virtual void setArea( ClippingArea ) override;
-    virtual bool clip( Math::Point<2> * v, int vertexCount ) override;
+    virtual std::vector<Polygon> clip( Polygon& ) override;
 };
 
 #endif // WEILER_ATHERTON_H

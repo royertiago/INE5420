@@ -4,8 +4,10 @@
 #ifndef POLYGON_CLIPPING_H
 #define POLYGON_CLIPPING_H
 
-#include "math/point.h"
 #include "render/clipping/clippingArea.h"
+#include "geometric/polygon.h"
+
+#include <vector>  // std::vector
 
 template <int N>
 class PolygonClipper {
@@ -13,19 +15,19 @@ public:
     /* Altera a área de clipping para a área passada. */
     virtual void setArea( ClippingArea ) = 0;
 
-    /* Efetua o clipping do polígono cujos vértices estão 
-     * representados em sentido horário no vetor de pontos
-     * 'v' de tamanho 'vertexCount'.
+    /* Efetua o clipping no polígono passado como parâmetro.
      *
-     * Caso o polígono esteja dentro (ou parcialmente dentro)
-     * da área de clipping, o valor de retorno deve ser true 
-     * e os pontos devem ser modificados para que representem 
-     * a versão aparada do polígono.
+     * Caso o polígono esteja completamente dentro da área
+     * de clipping, o valor de retorno será um vetor contendo
+     * o próprio polígono recebido como parâmetro.
      *
-     * Caso o polígono esteja totalmente fora da área de clipping,
-     * false deve ser retornado. A implementação é livre para
-     * modificar os objetos neste caso. */
-    virtual bool clip( Math::Point<N> * v, int vertexCount ) = 0;
+     * Caso o polígono esteja parcialmente dentro da área de
+     * clipping, o valor de retorno será um vetor contendo um
+     * ou vários polígonos resultantes da operação de clipping.
+     *
+     * Caso o polígono esteja completamente fora da área de
+     * clipping, o valor de retorno será um vetor vazio. */
+    virtual std::vector<Polygon> clip( Polygon& ) = 0;
 
     virtual ~PolygonClipper() = default;
 };
