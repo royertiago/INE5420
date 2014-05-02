@@ -25,7 +25,7 @@
 namespace Math {
 
 template< int M, int N >
-struct Matrix {
+class Matrix {
     /* Lista de [v]alores da matriz.
      *
      * Note que as dimensões parecem "invertidas".  M representa
@@ -36,6 +36,10 @@ struct Matrix {
      * Queremos que lin seja limitado por M, portanto, M deve ir
      * no template externo - mesmo que pareça invertido na declaração. */
     std::array< std::array<double, N>, M > values;
+
+public:
+    /* Constrói a matriz com todos os valores nulos. */
+    Matrix();
 
     /* Pequena gambiarra para permitir uma sintaxe mais agradável
      * na inicialização de vetores. Desta forma, construções como
@@ -50,7 +54,6 @@ struct Matrix {
      * Posições faltantes serão inicalizadas para zero. */
     Matrix( std::initializer_list< std::initializer_list<double> > );
 
-    Matrix() = default;
     Matrix( const Matrix& ) = default;
     Matrix( Matrix&& ) = default;
     Matrix<M, N>& operator=( const Matrix<M, N>& ) = default;
@@ -114,6 +117,13 @@ struct Matrix {
 
 
 // Construtores
+template< int M, int N >
+Matrix<M, N>::Matrix() {
+    for( int i = 0; i < M; ++i )
+        for( int j = 0; j < N; ++j )
+            values[i][j] = 0.0;
+}
+
 template< int M, int N >
 Matrix<M, N>::Matrix( std::initializer_list< double > source ) {
     static_assert( N == 1, "Construtor disponível apenas para vetores." );
@@ -208,6 +218,24 @@ Matrix<M, N> operator+( const Matrix<M, N>& lhs, const Matrix<M, N>& rhs ) {
     for( int i = 0; i < M; i++ )
         for( int j = 0; j < N; j++ )
             r[i][j] = lhs[i][j] + rhs[i][j];
+    return r;
+}
+
+template< int M, int N >
+Matrix<M, N> operator-( const Matrix<M, N>& lhs, const Matrix<M, N>& rhs ) {
+    Matrix<M, N> r;
+    for( int i = 0; i < M; i++ )
+        for( int j = 0; j < N; j++ )
+            r[i][j] = lhs[i][j] - rhs[i][j];
+    return r;
+}
+
+template< int M, int N >
+Matrix<M, N> operator*( const Matrix<M, N>& lhs, double rhs ) {
+    Matrix<M, N> r;
+    for( int i = 0; i < M; i++ )
+        for( int j = 0; j < N; j++ )
+            r[i][j] = lhs[i][j] * rhs;
     return r;
 }
 

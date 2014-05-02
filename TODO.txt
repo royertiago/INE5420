@@ -19,6 +19,10 @@ Implementar testes:
     TesterDrawable
     LineClipper
 
+Implementar PolyIterator para forward differences.
+Implementar operadores de Matrix para propagar uma operação genérica.
+Adicionar verificação this != other nos construtores de cópia.
+
 Os testes dependem do comando __attribute__, específico do GCC. 
     Entretanto, a única solução alternativa que conheço (gambiarras
     com objetos estáticos) depende do fato de o GCC escolher executar
