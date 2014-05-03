@@ -14,6 +14,8 @@
 
 #include "geometric/polygon.h"
 #include "geometric/geometricFactory.h"
+#include "utility/circularLinkedList.h"
+#include "math/point.h"
 
 class WeilerAtherton : public PolygonClipper<2> {
 private:
