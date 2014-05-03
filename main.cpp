@@ -7,6 +7,7 @@
 #include "geometric/drawablePoint.h"
 #include "geometric/geometricFactory.h"
 #include "geometric/polygon.h"
+#include "geometric/splineFactory.h"
 #include "math/constant.h"
 #include "math/linearOperator.h"
 #include "render/screenRenderer.h"
@@ -61,32 +62,47 @@ int main() {
     DisplayFile df;
 
     CubicSpline<2> * s1 = new CubicSpline<2>(
-            new Vector<2>[4]{{      0,        0},
-                             {1.0/3.0, -1.0/3.0},
-                             {      0,        0},
-                             {      0,        1}},
-            {0.5, 0.5} );
-
+            SplineFactory::Hermite<2>( { 0.25, 0.25},
+                                       { 0.5 ,  0.0},
+                                       { 0.75, 0.75},
+                                       {-0.5 ,  0.0} ) );
     CubicSpline<2> * s2 = new CubicSpline<2>(
-            new Vector<2>[4]{{      0,        0},
-                             {    1.0,      1.0},
-                             {      0,        0},
-                             {      0,       -1}},
-            {0.5, 0.5} );
-
+            SplineFactory::Hermite<2>( { 0.25, 0.25},
+                                       { 0.25, 0.25},
+                                       { 0.75, 0.75},
+                                       { 0.25, 0.25} ) );
     CubicSpline<2> * s3 = new CubicSpline<2>(
-            new Vector<2>[4]{{      0,        0},
-                             {    1.0,      1.0},
-                             {      0,        0},
-                             {   -0.5,        0}},
-            {0.5, 0.5} );
+            SplineFactory::Hermite<2>( { 0.25, 0.5},
+                                       { 0.0 , 1.0},
+                                       { 0.75, 0.5},
+                                       { 0.0 , 1.0} ) );
+    CubicSpline<2> * s4 = new CubicSpline<2>(
+            SplineFactory::Hermite<2>( { 0.25, 0.5},
+                                       { 0.0 , 1.0},
+                                       { 0.75, 0.5},
+                                       { 0.0 ,-1.0} ) );
+    CubicSpline<2> * s5 = new CubicSpline<2>(
+            SplineFactory::Hermite<2>( { 0.25, 0.5},
+                                       { 2.0 , 2.0},
+                                       { 0.75, 0.5},
+                                       { 2.0 ,-2.0} ) );
 
     df.addObject( s1 );
-    df.addObject( s2 );
-    df.addObject( s3 );
-
     clear( sdl, df, renderer );
     waitEnter();
+    df.addObject( s2 );
+    clear( sdl, df, renderer );
+    waitEnter();
+    df.addObject( s3 );
+    clear( sdl, df, renderer );
+    waitEnter();
+    df.addObject( s4 );
+    clear( sdl, df, renderer );
+    waitEnter();
+    df.addObject( s5 );
+    clear( sdl, df, renderer );
+    waitEnter();
+
     
     return 0;
 }

@@ -22,6 +22,12 @@ public:
      * que deve conter exatamente quatro elementos. */
     CubicSpline( Math::Vector<N>* coefficients, Math::Point<N> center );
 
+    CubicSpline( const CubicSpline& ) = default;
+    CubicSpline( CubicSpline&& ) = default;
+    CubicSpline& operator=( const CubicSpline& ) = default;
+    CubicSpline& operator=( CubicSpline&& ) = default;
+    ~CubicSpline() = default;
+
     // Métodos herdados
     virtual void draw( Renderer * ) override;
     virtual void transform( const Math::LinearOperator<N>& ) override;

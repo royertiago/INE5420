@@ -1,0 +1,83 @@
+/* splineFactory.h
+ * Namespace que contém funções capazes de gerar splines cúbicas
+ * a partir de pontos arbitrários no espaço.
+ */
+#ifndef SPLINE_FACTORY_H
+#define SPLINE_FACTORY_H
+
+#include "math/point.h"
+#include "math/vector.h"
+
+namespace SplineFactory {
+
+    /* Gera uma curva cúbica de Bézier a partir dos pontos passados. */
+    template< int N >
+    CubicSpline<N> Bezier( Math::Point<N> p0, Math::Point<N> p1, 
+                           Math::Point<N> p2, Math::Point<N> p3 );
+
+    /* Gera uma curva de Hermite cujas extremidades são os pontos p1 e p4
+     * e as tangentes são r1 e r4, respectivamente.
+     *
+     * A spline cúbica representará um polinômio cúbico s com coeficientes
+     * vetorias satisfazendo
+     *   s(0) = p1
+     *  s'(0) = r1
+     *   s(1) = p4
+     *  s'(1) = r4 */
+    template< int N >
+    CubicSpline<N> Hermite( Math::Point<N> p1, Math::Vector<N> r1, 
+                            Math::Point<N> p4, Math::Vector<N> r4 );
+
+
+// Implementações
+template< int N >
+CubicSpline<N> Hermite( Math::Point<N> p1, Math::Vector<N> r1,
+                        Math::Point<N> p4, Math::Vector<N> r4 )
+{
+    using Math::Matrix;
+    using Math::Vector;
+    static Matrix<4, 4> mh{{ 2, -2,  1,  1},
+                           {-3,  3, -2, -1},
+                           { 0,  0,  1,  0},
+                           { 1,  0,  0,  0}};
+
+    /* Dados os valores a, b, c, d, queremos obter coeficientes
+     * e1, e2, e3 e e4 tais que, se s(t) = e1 * t^3 + e2 * t^2 + e3 * t + e4,
+     * então s(0) = a, s(1) = b, s'(0) = c, s'(1) = d.
+     *
+     * Isto é, a, b, c, d impõem o valor inicial e final de s e da
+     * derivada de s.
+     *
+     * Se G = {{a}, {b}, {c}, {d}}, isto é, G é um vetor com estes valores,
+     * então mh satisfaz mh * G = {{e1}, {e2}, {e3}, {e4}}.
+     *
+     * Podemos extender este processo colocando vetores em G,
+     * ao invés de coeficientes; isto é,
+     *  a == p1
+     *  b == p4
+     *  c == r1
+     *  d == r4 */
+    Matrix<4, N> G;
+    for( int i = 0; i < N; ++i ) {
+        G[0][i] = p1[i];
+        G[1][i] = p4[i];
+        G[2][i] = r1[i];
+        G[3][i] = r4[i];
+    }
+    Matrix<4, N> C = mh * G; // C é a matriz dos coeficientes
+
+    Vector<N> * c = new Vector<N>[4];
+    // Estes coeficientes passaremos para a spline
+    for( int i = 0; i < N; ++i ) {
+        c[3][i] = C[0][i];
+        c[2][i] = C[1][i];
+        c[1][i] = C[2][i];
+        c[0][i] = C[3][i];
+    }
+
+    return CubicSpline<N>( c, (p1 + p4) * 0.5 );
+}
+
+} // namespace SplineFactory
+
+#endif // SPLINE_FACTORY_H
