@@ -1,6 +1,7 @@
 /* main.cpp */
 
 // Include *
+#include <cstdio>
 #include <SDL.h>
 #include "displayFile.h"
 #include "geometric/cubicSpline.h"
@@ -62,47 +63,68 @@ int main() {
     DisplayFile df;
 
     CubicSpline<2> * s1 = new CubicSpline<2>(
-            SplineFactory::Hermite<2>( { 0.25, 0.25},
-                                       { 0.5 ,  0.0},
-                                       { 0.75, 0.75},
-                                       {-0.5 ,  0.0} ) );
+            SplineFactory::Bezier<2>( { 0.25, 0.25},
+                                      { 0.75, 0.25},
+                                      { 0.75, 0.75},
+                                      { 0.5 , 0.5 } ) );
     CubicSpline<2> * s2 = new CubicSpline<2>(
-            SplineFactory::Hermite<2>( { 0.25, 0.25},
-                                       { 0.25, 0.25},
-                                       { 0.75, 0.75},
-                                       { 0.25, 0.25} ) );
-    CubicSpline<2> * s3 = new CubicSpline<2>(
-            SplineFactory::Hermite<2>( { 0.25, 0.5},
-                                       { 0.0 , 1.0},
-                                       { 0.75, 0.5},
-                                       { 0.0 , 1.0} ) );
-    CubicSpline<2> * s4 = new CubicSpline<2>(
-            SplineFactory::Hermite<2>( { 0.25, 0.5},
-                                       { 0.0 , 1.0},
-                                       { 0.75, 0.5},
-                                       { 0.0 ,-1.0} ) );
-    CubicSpline<2> * s5 = new CubicSpline<2>(
-            SplineFactory::Hermite<2>( { 0.25, 0.5},
-                                       { 2.0 , 2.0},
-                                       { 0.75, 0.5},
-                                       { 2.0 ,-2.0} ) );
+            SplineFactory::Bezier<2>( { 0, 0},
+                                      { 2, 1},
+                                      {-1, 1},
+                                      { 1, 0} ) );
+    CubicSpline<2> * b1 = new CubicSpline<2>(
+            SplineFactory::BSpline<2>( {-1.0/5, 0},
+                                       { 0.0/5, 0},
+                                       { 1.0/5, 0},
+                                       { 2.0/5, 1} ) );
+    CubicSpline<2> * b2 = new CubicSpline<2>(
+            SplineFactory::BSpline<2>( { 0.0/5, 0},
+                                       { 1.0/5, 0},
+                                       { 2.0/5, 1},
+                                       { 3.0/5, 0} ) );
+    CubicSpline<2> * b3 = new CubicSpline<2>(
+            SplineFactory::BSpline<2>( { 1.0/5, 0},
+                                       { 2.0/5, 1},
+                                       { 3.0/5, 0},
+                                       { 4.0/5, 0} ) );
+    CubicSpline<2> * b4 = new CubicSpline<2>(
+            SplineFactory::BSpline<2>( { 2.0/5, 1},
+                                       { 3.0/5, 0},
+                                       { 4.0/5, 0},
+                                       { 5.0/5, 0} ) );
+    CubicSpline<2> * b5 = new CubicSpline<2>(
+            SplineFactory::BSpline<2>( { 3.0/5, 0},
+                                       { 4.0/5, 0},
+                                       { 5.0/5, 0},
+                                       { 6.0/5, 0} ) );
 
     df.addObject( s1 );
     clear( sdl, df, renderer );
     waitEnter();
+
     df.addObject( s2 );
     clear( sdl, df, renderer );
     waitEnter();
-    df.addObject( s3 );
-    clear( sdl, df, renderer );
-    waitEnter();
-    df.addObject( s4 );
-    clear( sdl, df, renderer );
-    waitEnter();
-    df.addObject( s5 );
+
+    df.addObject( b1 );
     clear( sdl, df, renderer );
     waitEnter();
 
+    df.addObject( b2 );
+    clear( sdl, df, renderer );
+    waitEnter();
+
+    df.addObject( b3 );
+    clear( sdl, df, renderer );
+    waitEnter();
+
+    df.addObject( b4 );
+    clear( sdl, df, renderer );
+    waitEnter();
+
+    df.addObject( b5 );
+    clear( sdl, df, renderer );
+    waitEnter();
     
     return 0;
 }
