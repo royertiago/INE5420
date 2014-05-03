@@ -8,7 +8,7 @@
 #include <initializer_list>
 
 #include <type_traits>
-#include "variadic.h" // para asserts
+#include "utility/variadic.h" // para asserts
 
 #include "math/point.h"
 #include "polygon.h"

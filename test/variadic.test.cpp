@@ -1,7 +1,7 @@
 /* variadic.test.cpp
  * Teste de unidade das classes de variadic.h */
 
-#include "variadic.h"
+#include "utility/variadic.h"
 #include "test/lib/declarationMacros.h"
 #include "test/lib/testEquals.h"
 #include "test/lib/testMacro.h"

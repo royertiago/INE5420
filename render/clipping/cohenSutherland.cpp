@@ -115,7 +115,7 @@ bool CohenSutherland::clip( Math::Point<2>& p, double c ) {
         p[0] = s(ca.ymin);
     }
 
-    /* Pode ser que, ainda assim, o ponto não está em MIDDLE;
+    /* Pode ser que, ainda assim, o ponto não esteja em MIDDLE;
      * neste caso, a reta não intersecta a área de clipping. */
     code = regionOf( p );
     return code == MIDDLE;
