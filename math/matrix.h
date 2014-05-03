@@ -47,21 +47,30 @@ public:
      * são possíveis.
      * Construtor disponível apenas para N == 1.
      * Valores extra serão descartados, valores faltantes serão
-     * preenchidos com zeros. */
+     * preenchidos com 1.0; ver math/point.h */
     Matrix( std::initializer_list< double > );
 
     /* Permite inicialização de matrizes de tamanho arbitrário.
      * Posições faltantes serão inicalizadas para zero. */
     Matrix( std::initializer_list< std::initializer_list<double> > );
 
-    Matrix( const Matrix& ) = default;
+    /* Posições disponíveis serão preenchidas e as demais inicializadas
+     * com 0, exceto a posição P-1,Q-1, que será inicializada com 1.
+     * Ver math/point.h e math/linearOperator.h; este último requerimento
+     * permite que uma matriz NxN seja convertida implicitamente para
+     * um operador linear de ordem N, e que um vetor de ordem N seja
+     * convertido implicitamente para um ponto de ordem N. */
+    template< int P, int Q >
+    Matrix( const Matrix<P, Q>& );
+
+    Matrix( const Matrix<M, N>& ) = default;
     Matrix( Matrix&& ) = default;
     Matrix<M, N>& operator=( const Matrix<M, N>& ) = default;
     Matrix<M, N>& operator=( Matrix<M, N>&& ) = default;
     ~Matrix() = default;
 
-    /* Retorna um objeto proxy que representa a linha da matriz
-     * de índice line. Este objeto também sobrecarrega o operator[],
+    /* Retorna um objeto proxy que representa a linha da matriz do
+     * índice especificado. Este objeto também sobrecarrega operator[],
      * portanto é possível usar chamadas como
      *  matrix[2][5]
      * para acessar o elemento da terceira linha e sexta coluna
@@ -150,6 +159,23 @@ Matrix<M, N>::Matrix( std::initializer_list<std::initializer_list<double>> a) {
     for( ; i < M; ++i )
         for( int j = 0; j < N; ++j )
             values[i][j] = 0.0;
+}
+
+template< int M, int N > template< int P, int Q >
+Matrix<M, N>::Matrix( const Matrix<P, Q>& source ) {
+    int i = 0;
+    for( ; i < M && i < P; ++i ) {
+        int j = 0;
+        for( ; j < N && j < Q; ++j )
+            values[i][j] = source[i][j];
+        for( ; j < N; ++j )
+            values[i][j] = 0.0;
+    }
+    for( ; i < M; ++i )
+        for( int j = 0; j < N; ++j )
+            values[i][j] = 0.0;
+    if( M > P ) // Se sobraram linhas
+        values[M-1][N-1] = 1.0;
 }
 
 // Acesso a dados (getters and setters)

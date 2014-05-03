@@ -45,7 +45,7 @@ int main() {
     if( !Test::run() )
         return 1;
 
-    SDLScreen sdl( 600, 600, "Teste" );
+/*    SDLScreen sdl( 600, 600, "Teste" );
     sdl.setColor( 255, 255, 255, 255 );
     for( int i = 0; i < sdl.width(); i++ )
         for( int j = 0; j < sdl.height(); j++ )
@@ -97,6 +97,6 @@ int main() {
         clear( sdl, df, renderer );
         waitEnter();
     }
-
+*/
     return 0;
 }

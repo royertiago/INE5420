@@ -19,6 +19,10 @@ DECLARE_TEST( PolynomialTest ) {
 
     Polynomial<double> p( new double[4]{0, 1, 0, 1}, 3 );
     // p(x) = x^3 + x
+    b &= Test::TEST_EQUALS( p[0], 0.0 );
+    b &= Test::TEST_EQUALS( p[1], 1.0 );
+    b &= Test::TEST_EQUALS( p[2], 0.0 );
+    b &= Test::TEST_EQUALS( p[3], 1.0 );
 
     b &= t.TEST_EQUALS( p(0), 0.0 );
     b &= t.TEST_EQUALS( p(1), 2.0 );
@@ -42,11 +46,13 @@ DECLARE_TEST( PolynomialTest ) {
     Polynomial<Vector<2>> q( new Vector<2>[2]{v, u - v}, 1 );
     // q(t) = (1-t) * v + t * u
 
+    b &= m.TEST_EQUALS( q[0], v );
+    b &= m.TEST_EQUALS( q[1], u-v );
+
     b &= m.TEST_EQUALS( q(0), v );
     b &= m.TEST_EQUALS( q(1), u );
     b &= m.TEST_EQUALS( q(0.5), (Vector<2>{0, -0.5}) );
     b &= m.TEST_EQUALS( q(1.5), (Vector<2>{2, 2.5}) );
-
 
     return b;
 }
