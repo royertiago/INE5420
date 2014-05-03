@@ -27,6 +27,19 @@ public:
     
     virtual void setArea( ClippingArea ) override;
     virtual std::vector<Polygon> clip( Polygon& ) override;
+    
+    
+    
+    // Funções que auxiliam o algoritmo:
+    
+    // "Math::Point<2> pontoDeInterceccao" é um parâmetro que será
+    // modificado a fim de informar, caso o retorno seja "true", em
+    // qual ponto os dois segmentos de reta se cruzam.
+    bool pontoDeInterceccao(Math::Point<2>& inicioReta1,
+                            Math::Point<2>& fimReta1,
+                            Math::Point<2>& inicioReta2,
+                            Math::Point<2>& fimReta2,
+                            Math::Point<2>& pontoDeInterceccao);
 };
 
 #endif // WEILER_ATHERTON_H

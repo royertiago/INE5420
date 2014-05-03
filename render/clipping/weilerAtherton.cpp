@@ -40,10 +40,22 @@ std::vector<Polygon> WeilerAtherton::clip( Polygon& subjectPolygon ) {
     for(int i = 0; i < numberOfSubjectVertices; i++)
         subjectList->add(subjectVertices[i]);
     
+    // TODO: Adicionar intersecções entre o polígono objeto e a área de clipping às listas
+    
+    
     std::vector<Polygon> afterClippingPolygons;
     
     afterClippingPolygons.push_back(subjectPolygon);
        
     delete clipList; delete subjectList;
     return afterClippingPolygons;
+}
+
+bool WeilerAtherton::pontoDeInterceccao(Math::Point<2>& inicioReta1,
+                                        Math::Point<2>& fimReta1,
+                                        Math::Point<2>& inicioReta2,
+                                        Math::Point<2>& fimReta2,
+                                        Math::Point<2>& pontoDeInterceccao)
+{
+    return false;
 }
