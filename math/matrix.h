@@ -97,6 +97,11 @@ public:
     int rows() const;
     int columns() const;
 
+    /* Computa o quadrado da norma de Frobenius desta matriz.
+     * Para vetores, a norma de Frobenius é equivalente à
+     * norma euclidiana. */
+    double sqnorm() const;
+
     /* Matrizes são a representação computacional perfeita
      * para transformações lineares. Aqui, trataremos-nas
      * como sinônimos. */
@@ -197,6 +202,15 @@ int Matrix<M, N>::rows() const {
 template< int M, int N >
 int Matrix<M, N>::columns() const {
     return N;
+}
+
+template< int M, int N >
+double Matrix<M, N>::sqnorm() const {
+    double norm = 0;
+    for( int i = 0; i < M; ++i )
+        for( int j = 0; j < N; ++j )
+            norm += values[i][j] * values[i][j];
+    return norm;
 }
 
 // Transformações de elementos
