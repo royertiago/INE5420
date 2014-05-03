@@ -41,6 +41,12 @@ public:
 
     /* Troca o conteúdo destes dois polígonos. */
     Polygon& operator=( Polygon&& );
+    
+    /* Retorna os vértices do polígono. */
+    const Math::Point<2>* getVertices();
+    
+    /* Retorna o número de vértices do polígono. */
+    const int getVertexCount();
 
     /* O destrutor deletará o vetor que lhe foi passado no construtor. */
     ~Polygon();
@@ -62,6 +68,14 @@ inline Polygon::Polygon( Polygon&& p ) :
 {
     p.vertices = nullptr;
     p.vertexCount = 0;
+}
+
+inline const Math::Point<2>* Polygon::getVertices() {
+    return vertices;
+}
+
+inline const int Polygon::getVertexCount() {
+    return vertexCount;
 }
 
 inline Polygon::~Polygon() {
