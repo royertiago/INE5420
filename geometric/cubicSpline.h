@@ -53,8 +53,12 @@ void CubicSpline<N>::draw( Renderer * renderer ) {
      * pixels na tela. Vamos tentar desenhar retas entre cada
      * quadrado de dez pixels: */
     double delta = 100.0/pixels;
-    for( double t = 0; t < 1; t += delta )
-        renderer->drawLine( p(t), p(t + delta) );
+    auto it = p.iterator( 0, delta );
+    Math::Vector<N> current = it;
+    ++it;
+    Math::Vector<N> next = it;
+    for( ; it.current() < 1; ++it, current = next, next = it )
+        renderer->drawLine( current, next );
 }
 
 template< int N >

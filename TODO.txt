@@ -19,7 +19,6 @@ Implementar testes:
     TesterDrawable
     LineClipper
 
-Separar PolynomialIterator de math/polynomial.h
 Implementar Bézier generalizado
 Implementar Matrix::slice()
 Implementar operadores de Matrix para propagar uma operação genérica.

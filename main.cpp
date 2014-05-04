@@ -11,6 +11,7 @@
 #include "geometric/splineFactory.h"
 #include "math/constant.h"
 #include "math/linearOperator.h"
+#include "math/polynomial.h"
 #include "render/screenRenderer.h"
 #include "render/viewport.h"
 #include "render/viewportTransform.h"
@@ -100,31 +101,31 @@ int main() {
 
     df.addObject( s1 );
     clear( sdl, df, renderer );
-    waitEnter();
+    //waitEnter();
 
     df.addObject( s2 );
     clear( sdl, df, renderer );
-    waitEnter();
+    //waitEnter();
 
     df.addObject( b1 );
     clear( sdl, df, renderer );
-    waitEnter();
+    //waitEnter();
 
     df.addObject( b2 );
     clear( sdl, df, renderer );
-    waitEnter();
+    //waitEnter();
 
     df.addObject( b3 );
     clear( sdl, df, renderer );
-    waitEnter();
+    //waitEnter();
 
     df.addObject( b4 );
     clear( sdl, df, renderer );
-    waitEnter();
+    //waitEnter();
 
     df.addObject( b5 );
     clear( sdl, df, renderer );
-    waitEnter();
+    //waitEnter();
     
     return 0;
 }
