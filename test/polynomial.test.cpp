@@ -54,47 +54,5 @@ DECLARE_TEST( PolynomialTest ) {
     b &= m.TEST_EQUALS( q(0.5), (Vector<2>{0, -0.5}) );
     b &= m.TEST_EQUALS( q(1.5), (Vector<2>{2, 2.5}) );
 
-    // Iterator
-    p = Polynomial<double>( new double[3]{2, 1}, 1 );
-    auto it = p.iterator( 0, 1 );
-    b &= t.TEST_EQUALS( it, p(0) );
-    ++it;
-    b &= t.TEST_EQUALS( it, p(1) );
-    ++it;
-    b &= t.TEST_EQUALS( it, p(2) );
-    ++it;
-    b &= t.TEST_EQUALS( it, p(3) );
-    ++it;
-    b &= t.TEST_EQUALS( it, p(4) );
-
-    p = Polynomial<double>( new double[3]{50, 10, 1}, 2 );
-    auto jt = p.iterator( 0, 0.5 );
-    b &= t.TEST_EQUALS( jt, p(0) );
-    ++jt;
-    b &= t.TEST_EQUALS( jt, p(0.5) );
-    ++jt;
-    b &= t.TEST_EQUALS( jt, p(1) );
-    ++jt;
-    b &= t.TEST_EQUALS( jt, p(1.5) );
-    ++jt;
-    b &= t.TEST_EQUALS( jt, p(2.0) );
-    jt.step( 1 );
-    ++jt;
-    b &= t.TEST_EQUALS( jt, p(3) );
-    ++jt;
-    b &= t.TEST_EQUALS( jt, p(4) );
-    ++jt;
-    b &= t.TEST_EQUALS( jt, p(5) );
-    ++jt;
-    b &= t.TEST_EQUALS( jt, p(6) );
-    ++jt;
-    b &= t.TEST_EQUALS( jt, p(7) );
-
-    p = Polynomial<double>( new double[5]{-100, 50, -10, 2, 1}, 4 );
-    auto kt = p.iterator( -5, 0.1 );
-    t.setEpsilon( 1e-6 ); //Precisão cai muito rapidamente
-    for( int i = 0; i < 100; ++i, ++kt )
-        b &= t.TEST_EQUALS( kt, p(i * 0.1 - 5) );
-
     return b;
 }

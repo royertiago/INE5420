@@ -40,7 +40,8 @@ public:
     Polynomial<Coefficient>& operator=( Polynomial<Coefficient>&& );
     ~Polynomial(); // Precisamos gerenciar o ponteiro c.
 
-    /* Acessa o coeficiente diretamente. */
+    /* Acessa o coeficiente diretamente. 
+     * Modificar o coeficiente invalida iteradores. */
     Coefficient& operator[]( size_t index );
     const Coefficient& operator[]( size_t index ) const;
 
@@ -54,6 +55,10 @@ public:
     /* Computa o polinômio no ponto especificado. */
     Coefficient operator()( double at ) const;
 
+    /* Constrói um iterador para este polinômio.
+     * t é o ponto inicial de iteração,
+     * d é o incremento.
+     * Não modifique o polinômio enquanto o iterador for necessário. */
     PolynomialIterator<Coefficient> iterator( double t, double d ) const;
 };
 

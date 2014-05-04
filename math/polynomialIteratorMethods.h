@@ -121,14 +121,14 @@ void PolynomialIterator<Coefficient>::step( double step ) {
 }
 
 template< typename Coefficient >
-double PolynomialIterator<Coefficient>::current() const {
+PolynomialIterator<Coefficient>::operator double() const {
     return t;
 }
 
 // Funcionalidade principal
 
 template< typename Coefficient >
-PolynomialIterator<Coefficient>::operator Coefficient() const {
+Coefficient PolynomialIterator<Coefficient>::operator*() const {
     return delta[0];
 }
 

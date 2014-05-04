@@ -3,9 +3,11 @@
  * o valor de um polinômio em múltiplos pontos espaçados uniformemente
  * num intervalo.
  *
+ * Funcionamento do iterador:
+ *
  * Fixado h, defina Df(t) = f(t + h) - f(t).
  * Então, f(t + h) = f(t) + Df(t).
- * Por outro lado, DDf(t) = D^2f(t) = Df(t + h) - Df(t), ou seja,
+ * Repetindo com Df: DDf(t) = D^2f(t) = Df(t + h) - Df(t), ou seja,
  * Df(t + h) = Df(t) + D^2f(t + h).
  * Para um polinômio de grau n, é possível mostrar que D^nf(t) é
  * constante; portanto, podemos calcular f(t + k*h) para vários valores
@@ -17,6 +19,11 @@
  * então podemos, ao invés de usar os valores do polinômio para calcular
  * os deltas, usar os valores dos deltas para calcular os próximos valores
  * do polinômio.
+ *
+ * Entretanto, a perda de precisão pode ser significativa; neste caso,
+ * para reinicializar o iterador, utilize o método start cujo parâmetro
+ * é o próprio iterador (start recebe um double e operator double() retorna
+ * o ponto atual da iteração).
  */
 #ifndef POLYNOMIAL_ITERATOR_H
 #define POLYNOMIAL_ITERATOR_H
@@ -69,10 +76,10 @@ public:
     void step( double step );
 
     /* Informa qual é o ponto atual da iteração. */
-    double current() const;
+    operator double() const;
 
     /* Retorna o valor atual do polinômio. */
-    operator Coefficient() const;
+    Coefficient operator*() const;
 
     /* Avança o iterador. */
     void operator++();

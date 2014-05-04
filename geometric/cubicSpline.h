@@ -54,10 +54,10 @@ void CubicSpline<N>::draw( Renderer * renderer ) {
      * quadrado de dez pixels: */
     double delta = 100.0/pixels;
     auto it = p.iterator( 0, delta );
-    Math::Vector<N> current = it;
+    Math::Vector<N> current = *it;
     ++it;
-    Math::Vector<N> next = it;
-    for( ; it.current() < 1; ++it, current = next, next = it )
+    Math::Vector<N> next = *it;
+    for( ; it < 1; ++it, current = next, next = *it )
         renderer->drawLine( current, next );
 }
 
