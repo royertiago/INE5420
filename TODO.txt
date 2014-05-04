@@ -19,7 +19,9 @@ Implementar testes:
     TesterDrawable
     LineClipper
 
-Implementar PolyIterator para forward differences.
+Separar PolynomialIterator de math/polynomial.h
+Implementar Bézier generalizado
+Implementar Matrix::slice()
 Implementar operadores de Matrix para propagar uma operação genérica.
 Adicionar verificação this != other nos construtores de cópia.
 Criar MockResource para testar Polynomial contra vazamento de memória.

@@ -7,6 +7,7 @@
  *  - operator+(Coefficient) implementado
  *  - construtor padrão disponíveis (e devem representar o vetor zero)
  *  - operador de atribuição implementado (para cópia e atribuição)
+ *  - operator-(Coefficient) implementado (para PolynomialIterator)
  */
 #ifndef POLYNOMIAL_H
 #define POLYNOMIAL_H
@@ -15,6 +16,28 @@
 #include <cstddef> //std::size_t
 
 namespace Math {
+
+template< typename Coefficient > class Polynomial;
+
+template< typename Coefficient >
+class PolynomialIterator {
+    const Polynomial< Coefficient > & p;
+    Coefficient * delta;
+    double t;
+    double d;
+    int validDeltas;
+
+public:
+    PolynomialIterator( const Polynomial<Coefficient> &, double t, double d );
+    PolynomialIterator( const PolynomialIterator & );
+    ~PolynomialIterator();
+    void start( double start );
+    void step( double step );
+    operator Coefficient() const;
+    double current() const;
+    void operator++();
+
+};
 
 template< typename Coefficient >
 class Polynomial {
@@ -50,6 +73,8 @@ public:
 
     /* Computa o polinômio no ponto especificado. */
     Coefficient operator()( double at ) const;
+
+    PolynomialIterator<Coefficient> iterator( double t, double d ) const;
 };
 
 // Implementações
@@ -122,7 +147,7 @@ int Polynomial<Coefficient>::degree() const {
     return d;
 }
 
-// Operador de chamada de funcão
+// Operações
 
 template< typename Coefficient >
 Coefficient Polynomial<Coefficient>::operator()( double at ) const {
@@ -134,6 +159,83 @@ Coefficient Polynomial<Coefficient>::operator()( double at ) const {
     return ret;
 }
 
+template< typename Coefficient >
+PolynomialIterator<Coefficient> Polynomial<Coefficient>::iterator(
+        double start, double step ) const
+{
+    return PolynomialIterator<Coefficient>( *this, start, step );
+}
+
+// Iterador
+template< typename Coefficient >
+PolynomialIterator<Coefficient>::PolynomialIterator(
+        const Polynomial<Coefficient>& p, double t, double d ) :
+    p( p ),
+    delta( new Coefficient[p.degree() + 1] ),
+    t( t ),
+    d( d ),
+    validDeltas( 0 )
+{
+    delta[0] = p(t);
+}
+
+template< typename Coefficient >
+PolynomialIterator<Coefficient>::PolynomialIterator(
+        const PolynomialIterator<Coefficient> & other ) :
+    p( other.p ),
+    delta( new Coefficient[other.p.degree() + 1] ),
+    t( other.t ),
+    d( other.d ),
+    validDeltas( other.validDeltas )
+{
+    for( int i = 0; i <= validDeltas; ++i )
+        delta[i] = other.delta[i];
+}
+
+template< typename Coefficient >
+PolynomialIterator<Coefficient>::~PolynomialIterator() {
+    delete delta;
+}
+
+template< typename Coefficient >
+void PolynomialIterator<Coefficient>::start( double start ) {
+    t = start;
+    validDeltas = 0;
+    delta[0] = p(t);
+}
+
+template< typename Coefficient >
+void PolynomialIterator<Coefficient>::step( double step ) {
+    d = step;
+    validDeltas = 0;
+}
+
+template< typename Coefficient >
+double PolynomialIterator<Coefficient>::current() const {
+    return t;
+}
+
+template< typename Coefficient >
+PolynomialIterator<Coefficient>::operator Coefficient() const {
+    return delta[0];
+}
+
+template< typename Coefficient >
+void PolynomialIterator<Coefficient>::operator++() {
+    t += d;
+    if( p.degree() + 1 == validDeltas )
+        for( int i = validDeltas; i > 0; --i )
+            delta[i-1] += delta[i];
+    else {
+        Coefficient nextDelta = p(t);
+        for( int i = 0; i <= validDeltas; ++i ) {
+            Coefficient alce = nextDelta;
+            nextDelta = nextDelta - delta[i];
+            delta[i] = alce;
+        }
+        ++validDeltas;
+    }
+}
 
 } // namespace Math
 
