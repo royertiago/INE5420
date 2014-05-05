@@ -2,8 +2,10 @@
 
 // Include *
 #include <cstdio>
+#include <vector>
 #include <SDL.h>
 #include "displayFile.h"
+#include "geometric/BSpline.h"
 #include "geometric/cubicSpline.h"
 #include "geometric/drawablePoint.h"
 #include "geometric/geometricFactory.h"
@@ -24,6 +26,7 @@
 #include "view/SDLScreen.h"
 
 using namespace Math;
+using std::vector;
 
 void waitEnter() {
     SDL_Event e;
@@ -73,31 +76,12 @@ int main() {
                                       { 2, 1},
                                       {-1, 1},
                                       { 1, 0} ) );
-    CubicSpline<2> * b1 = new CubicSpline<2>(
-            SplineFactory::BSpline<2>( {-1.0/5, 0},
+    BSpline<2> * bSpline = new BSpline<2>( vector<Point<2>>{
+                                       {-1.0/5, 0},
                                        { 0.0/5, 0},
                                        { 1.0/5, 0},
-                                       { 2.0/5, 1} ) );
-    CubicSpline<2> * b2 = new CubicSpline<2>(
-            SplineFactory::BSpline<2>( { 0.0/5, 0},
-                                       { 1.0/5, 0},
                                        { 2.0/5, 1},
-                                       { 3.0/5, 0} ) );
-    CubicSpline<2> * b3 = new CubicSpline<2>(
-            SplineFactory::BSpline<2>( { 1.0/5, 0},
-                                       { 2.0/5, 1},
-                                       { 3.0/5, 0},
-                                       { 4.0/5, 0} ) );
-    CubicSpline<2> * b4 = new CubicSpline<2>(
-            SplineFactory::BSpline<2>( { 2.0/5, 1},
-                                       { 3.0/5, 0},
-                                       { 4.0/5, 0},
-                                       { 5.0/5, 0} ) );
-    CubicSpline<2> * b5 = new CubicSpline<2>(
-            SplineFactory::BSpline<2>( { 3.0/5, 0},
-                                       { 4.0/5, 0},
-                                       { 5.0/5, 0},
-                                       { 6.0/5, 0} ) );
+                                       { 3.0/5, 0}} );
 
     df.addObject( s1 );
     clear( sdl, df, renderer );
@@ -107,25 +91,21 @@ int main() {
     clear( sdl, df, renderer );
     //waitEnter();
 
-    df.addObject( b1 );
+    df.addObject( bSpline );
     clear( sdl, df, renderer );
-    //waitEnter();
+    waitEnter();
 
-    df.addObject( b2 );
+    bSpline->addPoint( {4.0/5, 0} );
     clear( sdl, df, renderer );
-    //waitEnter();
+    waitEnter();
 
-    df.addObject( b3 );
+    bSpline->addPoint( {5.0/5, 0} );
     clear( sdl, df, renderer );
-    //waitEnter();
+    waitEnter();
 
-    df.addObject( b4 );
+    bSpline->addPoint( {6.0/5, 0} );
     clear( sdl, df, renderer );
-    //waitEnter();
+    waitEnter();
 
-    df.addObject( b5 );
-    clear( sdl, df, renderer );
-    //waitEnter();
-    
     return 0;
 }
