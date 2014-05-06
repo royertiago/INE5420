@@ -5,8 +5,7 @@
 #include <algorithm>
 
 #include "polygon.h"
-#include "math/point.h"
-#include "math/linearOperator.h"
+
 #include "render/renderer.h"
 
 Polygon::Polygon( const Polygon& p ) :

@@ -13,10 +13,10 @@
 #ifndef VIEWPORT_TRANSFORM_H
 #define VIEWPORT_TRANSFORM_H
 
-#include "view/pixel.h"
-#include "render/viewport.h"
-#include "render/clipping/clippingArea.h"
 #include "math/point.h"
+#include "render/clipping/clippingArea.h"
+#include "render/viewport.h"
+#include "view/pixel.h"
 
 class ViewportTransform {
     Viewport vp;

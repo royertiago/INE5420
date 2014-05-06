@@ -1,9 +1,9 @@
 /* BSpline.h
- * Classe que agrupa diversas B-Splines.
+ * Classe que agrupa diversos segmentos de B-Splines.
  *
  * Cada B-spline é identificada por quatro pontos de controle
  * adjacentes, portanto, com K pontos de controle, teremos K - 3
- * segmendos de B-Spline.
+ * segmentos de B-Spline.
  */
 #ifndef B_SPLINE_H
 #define B_SPLINE_H
@@ -33,7 +33,7 @@ public:
 
     /* Transforma um único ponto da spline.
      * Os segmentos afetados serão reconstruídos. */
-    void transformPoint( int index, Math::LinearOperator<N>& );
+    void transformPoint( int index, const Math::LinearOperator<N>& );
 
     /* Adiciona um ponto de controle ao fim da spline. */
     void addPoint( Math::Point<N> );
@@ -57,9 +57,9 @@ BSpline<N>::BSpline( std::vector<Math::Point<N>> controlPoints ) :
 }
 
 template< int N >
-void BSpline<N>::transformPoint( int index, Math::LinearOperator<N>& op ) {
-    controlPoints[index] = op( controlPoints[index] );
-    for( int i = index - 3; i <= index && i < splines.size(); ++i )
+void BSpline<N>::transformPoint( int n, const Math::LinearOperator<N>& op ) {
+    controlPoints[n] = op( controlPoints[n] );
+    for( int i = n - 3; i <= n && i < splines.size(); ++i )
         splines[i] = SplineFactory::BSpline<N>( controlPoints[i],
                 controlPoints[i+1], controlPoints[i+2], controlPoints[i+3] );
 }

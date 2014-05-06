@@ -7,10 +7,7 @@
 using std::sin;
 using std::cos;
 
-#include "linearOperator.h"
-#include "math/matrix.h"
-#include "math/vector.h"
-#include "point.h"
+#include "math/linearOperator.h"
 
 using namespace Math;
 

@@ -22,14 +22,10 @@ Implementar testes:
 Implementar Bézier generalizado
 Implementar Matrix::slice()
 Implementar operadores de Matrix para propagar uma operação genérica.
+Modificar classes que trabalham com vetores para usar std::vector ou
+    unique_ptr ou implementar um util/shared_array_ptr.h.
 Adicionar verificação this != other nos construtores de cópia.
 Criar MockResource para testar Polynomial contra vazamento de memória.
-
-Os testes dependem do comando __attribute__, específico do GCC. 
-    Entretanto, a única solução alternativa que conheço (gambiarras
-    com objetos estáticos) depende do fato de o GCC escolher executar
-    o construtor destes objetos antes de executar o main(), algo
-    que não é garantido pelo C++.
 
 Embora lineClipper seja uma interface templatizada, o método setArea
     trabalha com ClippingArea, que é bidimensional. Se possível,
@@ -43,9 +39,6 @@ Da forma como está implementado atualmente, o line clipper tem de ser
 
 Implementar Matrix::operator=( initializer_list<initializer_list<double>> )
 
-Vários .cpp que implementam .h incluem todos os cabeçalhos incluídos
-    pelo .h desnecessariamente.
-
 
         Problemas / possíveis aprimoramentos:
 
@@ -57,10 +50,6 @@ WindowTransform
 
     A WindowTransform é um operador linear: talvez poderíamos tratá-la
     como tal.
-
-DrawablePoint
-    Ao invés de codificar a rotação de DrawablePoint::draw no braço,
-    podemos usar as transformações lineares para isso.
 
 TesterMatrix
     Este header inclui cstdio, o que não me parece ser muito bonito.

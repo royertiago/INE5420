@@ -7,9 +7,11 @@ using std::sin;
 using std::cos;
 
 #include "geometric/drawablePoint.h"
+
+#include "math/constant.h"
 #include "render/renderer.h"
 
-static const double pi = 3.14159653589793238462643383;
+using Math::PI;
 
 void DrawablePoint::draw( Renderer * renderer ) {
     double density = renderer->density();
@@ -23,7 +25,7 @@ void DrawablePoint::draw( Renderer * renderer ) {
     static const double radius = 2 / sqrt(density);
 
     // Usaremos 12 retas para desenhar o círculo:
-    double theta = 2* pi / 12;
+    double theta = 2* PI / 12;
     for( int i = 0; i < 12; i++ ) {
         renderer->drawLine(
             Math::Point<2>({ p[0] + radius * cos(i*theta),

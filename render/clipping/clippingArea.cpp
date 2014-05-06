@@ -2,7 +2,6 @@
  * Implementação de clippingArea.h */
 
 #include "clippingArea.h"
-#include "math/vector.h"
 
 const ClippingArea ClippingArea::normalized = {0, 0, 1, 1};
 

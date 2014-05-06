@@ -93,17 +93,18 @@ int main() {
 
     df.addObject( bSpline );
     clear( sdl, df, renderer );
-    waitEnter();
 
     bSpline->addPoint( {4.0/5, 0} );
     clear( sdl, df, renderer );
-    waitEnter();
 
     bSpline->addPoint( {5.0/5, 0} );
     clear( sdl, df, renderer );
-    waitEnter();
 
     bSpline->addPoint( {6.0/5, 0} );
+    clear( sdl, df, renderer );
+    waitEnter();
+
+    bSpline->transformPoint( 3, LinearFactory::make2DTranslation({0, -1}) );
     clear( sdl, df, renderer );
     waitEnter();
 

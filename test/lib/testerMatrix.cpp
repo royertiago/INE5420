@@ -1,7 +1,6 @@
 /* testerMatrix.cpp
  * Implementação de testerMatrix.h
  */
-#include <cstdio>
 #include <limits>
 #include <cmath>
 

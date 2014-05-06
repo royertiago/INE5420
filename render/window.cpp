@@ -5,8 +5,6 @@
 #include <cmath>
 
 #include "render/window.h"
-#include "render/clipping/clippingArea.h"
-#include "math/vector.h"
 
 using std::sin;
 using std::cos;

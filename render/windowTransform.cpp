@@ -4,10 +4,8 @@
  */
 
 #include "render/windowTransform.h"
-#include "render/clipping/clippingArea.h"
-#include "math/linearOperator.h"
+
 #include "math/vector.h"
-#include "window.h"
 
 using LinearFactory::make2DTranslation;
 using LinearFactory::make2DRotation;

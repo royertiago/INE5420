@@ -3,6 +3,7 @@
  */
 
 #include "render/viewport.h"
+
 #include "view/drawable.h"
 
 Viewport Viewport::generateViewport( Drawable * d ) {
