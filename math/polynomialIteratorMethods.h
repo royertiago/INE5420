@@ -71,9 +71,7 @@ PolynomialIterator<Coefficient>::PolynomialIterator(
     t( t ),
     h( h ),
     validDeltas( 0 )
-{
-    delta[0] = p(t);
-}
+{}
 
 template< typename Coefficient >
 PolynomialIterator<Coefficient>::PolynomialIterator(
@@ -84,7 +82,7 @@ PolynomialIterator<Coefficient>::PolynomialIterator(
     h( other.h ),
     validDeltas( other.validDeltas )
 {
-    for( int i = 0; i <= validDeltas; ++i )
+    for( int i = 0; i < validDeltas; ++i )
         delta[i] = other.delta[i];
 }
 
@@ -102,7 +100,7 @@ PolynomialIterator<Coefficient>::PolynomialIterator(
 
 template< typename Coefficient >
 PolynomialIterator<Coefficient>::~PolynomialIterator() {
-    delete delta;
+    delete[] delta;
 }
 
 // Operações anexas
@@ -111,13 +109,12 @@ template< typename Coefficient >
 void PolynomialIterator<Coefficient>::start( double start ) {
     t = start;
     validDeltas = 0;
-    delta[0] = p(t);
 }
 
 template< typename Coefficient >
 void PolynomialIterator<Coefficient>::step( double step ) {
     h = step;
-    validDeltas = 0;
+    validDeltas = 1; // Não alteramos o ponto atual
 }
 
 template< typename Coefficient >
@@ -129,6 +126,10 @@ PolynomialIterator<Coefficient>::operator double() const {
 
 template< typename Coefficient >
 Coefficient PolynomialIterator<Coefficient>::operator*() const {
+    if( validDeltas == 0 ) {
+        delta[0] = p( t );
+        validDeltas = 1;
+    }
     return delta[0];
 }
 
@@ -137,7 +138,7 @@ void PolynomialIterator<Coefficient>::operator++() {
     t += h;
     if( p.degree() + 1 == validDeltas )
         // Aqui, já fizemos todo o trabalho pesado: basta atualizar os deltas.
-        for( int i = validDeltas; i > 0; --i )
+        for( int i = validDeltas - 1; i > 0; --i )
             delta[i-1] = delta[i-1] + delta[i];
     else {
         // Existem mais deltas a serem atualizados.

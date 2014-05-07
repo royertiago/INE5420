@@ -36,7 +36,7 @@ template< typename Coefficient >
 class PolynomialIterator {
     const Polynomial< Coefficient > & p;
     // delta[i] guarda o valor de D^if(t). delta[0] = f(t).
-    Coefficient * delta;
+    mutable Coefficient * delta;
 
     // t é o atual ponto em que está sendo calculado o vetor.
     double t;
@@ -50,7 +50,7 @@ class PolynomialIterator {
      * até atingirmos o nível p.degree(), em que as variações das
      * variações tornam-se constantes.
      * Esta variável registra quantos níveis de variações já calculamos. */
-    int validDeltas;
+    mutable int validDeltas;
 
 public:
     /* Constrói um iterador para o polinômio passado.

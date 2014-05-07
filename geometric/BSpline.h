@@ -42,6 +42,11 @@ public:
     virtual void draw( Renderer * ) override;
     virtual Math::Point<N> center() const override;
     virtual void transform( const Math::LinearOperator<N>& ) override;
+
+private:
+    /* Recalcula o valor da B-Spline do índice passado. 
+     * O índice será assumido valido. */
+    void calculate( int index );
 };
 
 // Implementações
@@ -60,8 +65,7 @@ template< int N >
 void BSpline<N>::transformPoint( int n, const Math::LinearOperator<N>& op ) {
     controlPoints[n] = op( controlPoints[n] );
     for( int i = n - 3; i <= n && i < splines.size(); ++i )
-        splines[i] = SplineFactory::BSpline<N>( controlPoints[i],
-                controlPoints[i+1], controlPoints[i+2], controlPoints[i+3] );
+        calculate( i );
 }
 
 template< int N >
@@ -91,8 +95,13 @@ void BSpline<N>::transform( const Math::LinearOperator<N>& op ) {
     for( Math::Point<N>& p : controlPoints )
         p = op( p );
     for( int i = 0; i < splines.size(); ++i )
-        splines[i] = SplineFactory::BSpline<N>( controlPoints[i],
-            controlPoints[i+1], controlPoints[i+2], controlPoints[i+3] );
+        calculate( i );
+}
+
+template< int N >
+void BSpline<N>::calculate( int i ) {
+    splines[i] = SplineFactory::BSpline<N>( controlPoints[i],
+        controlPoints[i+1], controlPoints[i+2], controlPoints[i+3] );
 }
 
 #endif // B_SPLINE_H
