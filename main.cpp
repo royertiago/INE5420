@@ -9,6 +9,7 @@
 #include "geometric/cubicSpline.h"
 #include "geometric/drawablePoint.h"
 #include "geometric/geometricFactory.h"
+#include "geometric/hermiteSpline.h"
 #include "geometric/polygon.h"
 #include "geometric/splineFactory.h"
 #include "math/constant.h"
@@ -66,45 +67,29 @@ int main() {
     ScreenRenderer renderer( v, wt, cs, sdl );
     DisplayFile df;
 
-    CubicSpline<2> * s1 = new CubicSpline<2>(
-            SplineFactory::Bezier<2>( { 0.25, 0.25},
-                                      { 0.75, 0.25},
-                                      { 0.75, 0.75},
-                                      { 0.5 , 0.5 } ) );
-    CubicSpline<2> * s2 = new CubicSpline<2>(
-            SplineFactory::Bezier<2>( { 0, 0},
-                                      { 2, 1},
-                                      {-1, 1},
-                                      { 1, 0} ) );
-    BSpline<2> * bSpline = new BSpline<2>( vector<Point<2>>{
-                                       {-1.0/5, 0},
-                                       { 0.0/5, 0},
-                                       { 1.0/5, 0},
-                                       { 2.0/5, 1},
-                                       { 3.0/5, 0}} );
+    HermiteSpline<2> * h = new HermiteSpline<2>(
+            {{ 0.25, 0.25},
+             { 0.75, 0.75}},
+            {{ 0.75, 0.25},
+             { 0.75, 0.75}} );
 
-    df.addObject( s1 );
-    clear( sdl, df, renderer );
-    //waitEnter();
-
-    df.addObject( s2 );
-    clear( sdl, df, renderer );
-    //waitEnter();
-
-    df.addObject( bSpline );
-    clear( sdl, df, renderer );
-
-    bSpline->addPoint( {4.0/5, 0} );
-    clear( sdl, df, renderer );
-
-    bSpline->addPoint( {5.0/5, 0} );
-    clear( sdl, df, renderer );
-
-    bSpline->addPoint( {6.0/5, 0} );
+    df.addObject( h );
     clear( sdl, df, renderer );
     waitEnter();
 
-    bSpline->transformPoint( 3, LinearFactory::make2DTranslation({0, -1}) );
+    h->addPoint( {0.5, 0.5}, {0.0, 1.0} );
+    clear( sdl, df, renderer );
+    waitEnter();
+
+    h->addPoint( {0.2, 0.5}, {0.0, -1.0} );
+    clear( sdl, df, renderer );
+    waitEnter();
+
+    h->addPoint( {0.8, 0.2}, {1.0, 1.5} );
+    clear( sdl, df, renderer );
+    waitEnter();
+
+    h->addPoint( {0.0, 0.0}, {-1.0, -1.0} );
     clear( sdl, df, renderer );
     waitEnter();
 
