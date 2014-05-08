@@ -54,5 +54,38 @@ DECLARE_TEST( PolynomialTest ) {
     b &= m.TEST_EQUALS( q(0.5), (Vector<2>{0, -0.5}) );
     b &= m.TEST_EQUALS( q(1.5), (Vector<2>{2, 2.5}) );
 
+    // Operações algébricas
+    p = Polynomial<double>( new double[2]{1, 1}, 1 );
+    p = p * Polynomial<double>( new double[2]{-1, 1}, 1 );
+    Polynomial<double> r( new double[3]{-1, 0, 1}, 2 );
+    // p e r devem representar o mesmo polinômio.
+    b &= Test::TEST_EQUALS( p[0], r[0] );
+    b &= Test::TEST_EQUALS( p[1], r[1] );
+    b &= Test::TEST_EQUALS( p[2], r[2] );
+
+    p = Polynomial<double>( new double[3]{1, 1, 1}, 2 );
+    p = p * Polynomial<double>( new double[2]{-1, 1}, 1 );
+    r = Polynomial<double>( new double[4]{-1, 0, 0, 1}, 3 );
+    b &= Test::TEST_EQUALS( p[0], r[0] );
+    b &= Test::TEST_EQUALS( p[1], r[1] );
+    b &= Test::TEST_EQUALS( p[2], r[2] );
+    b &= Test::TEST_EQUALS( p[3], r[3] );
+
+    p = Polynomial<double>( new double[2]{1, 1}, 1 );
+    p = p * Polynomial<double>( new double[3]{1, 0, 1}, 2 );
+    p = p * Polynomial<double>( new double[2]{-1, 1}, 1 );
+    r = Polynomial<double>( new double[5]{-1, 0, 0, 0, 1}, 4 );
+    b &= Test::TEST_EQUALS( p[0], r[0] );
+    b &= Test::TEST_EQUALS( p[1], r[1] );
+    b &= Test::TEST_EQUALS( p[2], r[2] );
+    b &= Test::TEST_EQUALS( p[3], r[3] );
+    b &= Test::TEST_EQUALS( p[4], r[4] );
+
+    p = p + r;
+    b &= Test::TEST_EQUALS( p[0], r[0]*2 );
+    b &= Test::TEST_EQUALS( p[1], r[1]*2 );
+    b &= Test::TEST_EQUALS( p[2], r[2]*2 );
+    b &= Test::TEST_EQUALS( p[3], r[3]*2 );
+    b &= Test::TEST_EQUALS( p[4], r[4]*2 );
     return b;
 }

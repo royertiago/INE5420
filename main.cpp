@@ -5,6 +5,7 @@
 #include <vector>
 #include <SDL.h>
 #include "displayFile.h"
+#include "geometric/bezierSpline.h"
 #include "geometric/BSpline.h"
 #include "geometric/cubicSpline.h"
 #include "geometric/drawablePoint.h"
@@ -67,29 +68,50 @@ int main() {
     ScreenRenderer renderer( v, wt, cs, sdl );
     DisplayFile df;
 
-    HermiteSpline<2> * h = new HermiteSpline<2>(
-            {{ 0.25, 0.25},
-             { 0.75, 0.75}},
-            {{ 0.75, 0.25},
-             { 0.75, 0.75}} );
+    /*BezierSpline<2> * b1 = new BezierSpline<2>(
+            { {0,  0},
+              {0.25, 1},
+              {0.5, 0.3},
+              {0.75, 0.6},
+              {1, 0.5},
+              {0.75, 0.3} } );*/
 
-    df.addObject( h );
+    BezierSpline<2> * b2 = new BezierSpline<2>(
+            { {0.5,  0.5},
+              {0.00, 0.6},
+              {1.00, 0.6},
+              {0, 0.5},
+              {0.5, 0.6} } );
+
+/*    df.addObject( b1 );
+    clear( sdl, df, renderer );
+    waitEnter();*/
+
+    df.addObject( b2 );
     clear( sdl, df, renderer );
     waitEnter();
 
-    h->addPoint( {0.5, 0.5}, {0.0, 1.0} );
+    b2->transformPoint( 4, LinearFactory::make2DTranslation( {0, -0.02} ) );
     clear( sdl, df, renderer );
     waitEnter();
 
-    h->addPoint( {0.2, 0.5}, {0.0, -1.0} );
+    b2->transformPoint( 4, LinearFactory::make2DTranslation( {0, -0.02} ) );
     clear( sdl, df, renderer );
     waitEnter();
 
-    h->addPoint( {0.8, 0.2}, {1.0, 1.5} );
+    b2->transformPoint( 4, LinearFactory::make2DTranslation( {0, -0.02} ) );
     clear( sdl, df, renderer );
     waitEnter();
 
-    h->addPoint( {0.0, 0.0}, {-1.0, -1.0} );
+    b2->transformPoint( 4, LinearFactory::make2DTranslation( {0, -0.02} ) );
+    clear( sdl, df, renderer );
+    waitEnter();
+
+    b2->transformPoint( 3, LinearFactory::make2DTranslation( {0, -0.02} ) );
+    clear( sdl, df, renderer );
+    waitEnter();
+
+    b2->transformPoint( 4, LinearFactory::make2DTranslation( {0, -0.02} ) );
     clear( sdl, df, renderer );
     waitEnter();
 

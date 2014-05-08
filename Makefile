@@ -1,6 +1,6 @@
 #Configurações do compilador
 COMPILER = g++
-FLAGS = -std=c++0x -Wall -pedantic -Wextra
+FLAGS = -std=c++0x -Wall -pedantic -Wextra -ggdb
 LIBS := $(shell sdl2-config --cflags) -I./
 #Esta variável foi definida com := para que não seja uma variável recursiva.\
 	Variáveis recursivas têm seu valor computado toda vez que a variável \

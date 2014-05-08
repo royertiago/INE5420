@@ -76,6 +76,8 @@ void BSpline<N>::addPoint( Math::Point<N> p ) {
             controlPoints[i+1], controlPoints[i+2], controlPoints[i+3] ) );
 }
 
+// Métodos herdados
+
 template< int N >
 void BSpline<N>::draw( Renderer * renderer ) {
     for( CubicSpline<N>& s : splines )
@@ -97,6 +99,8 @@ void BSpline<N>::transform( const Math::LinearOperator<N>& op ) {
     for( int i = 0; i < splines.size(); ++i )
         calculate( i );
 }
+
+// Métodos privados
 
 template< int N >
 void BSpline<N>::calculate( int i ) {

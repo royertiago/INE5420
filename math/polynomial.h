@@ -60,8 +60,16 @@ public:
      * d é o incremento.
      * Não modifique o polinômio enquanto o iterador for necessário. */
     PolynomialIterator<Coefficient> iterator( double t, double d ) const;
-};
 
+    /* Multiplicação de polinômios.
+     * Note que multiplicação por polinômios sobre double sempre faz
+     * sentido; é equivalente à multiplicar por um escalar que se
+     * altera. */
+    Polynomial<Coefficient> operator*( const Polynomial<double>& ) const;
+
+    Polynomial<Coefficient> operator+( const Polynomial<Coefficient>& ) const;
+    friend class Polynomial<double>; // Para uso no operator*
+};
 
 } // namespace Math
 

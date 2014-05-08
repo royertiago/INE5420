@@ -87,6 +87,8 @@ void HermiteSpline<N>::addPoint( Math::Point<N> p, Math::Vector<N> v ) {
               controlPoints[i+1], tangentVectors[i+1] ) );
 }
 
+// Métodos herdados
+
 template< int N >
 void HermiteSpline<N>::draw( Renderer * renderer ) {
     for( CubicSpline<N>& s : splines )
@@ -105,9 +107,13 @@ template< int N >
 void HermiteSpline<N>::transform( const Math::LinearOperator<N>& op ) {
     for( Math::Point<N>& p : controlPoints )
         p = op( p );
+    for( Math::Vector<N>& v : tangentVectors )
+        v = op( Math::Point<N>(v) );
     for( int i = 0; i < splines.size(); ++i )
         calculate( i );
 }
+
+// Métodos privados
 
 template< int N >
 void HermiteSpline<N>::calculate( int i ) {

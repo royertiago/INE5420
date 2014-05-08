@@ -117,6 +117,37 @@ PolynomialIterator<Coefficient> Polynomial<Coefficient>::iterator(
     return PolynomialIterator<Coefficient>( *this, start, step );
 }
 
+// Operadores aritméticos
+
+template< typename Coefficient >
+Polynomial<Coefficient> Polynomial<Coefficient>::operator*(
+        const Polynomial<double>& rhs ) const 
+{
+    int degree = this->d + rhs.degree();
+    Coefficient * c = new Coefficient[ degree + 1 ]();
+    for( int i = 0; i <= this->d; ++i )
+        for( int j = 0; j <= rhs.degree(); ++j )
+            c[i + j] = c[i + j] + this->c[i] * rhs[j];
+    return Polynomial<Coefficient>( c, degree );
+}
+
+template< typename Coefficient >
+Polynomial<Coefficient> Polynomial<Coefficient>::operator+(
+        const Polynomial<Coefficient>& rhs ) const
+{
+    const Polynomial<Coefficient>& larger = this->d >= rhs.d ? *this : rhs;
+    const Polynomial<Coefficient>& smaller = this->d < rhs.d ? *this : rhs;
+    /* Agora, smaller referencia o polinômio de menor grau
+     * e larger referencia o de maior grau. */
+    Coefficient * c = new Coefficient[ larger.d + 1 ];
+    int i;
+    for( i = 0; i <= smaller.d; ++i )
+        c[i] = smaller[i] + larger[i];
+    for( ; i <= larger.d; ++i )
+        c[i] = larger[i];
+    return Polynomial<Coefficient>( c, larger.d );
+}
+
 } // namespace Math
 
 #endif // POLYNOMIAL_METHODS_H

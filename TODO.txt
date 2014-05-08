@@ -21,7 +21,6 @@ Implementar testes:
 
 
 Usar CRTP para retirar código duplicado das splines B e Hermite.
-Implementar Bézier generalizado
 Implementar Matrix::slice()
 Implementar operadores de Matrix para propagar uma operação genérica.
 Modificar classes que trabalham com vetores para usar std::vector ou
