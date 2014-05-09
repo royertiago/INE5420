@@ -25,6 +25,8 @@ namespace Test {
             const char * lineText, int lineNumber );
     bool testEquals( bool actualValue, bool expectedValue, 
             const char * lineText, int lineNumber );
+    bool testEquals( const char * actualValue, const char * expectedValue,
+            const char * lineText, int lineNumber );
 
 } // namespace Test
 
