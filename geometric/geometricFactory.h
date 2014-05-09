@@ -31,7 +31,7 @@ namespace GeometricFactory {
 
 template< typename ... Ts >
 Polygon * makePolygon( std::initializer_list<Ts> ... args ) {
-    static_assert( logical_and<
+    static_assert( Variadic::logical_and<
             std::is_convertible< Ts, double >::value ...
         >::value, "Apenas listas de inicialização de tipos"
                   " convertíveis para double!" );
