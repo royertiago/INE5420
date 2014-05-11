@@ -16,8 +16,7 @@ DECLARE_TEST( ParseTupleTest ) {
 
     bool b = true;
 
-    string data1 = "3.25 12 42 Wangenheim 23";
-    istringstream is1( data1 );
+    istringstream is1( "3.25 12 42 Wangenheim 23" );
     auto t1 = parseTuple<double, int, double, string, string>( is1 );
 
     b &= Test::TEST_EQUALS( get<0>( t1 ), 3.25 );
@@ -27,8 +26,7 @@ DECLARE_TEST( ParseTupleTest ) {
     b &= Test::TEST_EQUALS( get<4>( t1 ).c_str(), "23" );
 
 
-    string data2 = "move vector object1 3 5.0";
-    istringstream is2( data2 );
+    istringstream is2( "move vector object1 3 5.0 Aldo" );
     auto t2 = parseTuple<string, string, string, double, double>( is2 );
 
     b &= Test::TEST_EQUALS( get<0>( t2 ).c_str(), "move" );
@@ -36,6 +34,11 @@ DECLARE_TEST( ParseTupleTest ) {
     b &= Test::TEST_EQUALS( get<2>( t2 ).c_str(), "object1" );
     b &= Test::TEST_EQUALS( get<3>( t2 ), 3.0 );
     b &= Test::TEST_EQUALS( get<4>( t2 ), 5.0 );
+
+    string str;
+    is2 >> str;
+    b &= Test::TEST_EQUALS( str.c_str(), "Aldo" );
+    // parseTuple não pode ter consumido toda a string.
 
     return b;
 }

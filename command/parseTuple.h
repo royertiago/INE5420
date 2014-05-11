@@ -35,7 +35,7 @@ namespace {
                     ParseTuple<Ts...>::parseTuple( is ) );
         }
     };
-} // anonnymous namespace
+} // anonymous namespace
 
 template< typename ... Ts >
 std::tuple< Ts... > parseTuple( std::istringstream& is ) {
