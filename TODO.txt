@@ -20,6 +20,7 @@ Implementar testes:
     LineClipper
 
 
+Adicionar testes de unidade para as classes novas.
 Usar CRTP para retirar código duplicado das splines B e Hermite.
 Implementar Matrix::slice()
 Implementar operadores de Matrix para propagar uma operação genérica.

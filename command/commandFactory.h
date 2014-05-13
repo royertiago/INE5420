@@ -21,6 +21,17 @@ namespace CommandFactory {
     template< typename ... Format, typename Functor >
     Command * makeFunctional( Functor f );
 
+    /* Constrói um comando que faz nada.
+     * Pode ser usado para definir comentários, por exemplo. */
+    Command * nop();
+
+    /* Constrói um comando que carrega arquivos para serem interpretados
+     * pelo interpretador de comandos. */
+    Command * load();
+
+    /* Constrói um comando que ecoa todos os seus argumentos. */
+    Command * echo();
+
 
 // Implementação
 

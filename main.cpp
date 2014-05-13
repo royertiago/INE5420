@@ -2,9 +2,12 @@
 
 // Include *
 #include <cstdio>
+#include <iostream>
 #include <vector>
 #include <SDL.h>
 #include "displayFile.h"
+#include "command/shell.h"
+#include "command/commandFactory.h"
 #include "geometric/bezierSpline.h"
 #include "geometric/BSpline.h"
 #include "geometric/cubicSpline.h"
@@ -56,7 +59,13 @@ int main() {
     if( !Test::run() )
         return 1;
 
-    SDLScreen sdl( 600, 600, "Teste" );
+    Shell bash;
+    bash.addCommand( CommandFactory::nop(), "#" ); // comentário
+    bash.addCommand( CommandFactory::echo(), "echo" );
+    bash.addCommand( CommandFactory::load(), "load" );
+    bash.readFrom( std::cin );
+
+    /*SDLScreen sdl( 600, 600, "Teste" );
 
     WindowTransform wt( ClippingArea::normalized );
     Viewport v = Viewport::generateViewport( &sdl );
@@ -68,13 +77,13 @@ int main() {
     ScreenRenderer renderer( v, wt, cs, sdl );
     DisplayFile df;
 
-    /*BezierSpline<2> * b1 = new BezierSpline<2>(
+    BezierSpline<2> * b1 = new BezierSpline<2>(
             { {0,  0},
               {0.25, 1},
               {0.5, 0.3},
               {0.75, 0.6},
               {1, 0.5},
-              {0.75, 0.3} } );*/
+              {0.75, 0.3} } );
 
     BezierSpline<2> * b2 = new BezierSpline<2>(
             { {0.5,  0.5},
@@ -83,9 +92,9 @@ int main() {
               {0, 0.5},
               {0.5, 0.6} } );
 
-/*    df.addObject( b1 );
+    df.addObject( b1 );
     clear( sdl, df, renderer );
-    waitEnter();*/
+    waitEnter();
 
     df.addObject( b2 );
     clear( sdl, df, renderer );
@@ -113,7 +122,7 @@ int main() {
 
     b2->transformPoint( 4, LinearFactory::make2DTranslation( {0, -0.02} ) );
     clear( sdl, df, renderer );
-    waitEnter();
+    waitEnter();*/
 
     return 0;
 }
