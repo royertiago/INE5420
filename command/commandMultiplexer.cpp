@@ -20,7 +20,7 @@ void CommandMultiplexer::interpret( std::istringstream& is ) {
     commands[cmd]->interpret( is );
 }
 
-void CommandMultiplexer::addCommand( Command * cmd, std::string name ) {
+void CommandMultiplexer::addCommand( std::string name, Command * cmd ) {
     auto pair = commands.insert( std::make_pair( name, cmd ) );
     // pair é um par <iterador, bool>
 

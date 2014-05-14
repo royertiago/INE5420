@@ -1,4 +1,10 @@
 # Exemplo de arquivo de comandos.
 # Execute-o via "load sample.cg"
-add point alce {0.3 0.5}
-add point blce {0.4 0.5}
+add point alce {0.5 0.5}
+add cubic bezier bz1 {0.25 0.25} {0.75 0.25} {0.75 0.75} {0.5 0.5}
+add cubic bspline bs1 {-0.2 0} {0 0} {0.2 0} {0.4 1}
+add cubic bspline bs2 {0 0} {0.2 0} {0.4 1} {0.6 0}
+add cubic bspline bs3 {0.2 0} {0.4 1} {0.6 0} {0.8 0}
+add cubic bspline bs4 {0.4 1} {0.6 0} {0.8 0} {1 0}
+add cubic bspline bs5 {0.6 0} {0.8 0} {1 0} {1.2 0}
+add cubic hermite h1 {0.25 0.5} {0.0 1.0} {0.75 0.5} {0.0 -1.0}

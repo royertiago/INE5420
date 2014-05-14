@@ -25,7 +25,7 @@ public:
     ~Shell();
 
     // Métodos herdados
-    virtual void addCommand( Command *, std::string );
+    virtual void addCommand( std::string, Command * );
     virtual void readFrom( std::istream& );
 };
 

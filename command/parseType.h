@@ -8,6 +8,7 @@
 #include <limits>
 #include <sstream>
 #include <vector>
+#include <stdexcept>
 
 /* Definição padrão; todas as especializações devem possuir
  * ao menos este método estático, com a mesma assinatura. 
@@ -16,6 +17,9 @@
 template< typename T >
 struct ParseType {
     static T parse( std::istringstream& is ) {
+        if( !is.good() )
+            throw std::runtime_error( "Bad istringstream on ParseType" );
+
         T r;
         is >> r;
         return r;

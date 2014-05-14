@@ -3,12 +3,13 @@
  */
 
 #include <utility> // std::make_pair
+#include <stdexcept>
 
 #include "shell.h"
 #include "commandFactory.h"
 
 Shell::Shell() {
-    addCommand( CommandFactory::nop(), "" );
+    addCommand( "", CommandFactory::nop() );
 }
 
 Shell::~Shell() {
@@ -16,7 +17,7 @@ Shell::~Shell() {
         delete it.second;
 }
 
-void Shell::addCommand( Command * cmd, std::string name ) {
+void Shell::addCommand( std::string name, Command * cmd ) {
     auto pair = commands.insert( std::make_pair( name, cmd ) );
     // pair é um par <iterador, bool>
 
@@ -40,6 +41,13 @@ void Shell::readFrom( std::istream& is ) {
         std::istringstream iss( str );
         std::string cmd;
         iss >> cmd;
-        commands[cmd]->interpret( iss );
+
+        try {
+            commands[cmd]->interpret( iss );
+        } catch( std::runtime_error& ex ) {
+            printf( "Runtime exception: %s\nParsing remaining commands...\n",
+                    ex.what() );
+        }
+
     }
 }

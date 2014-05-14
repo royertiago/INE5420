@@ -48,7 +48,7 @@ public:
     virtual void setParent( CommandInterpreter * ) override;
 
     // Métodos herdados de CommandInterpreter
-    virtual void addCommand( Command *, std::string ) override;
+    virtual void addCommand( std::string, Command * ) override;
     virtual void readFrom( std::istream& ) override;
 };
 

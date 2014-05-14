@@ -75,67 +75,52 @@ int main() {
     update();
 
     Shell bash;
-    bash.addCommand( CommandFactory::nop(), "#" ); // comentário
-    bash.addCommand( CommandFactory::echo(), "echo" );
-    bash.addCommand( CommandFactory::load(), "load" );
+    bash.addCommand( "#",    CommandFactory::nop() ); // comentário
+    bash.addCommand( "echo", CommandFactory::echo() );
+    bash.addCommand( "load", CommandFactory::load() );
 
+    /* add cubic <chosen cubic> */
+    CommandMultiplexer * cubic = new CommandMultiplexer();
+    cubic->addCommand( "bezier", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, Math::Point<2> p1,
+                Math::Point<2> p2, Math::Point<2> p3, Math::Point<2> p4 )
+            {
+                CubicSpline<2> * spline = new CubicSpline<2>(
+                    SplineFactory::Bezier<2>( p1, p2, p3, p4 ) );
+                df.addObject( name, spline );
+                update();
+            } ) );
+    cubic->addCommand( "hermite", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, Math::Point<2> p1,
+                Math::Vector<2> r1, Math::Point<2> p4, Math::Vector<2> r4 )
+            {
+                CubicSpline<2> * spline = new CubicSpline<2>(
+                    SplineFactory::Hermite<2>( p1, r1, p4, r4 ) );
+                df.addObject( name, spline );
+                update();
+            } ) );
+    cubic->addCommand( "bspline", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, Math::Point<2> p0,
+                Math::Point<2> p1, Math::Point<2> p2, Math::Point<2> p3 )
+            {
+                CubicSpline<2> * spline = new CubicSpline<2>(
+                    SplineFactory::BSpline<2>( p0, p1, p2, p3 ) );
+                df.addObject( name, spline );
+                update();
+            } ) );
+
+    /* add <chosen object> */
     CommandMultiplexer * add = new CommandMultiplexer();
-    add->addCommand( CommandFactory::makeFunctional( 
+    add->addCommand( "cubic", cubic );
+    add->addCommand( "point", CommandFactory::makeFunctional( 
             [&df, &update]( std::string name, Math::Point<2> p ) {
                 df.addObject( name, new DrawablePoint( p ) );
                 update();
-            } ),
-            "point" );
-    bash.addCommand( add, "add" );
+            } ) );
+
+    bash.addCommand( "add", add );
 
     bash.readFrom( std::cin );
-/*
-    BezierSpline<2> * b1 = new BezierSpline<2>(
-            { {0,  0},
-              {0.25, 1},
-              {0.5, 0.3},
-              {0.75, 0.6},
-              {1, 0.5},
-              {0.75, 0.3} } );
-
-    BezierSpline<2> * b2 = new BezierSpline<2>(
-            { {0.5,  0.5},
-              {0.00, 0.6},
-              {1.00, 0.6},
-              {0, 0.5},
-              {0.5, 0.6} } );
-
-    df.addObject( b1 );
-    clear( sdl, df, renderer );
-    waitEnter();
-
-    df.addObject( b2 );
-    clear( sdl, df, renderer );
-    waitEnter();
-
-    b2->transformPoint( 4, LinearFactory::make2DTranslation( {0, -0.02} ) );
-    clear( sdl, df, renderer );
-    waitEnter();
-
-    b2->transformPoint( 4, LinearFactory::make2DTranslation( {0, -0.02} ) );
-    clear( sdl, df, renderer );
-    waitEnter();
-
-    b2->transformPoint( 4, LinearFactory::make2DTranslation( {0, -0.02} ) );
-    clear( sdl, df, renderer );
-    waitEnter();
-
-    b2->transformPoint( 4, LinearFactory::make2DTranslation( {0, -0.02} ) );
-    clear( sdl, df, renderer );
-    waitEnter();
-
-    b2->transformPoint( 3, LinearFactory::make2DTranslation( {0, -0.02} ) );
-    clear( sdl, df, renderer );
-    waitEnter();
-
-    b2->transformPoint( 4, LinearFactory::make2DTranslation( {0, -0.02} ) );
-    clear( sdl, df, renderer );
-    waitEnter();*/
 
     return 0;
 }

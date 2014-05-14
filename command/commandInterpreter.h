@@ -23,7 +23,7 @@ public:
      *
      * Caso já exista um comando com o nome escolhido, o comando
      * anterior será deletado. */
-    virtual void addCommand( Command *, std::string name ) = 0;
+    virtual void addCommand( std::string name, Command * ) = 0;
 
     /* Lê comandos da istream passada, até chegar no fim do arquivo.
      *
