@@ -22,7 +22,7 @@ public:
     Shell& operator=( const Shell& ) = delete;
     Shell& operator=( Shell&& ) = delete;
     // Ninguém mexe neste interpretador de comandos.
-    ~Shell() = default;
+    ~Shell();
 
     // Métodos herdados
     virtual void addCommand( Command *, std::string );

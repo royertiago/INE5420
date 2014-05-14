@@ -37,8 +37,6 @@ DECLARE_TEST( FunctionalCommandTest ) {
     c->interpret( is1 );
     b &= ::b;
 
-    delete c;
-
     istringstream is2( "       +42   " );
     Command * d = CommandFactory::makeFunctional( g );
     ::b = false;
@@ -62,6 +60,11 @@ DECLARE_TEST( FunctionalCommandTest ) {
         } );
     f->interpret( is3 );
     b &= alce;
+
+    delete c;
+    delete d;
+    delete e;
+    delete f;
 
     return b;
 }

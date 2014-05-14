@@ -6,8 +6,10 @@
 #include <vector>
 #include <SDL.h>
 #include "displayFile.h"
+#include "parseVector.h"
 #include "command/shell.h"
 #include "command/commandFactory.h"
+#include "command/commandMultiplexer.h"
 #include "geometric/bezierSpline.h"
 #include "geometric/BSpline.h"
 #include "geometric/cubicSpline.h"
@@ -59,14 +61,7 @@ int main() {
     if( !Test::run() )
         return 1;
 
-    Shell bash;
-    bash.addCommand( CommandFactory::nop(), "#" ); // comentário
-    bash.addCommand( CommandFactory::echo(), "echo" );
-    bash.addCommand( CommandFactory::load(), "load" );
-    bash.readFrom( std::cin );
-
-    /*SDLScreen sdl( 600, 600, "Teste" );
-
+    SDLScreen sdl( 600, 600, "Teste" );
     WindowTransform wt( ClippingArea::normalized );
     Viewport v = Viewport::generateViewport( &sdl );
     v.xmin += 10;
@@ -75,8 +70,26 @@ int main() {
     v.ymax -= 10;
     CohenSutherland cs( ClippingArea::normalized );
     ScreenRenderer renderer( v, wt, cs, sdl );
-    DisplayFile df;
+    DisplayFile<2> df;
+    auto update = [&sdl, &df, &renderer](){ clear(sdl, df, renderer); };
+    update();
 
+    Shell bash;
+    bash.addCommand( CommandFactory::nop(), "#" ); // comentário
+    bash.addCommand( CommandFactory::echo(), "echo" );
+    bash.addCommand( CommandFactory::load(), "load" );
+
+    CommandMultiplexer * add = new CommandMultiplexer();
+    add->addCommand( CommandFactory::makeFunctional( 
+            [&df, &update]( std::string name, Math::Point<2> p ) {
+                df.addObject( name, new DrawablePoint( p ) );
+                update();
+            } ),
+            "point" );
+    bash.addCommand( add, "add" );
+
+    bash.readFrom( std::cin );
+/*
     BezierSpline<2> * b1 = new BezierSpline<2>(
             { {0,  0},
               {0.25, 1},

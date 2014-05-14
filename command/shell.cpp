@@ -11,6 +11,11 @@ Shell::Shell() {
     addCommand( CommandFactory::nop(), "" );
 }
 
+Shell::~Shell() {
+    for( auto& it : commands )
+        delete it.second;
+}
+
 void Shell::addCommand( Command * cmd, std::string name ) {
     auto pair = commands.insert( std::make_pair( name, cmd ) );
     // pair é um par <iterador, bool>
