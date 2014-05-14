@@ -48,7 +48,7 @@ DECLARE_TEST( FunctionalCommandTest ) {
     bool alce = false;
 
     istringstream is3( "23" );
-    Command * e = CommandFactory::makeFunctional<int>(
+    Command * e = CommandFactory::makeFunctional(
         [&alce]( int i ){
             alce = Test::TEST_EQUALS( i, 23 );
         } );

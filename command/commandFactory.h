@@ -8,17 +8,14 @@
 
 namespace CommandFactory {
 
-    /* Constrói um FunctionalCommand a partir da função passada.
-     * O compilador é capaz de deduzir o tipo da função a partir dos
-     * argumentos; entretanto, esta função não cria comandos a partir
-     * de objetos funcionais. */
+    /* Constrói um FunctionalCommand a partir da função passada. */
     template< typename ... Format >
     Command * makeFunctional( void (*)( Format... ) );
 
     /* Constrói um FunctionalCommand a partir do objeto funcional
-     * passado. É necessário explicitar a formatação dos parâmetros
-     * que chamarâo a função. */
-    template< typename ... Format, typename Functor >
+     * passado. A formatação dos parâmetros é deduzida a partir
+     * de Functor::operator(). */
+    template< typename Functor >
     Command * makeFunctional( Functor f );
 
     /* Constrói um comando que faz nada.
@@ -41,8 +38,22 @@ Command * makeFunctional( void (* f)( Format... ) ) {
 }
 
 template< typename ... Format, typename Functor >
-Command * makeFunctional( Functor f ) {
+Command * makeFunctionalCommandHelper( 
+        Functor f, void ( Functor::* )( Format... ) )
+{
     return new FunctionalCommand< Functor, Format... >( f );
+}
+
+template< typename ... Format, typename Functor >
+Command * makeFunctionalCommandHelper( 
+        Functor f, void ( Functor::* )( Format... ) const )
+{
+    return new FunctionalCommand< Functor, Format... >( f );
+}
+
+template< typename Functor >
+Command * makeFunctional( Functor f ) {
+    return makeFunctionalCommandHelper( f, &Functor::operator() );
 }
 
 } // namespace CommandFactory

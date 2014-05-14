@@ -44,7 +44,7 @@ void waitEnter() {
 melga: return;
 }
 
-void clear( Drawable& d, DisplayFile& df, ScreenRenderer& renderer ) {
+void clear( Drawable& d, DisplayFile<2>& df, ScreenRenderer& renderer ) {
     //GAMBIARRRRRA
     d.setColor( 255, 255, 255, 255 );
     for( int i = 0; i < d.width(); i++ )
