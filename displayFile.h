@@ -11,6 +11,7 @@
 
 #include "geometric/transformableObject.h"
 #include "math/linearOperator.h"
+#include "math/point.h"
 #include "render/renderer.h"
 
 template< int N >
@@ -36,8 +37,17 @@ public:
      * DisplayFile no renderizador passado. */
     void draw( Renderer * );
 
+    /* Deleta todos os objetos contidos no DisplayFile. */
+    void clear();
+
     /* Transforma o objeto especificado pela string. */
-    void transform( std::string name, Math::LinearOperator<N>& op );
+    void transform( std::string name, const Math::LinearOperator<N>& op );
+
+    /* Informa o centro do objeto. */
+    Math::Point<N> center( std::string name );
+
+    /* Remove e deleta o objeto especificado do DisplayFile. */
+    void remove( std::string name );
 
     ~DisplayFile();
 };
@@ -45,9 +55,9 @@ public:
 // Implementação
 
 template< int N >
-void DisplayFile<N>::draw( Renderer * renderer ) {
+DisplayFile<N>::~DisplayFile() {
     for( auto& pair : objects )
-        pair.second->draw( renderer );
+        delete pair.second;
 }
 
 template< int N >
@@ -62,18 +72,37 @@ void DisplayFile<N>::addObject( std::string n, TransformableObject<N>* obj ) {
 }
 
 template< int N >
-DisplayFile<N>::~DisplayFile() {
+void DisplayFile<N>::draw( Renderer * renderer ) {
     for( auto& pair : objects )
-        delete pair.second;
+        pair.second->draw( renderer );
 }
 
 template< int N >
-void DisplayFile<N>::transform( std::string n, Math::LinearOperator<N>& op ) {
+void DisplayFile<N>::clear() {
+    for( auto& pair : objects )
+        delete pair.second;
+    objects.clear();
+}
+
+template< int N >
+void DisplayFile<N>::transform( std::string n, 
+        const Math::LinearOperator<N>& op )
+{
     auto iterator = objects.find( n );
     if( iterator == objects.end() )
         return;
 
-    iterator.second->transform( op );
+    iterator->second->transform( op );
 }
 
+template< int N >
+Math::Point<N> DisplayFile<N>::center( std::string name ) {
+    return objects[name]->center();
+}
+
+template< int N >
+void DisplayFile<N>::remove( std::string name ) {
+    delete objects[name];
+    objects.erase( name );
+}
 #endif // DISPLAY_FILE_H

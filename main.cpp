@@ -79,8 +79,54 @@ int main() {
     bash.addCommand( "echo", CommandFactory::echo() );
     bash.addCommand( "load", CommandFactory::load() );
 
-    /* add cubic <chosen cubic> */
+    bash.addCommand( "clear", CommandFactory::makeFunctional(
+            [&df, &update] () {
+                df.clear();
+                update();
+            } ) );
+    bash.addCommand( "reset", CommandFactory::makeFunctional(
+            [&wt, &update] () {
+                wt.window().x = 0.5;
+                wt.window().y = 0.5;
+                wt.window().w = 1.0;
+                wt.window().h = 1.0;
+                wt.window().t = 0.0;
+                update();
+            } ) );
+
+    /* add <command> */
+    CommandMultiplexer * add = new CommandMultiplexer();
+    bash.addCommand( "add", add );
+
+    add->addCommand( "point", CommandFactory::makeFunctional( 
+            [&df, &update]( std::string name, Math::Point<2> p ) {
+                df.addObject( name, new DrawablePoint( p ) );
+                update();
+            } ) );
+    add->addCommand( "bezier", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, std::vector<Math::Point<2>> v ) {
+                df.addObject( name, new BezierSpline<2>( v ) );
+                update();
+            } ) );
+    add->addCommand( "bspline", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, std::vector<Math::Point<2>> v ) {
+                df.addObject( name, new BSpline<2>( v ) );
+                update();
+            } ) );
+    add->addCommand( "polygon", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, std::vector<Math::Point<2>> v ) {
+                Math::Point<2>* p = new Math::Point<2>[v.size()];
+                for( int i = 0; i < v.size(); ++i )
+                    p[i] = v[i];
+
+                df.addObject( name, new Polygon( p, v.size() ) );
+                update();
+            } ) );
+
+    /* add cubic <command> */
     CommandMultiplexer * cubic = new CommandMultiplexer();
+    add->addCommand( "cubic", cubic );
+
     cubic->addCommand( "bezier", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, Math::Point<2> p1,
                 Math::Point<2> p2, Math::Point<2> p3, Math::Point<2> p4 )
@@ -109,16 +155,121 @@ int main() {
                 update();
             } ) );
 
-    /* add <chosen object> */
-    CommandMultiplexer * add = new CommandMultiplexer();
-    add->addCommand( "cubic", cubic );
-    add->addCommand( "point", CommandFactory::makeFunctional( 
-            [&df, &update]( std::string name, Math::Point<2> p ) {
-                df.addObject( name, new DrawablePoint( p ) );
+    /* move <command> */
+    CommandMultiplexer * move = new CommandMultiplexer();
+    bash.addCommand( "move", move );
+
+    move->addCommand( "up", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, double amount ) {
+                df.transform( name, 
+                    LinearFactory::make2DTranslation( {0, amount} ) );
+                update();
+            } ) );
+    move->addCommand( "down", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, double amount ) {
+                df.transform( name, 
+                    LinearFactory::make2DTranslation( {0, -amount} ) );
+                update();
+            } ) );
+    move->addCommand( "left", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, double amount ) {
+                df.transform( name, 
+                    LinearFactory::make2DTranslation( {-amount, 0} ) );
+                update();
+            } ) );
+    move->addCommand( "right", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, double amount ) {
+                df.transform( name, 
+                    LinearFactory::make2DTranslation( {amount, 0} ) );
                 update();
             } ) );
 
-    bash.addCommand( "add", add );
+    /* move window <command> */
+    CommandMultiplexer * moveWindow = new CommandMultiplexer();
+    move->addCommand( "window", moveWindow );
+
+    moveWindow->addCommand( "up", CommandFactory::makeFunctional(
+            [&wt, &update]( double amount ) {
+                wt.window().moveUp( {0, amount} );
+                update();
+            } ) );
+    moveWindow->addCommand( "down", CommandFactory::makeFunctional(
+            [&wt, &update]( double amount ) {
+                wt.window().moveUp( {0, -amount} );
+                update();
+            } ) );
+    moveWindow->addCommand( "left", CommandFactory::makeFunctional(
+            [&wt, &update]( double amount ) {
+                wt.window().moveUp( {-amount, 0} );
+                update();
+            } ) );
+    moveWindow->addCommand( "right", CommandFactory::makeFunctional(
+            [&wt, &update]( double amount ) {
+                wt.window().moveUp( {amount, 0} );
+                update();
+            } ) );
+
+    /* rotate <command> */
+    CommandMultiplexer * rotate = new CommandMultiplexer();
+    bash.addCommand( "rotate", rotate );
+
+    rotate->addCommand( "origin", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, double degrees ) {
+                df.transform( name, LinearFactory::make2DRotation(
+                        degrees/180*Math::PI ) );
+                update();
+            } ) );
+    rotate->addCommand( "point", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, double degrees, 
+                Math::Point<2> p ) 
+            {
+                df.transform( name, 
+                    LinearFactory::make2DRotation( degrees/180*Math::PI, p ) );
+                update();
+            } ) );
+    rotate->addCommand( "center", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, double degrees ) {
+                df.transform( name, LinearFactory::make2DRotation(
+                        degrees/180*Math::PI, df.center( name ) ) );
+                update();
+            } ) );
+    rotate->addCommand( "window", CommandFactory::makeFunctional(
+            [&wt, &update]( double degrees ) {
+                wt.window().rotate( degrees/180*Math::PI );
+                update();
+            } ) );
+
+
+    /* zoom <in/out> */
+    CommandMultiplexer * zoom = new CommandMultiplexer();
+    bash.addCommand( "zoom", zoom );
+    
+    zoom->addCommand( "in", CommandFactory::makeFunctional(
+            [&wt, &update]( double percent ) {
+                wt.window().vscale( 1 - percent/100 );
+                wt.window().hscale( 1 - percent/100 );
+                update();
+            } ) );
+    zoom->addCommand( "out", CommandFactory::makeFunctional(
+            [&wt, &update]( double percent ) {
+                wt.window().vscale( 1 + percent/100 );
+                wt.window().hscale( 1 + percent/100 );
+                update();
+            } ) );
+
+
+    bash.addCommand( "scale", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, double factor ) {
+                df.transform( name, LinearFactory::make2DScale(
+                        factor, df.center( name ) ) );
+                update();
+            } ) );
+
+    bash.addCommand( "delete", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name ) {
+                df.remove( name );
+                update();
+            } ) );
 
     bash.readFrom( std::cin );
 

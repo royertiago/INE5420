@@ -33,8 +33,8 @@ Polygon& Polygon::operator=( Polygon&& p ) {
 Math::Point<2> Polygon::center() const {
     Math::Point<2> c = vertices[0];
     for( int i = 1; i < vertexCount; ++i ) {
-        c[0] = vertices[i][0];
-        c[1] = vertices[i][1];
+        c[0] = c[0] + vertices[i][0];
+        c[1] = c[1] + vertices[i][1];
     }
     c[0] /= vertexCount;
     c[1] /= vertexCount;
