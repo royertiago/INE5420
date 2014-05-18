@@ -15,10 +15,10 @@
 #include "geometric/BSpline.h"
 #include "geometric/cubicSpline.h"
 #include "geometric/drawablePoint.h"
-#include "geometric/geometricFactory.h"
 #include "geometric/hermiteSpline.h"
 #include "geometric/polygon.h"
 #include "geometric/splineFactory.h"
+#include "geometric/wireframe.h"
 #include "math/constant.h"
 #include "math/linearOperator.h"
 #include "math/polynomial.h"
@@ -117,11 +117,14 @@ int main( int argc, char * argv[] ) {
             } ) );
     add->addCommand( "polygon", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, std::vector<Math::Point<D>> v ) {
-                Math::Point<D>* p = new Math::Point<D>[v.size()];
-                for( unsigned i = 0; i < v.size(); ++i )
-                    p[i] = v[i];
-
-                df.addObject( name, new Polygon<D>( p, v.size() ) );
+                df.addObject( name, new Polygon<D>( v ) );
+                update();
+            } ) );
+    add->addCommand( "wireframe", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, std::vector<Math::Point<D>> v,
+                std::vector<std::pair<int, int>> e )
+            {
+                df.addObject( name, new Wireframe<D>( v, e ) );
                 update();
             } ) );
 

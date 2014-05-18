@@ -4,11 +4,13 @@
 #ifndef PARSE_TYPE_H
 #define PARSE_TYPE_H
 
-#include <climits>
 #include <limits>
 #include <sstream>
-#include <vector>
 #include <stdexcept>
+
+// Tipos sobrecarregados
+#include <vector>
+#include <utility> //std::pair
 
 /* Definição padrão; todas as especializações devem possuir
  * ao menos este método estático, com a mesma assinatura. 
@@ -55,4 +57,19 @@ struct ParseType< std::vector<T> > {
     }
 };
 
+/* O formato esperado é
+ *  (T U)
+ */
+template< typename T, typename U >
+struct ParseType< std::pair<T, U> > {
+    static std::pair<T, U> parse( std::istringstream& is ) {
+        is.ignore( std::numeric_limits<std::streamsize>::max(), '(' );
+        T t;
+        is >> t;
+        U u;
+        is >> u;
+        is.ignore( std::numeric_limits<std::streamsize>::max(), ')' );
+        return std::make_pair( t, u );
+    }
+};
 #endif // PARSE_TYPE_H

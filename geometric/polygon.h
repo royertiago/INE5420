@@ -7,7 +7,7 @@
 #ifndef POLYGON_H
 #define POLYGON_H
 
-#include <algorithm>
+#include <vector>
 #include "render/renderer.h"
 #include "transformableObject.h"
 #include "math/linearOperator.h"
@@ -15,34 +15,13 @@
 
 template< int N >
 class Polygon : public TransformableObject<N> {
-    Math::Point<N> * vertices;
-    int vertexCount;
+    std::vector<Math::Point<N>> vertices;
 
 public:
-    /* Constrói o polígono com este vetor de pontos, com a quantidade
-     * referida de pontos.
-     *
-     * O polígono assumirá propriedade deste vetor de pontos e deletar-
-     * -los-á junto consigo. */
-    Polygon( Math::Point<N> * vertices, int vertexCount );
-
-    /* Copia o conteúdo do poligono passado para este. */
-    Polygon( const Polygon& );
-
-    /* Transfere o conteúdo do polígono passado para este, deixando
-     * o polígono passado como se tivesse sido construído com
-     * o construtor padrão. */
-    Polygon( Polygon&& );
-
-    /* Copia o conteúdo do polígono passado para este. */
-    Polygon& operator=( const Polygon& );
-
-    /* Troca o conteúdo destes dois polígonos. */
-    Polygon& operator=( Polygon&& );
-    
-    /* O destrutor deletará o vetor que lhe foi passado no construtor. */
-    ~Polygon();
-
+    /* Constrói o polígono com este vetor de pontos.
+     * As arestas são constituídas de pontos adjacentes; o último
+     * ponto é considerado ser adjacente do primeiro. */
+    Polygon( std::vector<Math::Point<N>> );
 
     // Métodos herdados
     virtual void draw( Renderer<N> * ) override;
@@ -53,73 +32,32 @@ public:
 
 //Implementação
 template< int N >
-Polygon<N>::Polygon( Math::Point<N> * vertices, int vertexCount ) :
-    vertices( vertices ),
-    vertexCount( vertexCount )
+Polygon<N>::Polygon( std::vector<Math::Point<N>> vertices ) :
+    vertices( vertices )
 {}
-
-template< int N >
-Polygon<N>::Polygon( const Polygon<N>& p ) :
-    vertices( new Math::Point<N>[p.vertexCount] ),
-    vertexCount( p.vertexCount )
-{
-    for( int i = 0; i < vertexCount; i++ )
-        vertices[i] = p.vertices[i];
-}
-
-template< int N >
-Polygon<N>::Polygon( Polygon<N>&& p ) :
-    vertices( p.vertices ),
-    vertexCount( p.vertexCount )
-{
-    p.vertices = nullptr;
-    p.vertexCount = 0;
-}
-
-template< int N >
-Polygon<N>& Polygon<N>::operator=( const Polygon<N>& p ) {
-    delete vertices;
-    vertices = new Math::Point<N>[p.vertexCount];
-    vertexCount = p.vertexCount;
-    std::copy( p.vertices, p.vertices + vertexCount, vertices );
-    return *this;
-}
-
-template< int N >
-Polygon<N>& Polygon<N>::operator=( Polygon<N>&& p ) {
-    std::swap( vertices, p.vertices );
-    std::swap( vertexCount, p.vertexCount );
-    return *this;
-}
-
-template< int N >
-Polygon<N>::~Polygon() {
-    delete[] vertices;
-}
 
 template< int N >
 Math::Point<N> Polygon<N>::center() const {
     Math::Point<N> c = vertices[0];
-    for( int i = 1; i < vertexCount; ++i ) {
-        for( int j = 0; j < N; ++j )
-            c[j] = c[j] + vertices[i][j];
-    }
+    for( int i = 1; i < vertices.size(); ++i )
+        c = c + vertices[i]; //TODO: implementar operadores adicionais
+
 
     for( int j = 0; j < N; ++j )
-        c[j] /= vertexCount;
+        c[j] /= vertices.size();
     return c;
 }
 
 template< int N >
 void Polygon<N>::transform( const Math::LinearOperator<N>& op ) {
-    for( int i = 0; i < vertexCount; ++i )
+    for( int i = 0; i < vertices.size(); ++i )
         vertices[i] = op( vertices[i] );
 }
 
 template< int N >
 void Polygon<N>::draw( Renderer<N> * renderer ) {
-    for( int i = 0; i < vertexCount; i++ )
-        renderer->drawLine( vertices[i], vertices[(i+1) % vertexCount] );
+    for( int i = 0; i < vertices.size(); ++i )
+        renderer->drawLine( vertices[i], vertices[(i+1) % vertices.size()] );
     /* Ligar os vértices vertices[i] e vertices[(i+1) % vertexCount]
      * tem dois efeitos interessantes: ao chegar no último vértice, o
      * renderizador ligará o último ponto com o primeiro (pois

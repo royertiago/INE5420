@@ -31,30 +31,7 @@ Modificar classes que trabalham com vetores para usar std::vector ou
     unique_ptr ou implementar um util/shared_array_ptr.h.
 Adicionar verificação this != other nos construtores de cópia.
 Criar MockResource para testar Polynomial contra vazamento de memória.
-
-Embora lineClipper seja uma interface templatizada, o método setArea
-    trabalha com ClippingArea, que é bidimensional. Se possível,
-    generalizar a área de clipping para ser n-dimensional.
-
-Da forma como está implementado atualmente, o line clipper tem de ser
-    informado, a cada uso, qual a área de clipping utilizada.
-    Seria interessante se o line clipper mantivesse um ponteiro
-    para a área de clipping, para o caso de esta área ser alterada
-    extenamente e a mudança se refletir dentro do clipper.
-
 Implementar Matrix::operator=( initializer_list<initializer_list<double>> )
-
-
-        Problemas / possíveis aprimoramentos:
-
-WindowTransform
-    Uma chamada ao método window() da transformada de window pode
-    criar uma referência externa ao objeto interno window que
-    pode ser usada para modificar este objeto sem o conhecimento
-    da transformada.
-
-    A WindowTransform é um operador linear: talvez poderíamos tratá-la
-    como tal.
 
 TesterMatrix
     Este header inclui cstdio, o que não me parece ser muito bonito.
