@@ -13,7 +13,7 @@ using std::cos;
 
 using Math::PI;
 
-void DrawablePoint::draw( Renderer * renderer ) {
+void DrawablePoint::draw( Renderer<2> * renderer ) {
     double density = renderer->density();
 
     /* Tentaremos fazer com que o diâmetro do círculo seja em torno

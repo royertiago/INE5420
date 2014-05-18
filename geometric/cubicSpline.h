@@ -29,7 +29,7 @@ public:
     ~CubicSpline() = default;
 
     // Métodos herdados
-    virtual void draw( Renderer * ) override;
+    virtual void draw( Renderer<N> * ) override;
     virtual void transform( const Math::LinearOperator<N>& ) override;
     virtual Math::Point<N> center() const override;
 };
@@ -42,7 +42,7 @@ CubicSpline<N>::CubicSpline( Math::Vector<N>* pc, Math::Point<N> center ) :
 {}
 
 template< int N >
-void CubicSpline<N>::draw( Renderer * renderer ) {
+void CubicSpline<N>::draw( Renderer<N> * renderer ) {
     double sqnorm = (p(0) - p(1)).sqnorm();
     int pixels = sqnorm * renderer->density();
     /* Assumiremos que a derivada do polinômio nunca fica

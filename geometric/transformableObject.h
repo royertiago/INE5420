@@ -9,7 +9,7 @@
 #include "math/linearOperator.h"
 
 template< int N >
-class TransformableObject : public GeometricObject {
+class TransformableObject : public GeometricObject<N> {
 public:
     /* Aplica a transformação linear passada no objeto.
      * O objeto é livre para determinar o melhor momento

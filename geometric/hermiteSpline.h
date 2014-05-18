@@ -40,7 +40,7 @@ public:
     void addPoint( Math::Point<N> controlPoint, Math::Vector<N> tangent );
 
     // Métodos herdados
-    virtual void draw( Renderer * ) override;
+    virtual void draw( Renderer<N> * ) override;
     virtual Math::Point<N> center() const override;
     virtual void transform( const Math::LinearOperator<N>& ) override;
 
@@ -90,7 +90,7 @@ void HermiteSpline<N>::addPoint( Math::Point<N> p, Math::Vector<N> v ) {
 // Métodos herdados
 
 template< int N >
-void HermiteSpline<N>::draw( Renderer * renderer ) {
+void HermiteSpline<N>::draw( Renderer<N> * renderer ) {
     for( CubicSpline<N>& s : splines )
         s.draw( renderer );
 }

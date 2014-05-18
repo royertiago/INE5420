@@ -7,14 +7,15 @@
 #ifndef POLYGON_H
 #define POLYGON_H
 
+#include <algorithm>
+#include "render/renderer.h"
 #include "transformableObject.h"
 #include "math/linearOperator.h"
 #include "math/point.h"
 
-class Renderer;
-
-class Polygon : public TransformableObject<2> {
-    Math::Point<2> * vertices;
+template< int N >
+class Polygon : public TransformableObject<N> {
+    Math::Point<N> * vertices;
     int vertexCount;
 
 public:
@@ -23,10 +24,7 @@ public:
      *
      * O polígono assumirá propriedade deste vetor de pontos e deletar-
      * -los-á junto consigo. */
-    Polygon( Math::Point<2> * vertices, int vertexCount ) :
-        vertices( vertices ),
-        vertexCount( vertexCount )
-    {}
+    Polygon( Math::Point<N> * vertices, int vertexCount );
 
     /* Copia o conteúdo do poligono passado para este. */
     Polygon( const Polygon& );
@@ -42,27 +40,35 @@ public:
     /* Troca o conteúdo destes dois polígonos. */
     Polygon& operator=( Polygon&& );
     
-    /* Retorna os vértices do polígono. */
-    const Math::Point<2>* getVertices() const;
-    
-    /* Retorna o número de vértices do polígono. */
-    int getVertexCount() const;
-
     /* O destrutor deletará o vetor que lhe foi passado no construtor. */
     ~Polygon();
 
 
     // Métodos herdados
-    virtual void draw( Renderer * ) override;
-    virtual void transform( const Math::LinearOperator<2>& ) override;
-    virtual Math::Point<2> center() const override;
+    virtual void draw( Renderer<N> * ) override;
+    virtual void transform( const Math::LinearOperator<N>& ) override;
+    virtual Math::Point<N> center() const override;
 };
 
 
+//Implementação
+template< int N >
+Polygon<N>::Polygon( Math::Point<N> * vertices, int vertexCount ) :
+    vertices( vertices ),
+    vertexCount( vertexCount )
+{}
 
-//Implementação das funções mais simples 
+template< int N >
+Polygon<N>::Polygon( const Polygon<N>& p ) :
+    vertices( new Math::Point<N>[p.vertexCount] ),
+    vertexCount( p.vertexCount )
+{
+    for( int i = 0; i < vertexCount; i++ )
+        vertices[i] = p.vertices[i];
+}
 
-inline Polygon::Polygon( Polygon&& p ) :
+template< int N >
+Polygon<N>::Polygon( Polygon<N>&& p ) :
     vertices( p.vertices ),
     vertexCount( p.vertexCount )
 {
@@ -70,16 +76,56 @@ inline Polygon::Polygon( Polygon&& p ) :
     p.vertexCount = 0;
 }
 
-inline const Math::Point<2>* Polygon::getVertices() const {
-    return vertices;
+template< int N >
+Polygon<N>& Polygon<N>::operator=( const Polygon<N>& p ) {
+    delete vertices;
+    vertices = new Math::Point<N>[p.vertexCount];
+    vertexCount = p.vertexCount;
+    std::copy( p.vertices, p.vertices + vertexCount, vertices );
+    return *this;
 }
 
-inline int Polygon::getVertexCount() const {
-    return vertexCount;
+template< int N >
+Polygon<N>& Polygon<N>::operator=( Polygon<N>&& p ) {
+    std::swap( vertices, p.vertices );
+    std::swap( vertexCount, p.vertexCount );
+    return *this;
 }
 
-inline Polygon::~Polygon() {
+template< int N >
+Polygon<N>::~Polygon() {
     delete[] vertices;
+}
+
+template< int N >
+Math::Point<N> Polygon<N>::center() const {
+    Math::Point<N> c = vertices[0];
+    for( int i = 1; i < vertexCount; ++i ) {
+        for( int j = 0; j < N; ++j )
+            c[j] = c[j] + vertices[i][j];
+    }
+
+    for( int j = 0; j < N; ++j )
+        c[j] /= vertexCount;
+    return c;
+}
+
+template< int N >
+void Polygon<N>::transform( const Math::LinearOperator<N>& op ) {
+    for( int i = 0; i < vertexCount; ++i )
+        vertices[i] = op( vertices[i] );
+}
+
+template< int N >
+void Polygon<N>::draw( Renderer<N> * renderer ) {
+    for( int i = 0; i < vertexCount; i++ )
+        renderer->drawLine( vertices[i], vertices[(i+1) % vertexCount] );
+    /* Ligar os vértices vertices[i] e vertices[(i+1) % vertexCount]
+     * tem dois efeitos interessantes: ao chegar no último vértice, o
+     * renderizador ligará o último ponto com o primeiro (pois
+     * vertexCount % vertexCount == 0) e, no caso patológico de o
+     * polígono ter apenas um vértice, o renderizador ligará o ponto
+     * nele mesmo - enchendo um pixel. */
 }
 
 #endif // POLYGON_H

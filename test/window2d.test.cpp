@@ -1,27 +1,36 @@
 /* Teste de unidade de window.h */
 
-#include "render/window.h"
+#include "render/window2d.h"
 
 #include "test/lib/declarationMacros.h"
 #include "test/lib/testEquals.h"
 #include "test/lib/testMacro.h"
 #include "test/lib/testerDouble.h"
 
-#include "render/clipping/clippingArea.h"
 #include "math/constant.h"
 
-DECLARE_TEST( WindowTest ) {
+DECLARE_TEST( Window2DTest ) {
     bool b = true;
 
-    ClippingArea c{0, 0, 1, 1};
-    Window w( c );
+    Window<2> w;
+    b &= Test::TEST_EQUALS( w.x, 0.0 );
+    b &= Test::TEST_EQUALS( w.y, 0.0 );
+    b &= Test::TEST_EQUALS( w.w, 2.0 );
+    b &= Test::TEST_EQUALS( w.h, 2.0 );
+    b &= Test::TEST_EQUALS( w.t, 0.0 );
+
+    w.setCenter({0.5, 0.5});
+    w.setWidth( 1 );
+    w.setHeight( 1 );
+    b &= Test::TEST_EQUALS( w.x, 0.5 );
+    b &= Test::TEST_EQUALS( w.y, 0.5 );
+    b &= Test::TEST_EQUALS( w.w, 1.0 );
+    b &= Test::TEST_EQUALS( w.h, 1.0 );
+
     w.move({0.5, 0});
 
     b &= Test::TEST_EQUALS( w.x, 1.0 );
     b &= Test::TEST_EQUALS( w.y, 0.5 );
-    b &= Test::TEST_EQUALS( w.w, 1.0 );
-    b &= Test::TEST_EQUALS( w.h, 1.0 );
-    b &= Test::TEST_EQUALS( w.t, 0.0 );
     /* Aqui podemos usar igualdade pois estes números são
      * representáveis por completo em double. */
 

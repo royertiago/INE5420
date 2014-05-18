@@ -11,22 +11,23 @@
 #include "math/linearOperator.h"
 #include "math/point.h"
 
+template< int N >
 class Renderer;
 
 class DrawablePoint : public TransformableObject<2> {
     Math::Point<2> p;
 
 public:
+    /* Cria um DrawablePoint em p. */
     DrawablePoint( Math::Point<2> p ) : p(p) {}
 
     DrawablePoint() = default;
     DrawablePoint( const DrawablePoint& ) = default;
     DrawablePoint( DrawablePoint&& ) = default;
-
     virtual ~DrawablePoint() = default;
 
     //Métodos herdados
-    virtual void draw( Renderer* ) override;
+    virtual void draw( Renderer<2>* ) override;
     virtual void transform( const Math::LinearOperator<2>& ) override;
     virtual Math::Point<2> center() const;
 };

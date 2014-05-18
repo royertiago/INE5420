@@ -39,7 +39,7 @@ public:
     void addPoint( Math::Point<N> );
 
     // Métodos herdados
-    virtual void draw( Renderer * ) override;
+    virtual void draw( Renderer<N> * ) override;
     virtual Math::Point<N> center() const override;
     virtual void transform( const Math::LinearOperator<N>& ) override;
 
@@ -79,7 +79,7 @@ void BSpline<N>::addPoint( Math::Point<N> p ) {
 // Métodos herdados
 
 template< int N >
-void BSpline<N>::draw( Renderer * renderer ) {
+void BSpline<N>::draw( Renderer<N> * renderer ) {
     for( CubicSpline<N>& s : splines )
         s.draw( renderer );
 }

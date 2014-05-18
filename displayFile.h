@@ -35,7 +35,7 @@ public:
 
     /* Desenha todos os objetos geométricos armazenados neste
      * DisplayFile no renderizador passado. */
-    void draw( Renderer * );
+    void draw( Renderer<N> * );
 
     /* Deleta todos os objetos contidos no DisplayFile. */
     void clear();
@@ -72,7 +72,7 @@ void DisplayFile<N>::addObject( std::string n, TransformableObject<N>* obj ) {
 }
 
 template< int N >
-void DisplayFile<N>::draw( Renderer * renderer ) {
+void DisplayFile<N>::draw( Renderer<N> * renderer ) {
     for( auto& pair : objects )
         pair.second->draw( renderer );
 }

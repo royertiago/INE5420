@@ -22,20 +22,20 @@ namespace GeometricFactory {
      * (nem para std::initializer_list), para que esta função pudesse
      * aceitar listas de inicialização, ela deveria aceitar apenas
      * listas de inicialização, possivelmente de tipos diferentes. */
-    template< typename ... Params >
-    Polygon * makePolygon( std::initializer_list<Params> ... );
+    template< int N, typename ... Params >
+    Polygon<N> * makePolygon( std::initializer_list<Params> ... );
 
 
 
 //Implementações
 
-template< typename ... Ts >
-Polygon * makePolygon( std::initializer_list<Ts> ... args ) {
+template< int N, typename ... Ts >
+Polygon<N> * makePolygon( std::initializer_list<Ts> ... args ) {
     static_assert( Variadic::logical_and<
             std::is_convertible< Ts, double >::value ...
         >::value, "Apenas listas de inicialização de tipos"
                   " convertíveis para double!" );
-    return new Polygon( new Math::Point<2>[sizeof...(args)]{args...}, 
+    return new Polygon<N>( new Math::Point<2>[sizeof...(args)]{args...}, 
             sizeof...(args) );
 }
 

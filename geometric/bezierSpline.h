@@ -45,7 +45,7 @@ public:
     void transformPoint( int index, const Math::LinearOperator<N>& );
 
     // Métodos herdados
-    virtual void draw( Renderer * ) override;
+    virtual void draw( Renderer<N> * ) override;
     virtual Math::Point<N> center() const override;
     virtual void transform( const Math::LinearOperator<N>& ) override;
 
@@ -88,7 +88,7 @@ void BezierSpline<N>::transformPoint( int index,
 // Métodos herdados
 
 template< int N >
-void BezierSpline<N>::draw( Renderer * renderer ) {
+void BezierSpline<N>::draw( Renderer<N> * renderer ) {
     auto& p = polynomials[order-1][0];
     double sqnorm = 0.0;
     for( int i = 0; i < controlPoints.size() - 1; ++i )

@@ -3,6 +3,7 @@
 // Include *
 #include <cstdio>
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <SDL.h>
 #include "displayFile.h"
@@ -23,17 +24,18 @@
 #include "math/polynomial.h"
 #include "render/screenRenderer.h"
 #include "render/viewport.h"
-#include "render/viewportTransform.h"
 #include "render/window.h"
-#include "render/windowTransform.h"
-#include "render/clipping/clippingArea.h"
 #include "render/clipping/cohenSutherland.h"
+#include "render/projection/projector.h"
+#include "render/projection/parallel.h"
 #include "test/lib/testList.h"
 #include "view/pixel.h"
 #include "view/SDLScreen.h"
 
 using namespace Math;
 using std::vector;
+
+constexpr int D = 2; // Número de dimensões em que o programa trabalha.
 
 void waitEnter() {
     SDL_Event e;
@@ -46,7 +48,7 @@ void waitEnter() {
 melga: return;
 }
 
-void clear( Drawable& d, DisplayFile<2>& df, ScreenRenderer& renderer ) {
+void clear( Drawable& d, DisplayFile<D>& df, ScreenRenderer<D>& renderer ) {
     //GAMBIARRRRRA
     d.setColor( 255, 255, 255, 255 );
     for( int i = 0; i < d.width(); i++ )
@@ -57,20 +59,21 @@ void clear( Drawable& d, DisplayFile<2>& df, ScreenRenderer& renderer ) {
     d.update();
 }
 
-int main() {
+int main( int argc, char * argv[] ) {
     if( !Test::run() )
         return 1;
 
     SDLScreen sdl( 600, 600, "Teste" );
-    WindowTransform wt( ClippingArea::normalized );
+    Window<D> w;
     Viewport v = Viewport::generateViewport( &sdl );
     v.xmin += 10;
     v.ymin += 10;
     v.xmax -= 10;
     v.ymax -= 10;
-    CohenSutherland cs( ClippingArea::normalized );
-    ScreenRenderer renderer( v, wt, cs, sdl );
-    DisplayFile<2> df;
+    Projector<D> p = Parallel<D>;
+    LineClipper cs = CohenSutherland;
+    ScreenRenderer<D> renderer( v, w, p, cs, sdl );
+    DisplayFile<D> df;
     auto update = [&sdl, &df, &renderer](){ clear(sdl, df, renderer); };
     update();
 
@@ -85,12 +88,11 @@ int main() {
                 update();
             } ) );
     bash.addCommand( "reset", CommandFactory::makeFunctional(
-            [&wt, &update] () {
-                wt.window().x = 0.5;
-                wt.window().y = 0.5;
-                wt.window().w = 1.0;
-                wt.window().h = 1.0;
-                wt.window().t = 0.0;
+            [&w, &update] () {
+                w.setCenter({0, 0});
+                w.setWidth(2.0);
+                w.setHeight(2.0);
+                w.setTheta(0.0);
                 update();
             } ) );
 
@@ -99,27 +101,27 @@ int main() {
     bash.addCommand( "add", add );
 
     add->addCommand( "point", CommandFactory::makeFunctional( 
-            [&df, &update]( std::string name, Math::Point<2> p ) {
+            [&df, &update]( std::string name, Math::Point<D> p ) {
                 df.addObject( name, new DrawablePoint( p ) );
                 update();
             } ) );
     add->addCommand( "bezier", CommandFactory::makeFunctional(
-            [&df, &update]( std::string name, std::vector<Math::Point<2>> v ) {
-                df.addObject( name, new BezierSpline<2>( v ) );
+            [&df, &update]( std::string name, std::vector<Math::Point<D>> v ) {
+                df.addObject( name, new BezierSpline<D>( v ) );
                 update();
             } ) );
     add->addCommand( "bspline", CommandFactory::makeFunctional(
-            [&df, &update]( std::string name, std::vector<Math::Point<2>> v ) {
-                df.addObject( name, new BSpline<2>( v ) );
+            [&df, &update]( std::string name, std::vector<Math::Point<D>> v ) {
+                df.addObject( name, new BSpline<D>( v ) );
                 update();
             } ) );
     add->addCommand( "polygon", CommandFactory::makeFunctional(
-            [&df, &update]( std::string name, std::vector<Math::Point<2>> v ) {
-                Math::Point<2>* p = new Math::Point<2>[v.size()];
-                for( int i = 0; i < v.size(); ++i )
+            [&df, &update]( std::string name, std::vector<Math::Point<D>> v ) {
+                Math::Point<D>* p = new Math::Point<D>[v.size()];
+                for( unsigned i = 0; i < v.size(); ++i )
                     p[i] = v[i];
 
-                df.addObject( name, new Polygon( p, v.size() ) );
+                df.addObject( name, new Polygon<D>( p, v.size() ) );
                 update();
             } ) );
 
@@ -128,29 +130,29 @@ int main() {
     add->addCommand( "cubic", cubic );
 
     cubic->addCommand( "bezier", CommandFactory::makeFunctional(
-            [&df, &update]( std::string name, Math::Point<2> p1,
-                Math::Point<2> p2, Math::Point<2> p3, Math::Point<2> p4 )
+            [&df, &update]( std::string name, Math::Point<D> p1,
+                Math::Point<D> p2, Math::Point<D> p3, Math::Point<D> p4 )
             {
-                CubicSpline<2> * spline = new CubicSpline<2>(
-                    SplineFactory::Bezier<2>( p1, p2, p3, p4 ) );
+                CubicSpline<D> * spline = new CubicSpline<D>(
+                    SplineFactory::Bezier<D>( p1, p2, p3, p4 ) );
                 df.addObject( name, spline );
                 update();
             } ) );
     cubic->addCommand( "hermite", CommandFactory::makeFunctional(
-            [&df, &update]( std::string name, Math::Point<2> p1,
-                Math::Vector<2> r1, Math::Point<2> p4, Math::Vector<2> r4 )
+            [&df, &update]( std::string name, Math::Point<D> p1,
+                Math::Vector<D> r1, Math::Point<D> p4, Math::Vector<D> r4 )
             {
-                CubicSpline<2> * spline = new CubicSpline<2>(
-                    SplineFactory::Hermite<2>( p1, r1, p4, r4 ) );
+                CubicSpline<D> * spline = new CubicSpline<D>(
+                    SplineFactory::Hermite<D>( p1, r1, p4, r4 ) );
                 df.addObject( name, spline );
                 update();
             } ) );
     cubic->addCommand( "bspline", CommandFactory::makeFunctional(
-            [&df, &update]( std::string name, Math::Point<2> p0,
-                Math::Point<2> p1, Math::Point<2> p2, Math::Point<2> p3 )
+            [&df, &update]( std::string name, Math::Point<D> p0,
+                Math::Point<D> p1, Math::Point<D> p2, Math::Point<D> p3 )
             {
-                CubicSpline<2> * spline = new CubicSpline<2>(
-                    SplineFactory::BSpline<2>( p0, p1, p2, p3 ) );
+                CubicSpline<D> * spline = new CubicSpline<D>(
+                    SplineFactory::BSpline<D>( p0, p1, p2, p3 ) );
                 df.addObject( name, spline );
                 update();
             } ) );
@@ -189,23 +191,23 @@ int main() {
     move->addCommand( "window", moveWindow );
 
     moveWindow->addCommand( "up", CommandFactory::makeFunctional(
-            [&wt, &update]( double amount ) {
-                wt.window().moveUp( {0, amount} );
+            [&w, &update]( double amount ) {
+                w.moveUp( {0, amount} );
                 update();
             } ) );
     moveWindow->addCommand( "down", CommandFactory::makeFunctional(
-            [&wt, &update]( double amount ) {
-                wt.window().moveUp( {0, -amount} );
+            [&w, &update]( double amount ) {
+                w.moveUp( {0, -amount} );
                 update();
             } ) );
     moveWindow->addCommand( "left", CommandFactory::makeFunctional(
-            [&wt, &update]( double amount ) {
-                wt.window().moveUp( {-amount, 0} );
+            [&w, &update]( double amount ) {
+                w.moveUp( {-amount, 0} );
                 update();
             } ) );
     moveWindow->addCommand( "right", CommandFactory::makeFunctional(
-            [&wt, &update]( double amount ) {
-                wt.window().moveUp( {amount, 0} );
+            [&w, &update]( double amount ) {
+                w.moveUp( {amount, 0} );
                 update();
             } ) );
 
@@ -221,7 +223,7 @@ int main() {
             } ) );
     rotate->addCommand( "point", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double degrees, 
-                Math::Point<2> p ) 
+                Math::Point<D> p ) 
             {
                 df.transform( name, 
                     LinearFactory::make2DRotation( degrees/180*Math::PI, p ) );
@@ -234,8 +236,8 @@ int main() {
                 update();
             } ) );
     rotate->addCommand( "window", CommandFactory::makeFunctional(
-            [&wt, &update]( double degrees ) {
-                wt.window().rotate( degrees/180*Math::PI );
+            [&w, &update]( double degrees ) {
+                w.rotate( degrees/180*Math::PI );
                 update();
             } ) );
 
@@ -245,15 +247,15 @@ int main() {
     bash.addCommand( "zoom", zoom );
     
     zoom->addCommand( "in", CommandFactory::makeFunctional(
-            [&wt, &update]( double percent ) {
-                wt.window().vscale( 1 - percent/100 );
-                wt.window().hscale( 1 - percent/100 );
+            [&w, &update]( double percent ) {
+                w.vscale( 1 - percent/100 );
+                w.hscale( 1 - percent/100 );
                 update();
             } ) );
     zoom->addCommand( "out", CommandFactory::makeFunctional(
-            [&wt, &update]( double percent ) {
-                wt.window().vscale( 1 + percent/100 );
-                wt.window().hscale( 1 + percent/100 );
+            [&w, &update]( double percent ) {
+                w.vscale( 1 + percent/100 );
+                w.hscale( 1 + percent/100 );
                 update();
             } ) );
 
@@ -271,7 +273,12 @@ int main() {
                 update();
             } ) );
 
-    bash.readFrom( std::cin );
+    if( argc == 1 )
+        bash.readFrom( std::cin );
+    else {
+        std::ifstream file( argv[1] );
+        bash.readFrom( file );
+    }
 
     return 0;
 }

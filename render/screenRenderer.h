@@ -1,30 +1,24 @@
 /* screenRenderer.h
  * Implementação de renderer.h; esta classe utiliza-se de objetos
  * Drawable para transportar para a tela os resultados da renderização.
- *
- * Objetos desta classe possuem referências para Drawable e
- * WindowTransform. Embora as referências para a transformada é constantes
- * (isto é, este objeto não as modificará), este objeto pode ser modificado
- * externamente, fora do controle do ScreenRenderer. 
- *
- * Esta classe depende de classes que implementem a interface LineClipper
- * para fazer clipping de linhas.
  */
 #ifndef SCREEN_RENDERER_H
 #define SCREEN_RENDERER_H
 
 #include "render/renderer.h"
-#include "render/viewportTransform.h"
-#include "render/windowTransform.h"
 #include "render/viewport.h"
+#include "render/window.h"
 #include "render/clipping/lineClipper.h"
+#include "render/projection/projector.h"
 #include "math/point.h"
 #include "view/drawable.h"
 
-class ScreenRenderer : public Renderer {
-    const ViewportTransform vpt;
-    const WindowTransform& wt;
-    LineClipper<2>& clipper;
+template< int N >
+class ScreenRenderer : public Renderer<N> {
+    const Window<N>& w;
+    const Viewport vp;
+    Projector<N> project;
+    LineClipper clip;
     Drawable& screen;
 
 public:
@@ -33,36 +27,59 @@ public:
      * e transformada de window passadas.
      * A transformada de viewport é gerada automaticamente com base
      * na viewport passada. */
-    ScreenRenderer( Viewport, const WindowTransform&, LineClipper<2>&,
-            Drawable& screen );
+    ScreenRenderer( Viewport, const Window<N>&, Projector<N>,
+            LineClipper, Drawable& );
 
     virtual ~ScreenRenderer() = default;
     
     // Métodos herdados:
-    virtual void drawLine( Math::Point<2> origin, 
-            Math::Point<2> destiny ) override;
-    virtual void drawPolygon( Math::Point<2> * points, 
-            int numPoints ) override;
-    virtual double density() override;
+    virtual void drawLine( Math::Point<N>, Math::Point<N> ) override;
+    virtual void drawTriangle( Math::Point<N>, Math::Point<N>, 
+            Math::Point<N> ) override;
+    virtual double density() const override;
 };
 
-// Implementação dos métodos mais simples
-inline ScreenRenderer::ScreenRenderer( Viewport v, const WindowTransform& wt,
-        LineClipper<2>& clipper, Drawable& s ) :
-    vpt( v, wt.clippingArea() ),
-    wt( wt ),
-    clipper( clipper ),
+// Implementação
+template< int N >
+ScreenRenderer<N>::ScreenRenderer( Viewport vp, const Window<N>& w,
+        Projector<N> p, LineClipper c, Drawable& s ) :
+    w( w ),
+    vp( vp ),
+    project( p ),
+    clip( c ),
     screen( s )
 {}
 
-inline double ScreenRenderer::density() {
-    return vpt.viewport().area()/wt.window().area();
+template< int N >
+void ScreenRenderer<N>::drawLine( Math::Point<N> o, Math::Point<N> d ) {
+    //Origin and Destiny
+    Math::Point<N> wo = w.map( o ); //World-coordinates Origin point
+    Math::Point<N> wd = w.map( d ); //World-coordinates Destiny point
+    /* Agora, temos ambas as extremidades da linha a ser desenhada
+     * em coordenadas da window. */
+
+    ProjectedPoint po = project( wo ); //Projected Origin
+    ProjectedPoint pd = project( wd ); //Projected Destiny
+    /* Agora as temos em coordenadas projetadas. */
+
+    if( clip(po, pd) ) {
+        Pixel vo = vp.transform( po ); //Viewport-cordinates Origin point
+        Pixel vd = vp.transform( pd ); //Viewport-cordinates Origin point
+        screen.paint( vo, vd );
+    }
 }
 
-inline void ScreenRenderer::drawPolygon( Math::Point<2> *, int ) {
+template< int N >
+double ScreenRenderer<N>::density() const {
+    return vp.area()/w.area();
+}
+
+template< int N >
+void ScreenRenderer<N>::drawTriangle( Math::Point<N>, Math::Point<N>, 
+        Math::Point<N> )
+{
     /* Gambiarra para que o código compile.
      * TODO: implementar este método. */
 }
 
 #endif // SCREEN_RENDERER_H
-

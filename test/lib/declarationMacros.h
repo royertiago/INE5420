@@ -45,4 +45,10 @@ bool test();                                                            \
 REGISTER_TEST( test )                                                   \
 bool test()
 
+/* Declara o teste especificado como sendo amigo da classe atual.
+ * Prefira este método a declarar o teste como amigo "no braço" pois
+ * caso haja necessidade de mover todos os testes para um namespace
+ * próprio apenas alterações neste header são necessárias. */
+#define TEST_FRIEND( test ) friend bool test()
+
 #endif // DECLARATION_MACROS_H

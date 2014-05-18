@@ -7,15 +7,17 @@
 #ifndef GEOMETRIC_OBJECT_H
 #define GEOMETRIC_OBJECT_H
 
+template< int N >
 class Renderer;
 
+template< int N >
 class GeometricObject {
 public:
     /* Desenha este objeto geométrico no renderizador passado.
      *
      * O objeto não precisa cuidar de desenhar apenas na área
      * disponível na window; o renderizador cuidará disso. */
-    virtual void draw( Renderer * ) = 0;
+    virtual void draw( Renderer<N> * ) = 0;
 
     virtual ~GeometricObject() = default;
 };
