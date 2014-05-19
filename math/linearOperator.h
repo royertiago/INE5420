@@ -63,6 +63,18 @@ namespace LinearFactory {
      * O ângulo será tratado em radianos. */
     LinearOperator<2> Rotation2D( double angle, Point<2> center );
 
+    /* Constrói um operador linear que transforma os pontos de 
+     * forma que front esteja alinhado com o vetor unitário z
+     * {0, 0, 1} e up alinhado com o vetor unitário y {0, 1, 0}.
+     * 
+     * Assumiremos que front e up formam uma base ortonormal para
+     * o plano que será mapeado para o plano yz. */
+    LinearOperator<3> AxisAlignment( Vector<3> front, Vector<3> up );
+
+    /* Constrói o operador linear inverso de AxisAlignment,
+     * com os mesmos argumentos. */
+    LinearOperator<3> InverseAxisAlignment( Vector<3> front, Vector<3> up );
+
 // Implementação
 template< int N >
 LinearOperator<N> Translation( Vector<N> direction ) {
