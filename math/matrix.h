@@ -47,11 +47,13 @@ public:
      * são possíveis.
      * Construtor disponível apenas para N == 1.
      * Valores extra serão descartados, valores faltantes serão
-     * preenchidos com 1.0; ver math/point.h */
+     * preenchidos com 0.0, exceto o último, que será preenchhido
+     * com 1.0 (ver math/point.h). */
     Matrix( std::initializer_list< double > );
 
     /* Permite inicialização de matrizes de tamanho arbitrário.
-     * Posições faltantes serão inicalizadas para zero. */
+     * Posições faltantes serão inicalizadas para zero, exceto
+     * a posição M-1,N-1, que será inicializada com 1.0. */
     Matrix( std::initializer_list< std::initializer_list<double> > );
 
     /* Posições disponíveis serão preenchidas e as demais inicializadas
@@ -145,7 +147,9 @@ Matrix<M, N>::Matrix( std::initializer_list< double > source ) {
     auto it = source.begin();
     for( ; i < M && it != source.end(); ++i, ++it )
         values[i][0] = *it;
-    for( ; i < M; ++i )
+    for( ; i < M-1; ++i )
+        values[i][0] = 0.0;
+    if( i < M )
         values[i][0] = 1.0;
 }
 

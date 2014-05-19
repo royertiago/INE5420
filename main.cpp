@@ -167,25 +167,25 @@ int main( int argc, char * argv[] ) {
     move->addCommand( "up", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double amount ) {
                 df.transform( name, 
-                    LinearFactory::make2DTranslation( {0, amount} ) );
+                    LinearFactory::Translation<D>( {0, amount} ) );
                 update();
             } ) );
     move->addCommand( "down", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double amount ) {
                 df.transform( name, 
-                    LinearFactory::make2DTranslation( {0, -amount} ) );
+                    LinearFactory::Translation<D>( {0, -amount} ) );
                 update();
             } ) );
     move->addCommand( "left", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double amount ) {
                 df.transform( name, 
-                    LinearFactory::make2DTranslation( {-amount, 0} ) );
+                    LinearFactory::Translation<D>( {-amount, 0} ) );
                 update();
             } ) );
     move->addCommand( "right", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double amount ) {
                 df.transform( name, 
-                    LinearFactory::make2DTranslation( {amount, 0} ) );
+                    LinearFactory::Translation<D>( {amount, 0} ) );
                 update();
             } ) );
 
@@ -220,8 +220,8 @@ int main( int argc, char * argv[] ) {
 
     rotate->addCommand( "origin", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double degrees ) {
-                df.transform( name, LinearFactory::make2DRotation(
-                        degrees/180*Math::PI ) );
+                df.transform( name, LinearFactory::Rotation<D>(
+                        degrees/180*Math::PI, 0, 1 ) );
                 update();
             } ) );
     rotate->addCommand( "point", CommandFactory::makeFunctional(
@@ -229,12 +229,12 @@ int main( int argc, char * argv[] ) {
                 Math::Point<D> p ) 
             {
                 df.transform( name, 
-                    LinearFactory::make2DRotation( degrees/180*Math::PI, p ) );
+                    LinearFactory::Rotation2D( degrees/180*Math::PI, p ) );
                 update();
             } ) );
     rotate->addCommand( "center", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double degrees ) {
-                df.transform( name, LinearFactory::make2DRotation(
+                df.transform( name, LinearFactory::Rotation2D(
                         degrees/180*Math::PI, df.center( name ) ) );
                 update();
             } ) );
@@ -265,7 +265,7 @@ int main( int argc, char * argv[] ) {
 
     bash.addCommand( "scale", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double factor ) {
-                df.transform( name, LinearFactory::make2DScale(
+                df.transform( name, LinearFactory::Scale<D>(
                         factor, df.center( name ) ) );
                 update();
             } ) );

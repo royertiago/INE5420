@@ -82,13 +82,12 @@ Math::Point<2> Window<2>::map( Math::Point<2> p ) const {
 
 void Window<2>::computeTransform() const {
     using namespace LinearFactory;
-    op = make2DTranslation( {-x, -y} );
-    /* Acabo de deslocar o centro da window para o centro do mundo.
+    op = Translation<2>( {-x, -y} );
+    /* Acabamos de deslocar o centro da window para o centro do mundo.
      * Agora, usaremos as transformações com base na origem do mundo
-     * para deixar a transformação alinhada com a área de clipping,
-     * e depois é só deslocar tudo para o centro CAcenter. */
+     * para alinhar-mo-nos com o sistema de coordenadas da window.  */
     
-    op.backComposeWith( make2DRotation( -t ) );
+    op.backComposeWith( Rotation<2>( -t, 0, 1 ) );
     //Agora, os eixos de ambos estão na orientação correta.
 
     Math::LinearOperator<2> scale = { { 2/w,   0, 0 },

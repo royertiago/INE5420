@@ -26,6 +26,9 @@ Criar tipo PreClipper, que faz uma pré-clipagem de retas não-projetadas
     visualização.
 
 Implementar utility/triangulation.h
+Implementar Matrix::slice()
+    Pontos de uso: SplineFactory::Hermite, SplineFactory::BSpline,
+    LinearFactory::makeTranslation.
 Implementar operadores de Matrix para propagar uma operação genérica.
 Modificar classes que trabalham com vetores para usar std::vector ou
     unique_ptr ou implementar um util/shared_array_ptr.h.

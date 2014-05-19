@@ -7,6 +7,7 @@
 #ifndef LINEAR_OPERATOR_H
 #define LINEAR_OPERATOR_H
 
+#include <cmath>
 #include "math/matrix.h"
 #include "math/vector.h"
 #include "math/point.h"
@@ -22,31 +23,84 @@ namespace Math {
 /* Namespace que contém funções para construir operadores lineares
  * capazes de efetuar operações específicas. */
 namespace LinearFactory {
-    using Math::LinearOperator;
+    using namespace Math;
 
     /* Constrói um operador linear que desloca os pontos
      * na direção especificada. */
-    LinearOperator<2> make2DTranslation( Math::Vector<2> direction );
+    template< int N >
+    LinearOperator<N> Translation( Math::Vector<N> direction );
 
     /* Constrói um operador linear que amplia os pontos
      * pelo fator especificado. Note que esta transformação de escala
-     * ocorre em relação à origem do mundo. */
-    LinearOperator<2> make2DScale( double factor );
+     * ocorre em relação à origem do mundo.
+     * Note que Scale(1) é a matriz identidade. */
+    template< int N >
+    LinearOperator<N> Scale( double factor );
 
     /* Constrói um operador linear que amplia os pontos pelo
      * fator especificado, em relação ao centro especificado. */
-    LinearOperator<2> make2DScale( double factor, Math::Point<2> center );
+    template< int N >
+    LinearOperator<N> Scale( double factor, Point<N> center );
 
     /* Constrói um operador linear que rotaciona os pontos
-     * em sentido anti-horário, em relação ao mundo.
-     * O ângulo será tratado em radianos. */
-    LinearOperator<2> make2DRotation( double angle );
+     * no plano ij, no sentido i->j.
+     *
+     * O ângulo será tratado em radianos.
+     * i e j começam do zero.
+     *
+     * Por exemplo, para fazer uma rotação no plano xz no sentido
+     * x -> z num espaço tridimensional, chame
+     *  auto op = Rotation<3>( angle, 0, 2 );
+     * op({0, 0, 1}) deve ser igual a {1, 0, 0} para angle = Pi/2.
+     * A transformação de rotação padrão em duas dimensões é obtida via
+     *  Rotation<2>( angle, 0, 1 ); */
+    template< int N >
+    LinearOperator<N> Rotation( double angle, int i, int j );
 
     /* Constrói um operador linear que rotaciona os pontos
      * com relação ao centro especificado, em sentido anti-horário,
      * pelo ângulo especificado.
      * O ângulo será tratado em radianos. */
-    LinearOperator<2> make2DRotation( double angle, Math::Point<2> center );
+    LinearOperator<2> Rotation2D( double angle, Point<2> center );
+
+// Implementação
+template< int N >
+LinearOperator<N> Translation( Vector<N> direction ) {
+    LinearOperator<N> r; //retorno
+    for( int i = 0; i <= N; ++i )
+        r[i][i] = 1.0;
+    for( int i = 0; i < N; ++i )
+        r[i][N] = direction[i];
+    return r;
+}
+
+template< int N >
+LinearOperator<N> Scale( double factor ) {
+    LinearOperator<N> r;
+    int i = 0;
+    for( ; i < N; ++i )
+        r[i][i] = factor;
+    r[i][i] = 1.0;
+    return r;
+}
+
+template< int N >
+LinearOperator<N> Scale( double factor, Point<N> center ) {
+    LinearOperator<N> r = Translation<N>( -center );
+    r.backComposeWith( Scale<N>( factor ) );
+    r.backComposeWith( Translation<N>( center ) );
+    return r;
+}
+
+template< int N >
+LinearOperator<N> Rotation( double angle, int m, int j ) {
+    LinearOperator<N> r = Scale<N>( 1 );
+    r[m][m] =  std::cos( angle );
+    r[j][j] =  std::cos( angle );
+    r[m][j] = -std::sin( angle );
+    r[j][m] =  std::sin( angle );
+    return r;
+}
 
 } // namespace LinearFactory
 
