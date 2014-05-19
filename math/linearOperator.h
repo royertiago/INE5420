@@ -67,7 +67,7 @@ namespace LinearFactory {
      * forma que front esteja alinhado com o vetor unitário z
      * {0, 0, 1} e up alinhado com o vetor unitário y {0, 1, 0}.
      * 
-     * Assumiremos que front e up formam uma base ortonormal para
+     * Assumiremos que front e up formam uma base ortogonal para
      * o plano que será mapeado para o plano yz. */
     LinearOperator<3> AxisAlignment( Vector<3> front, Vector<3> up );
 

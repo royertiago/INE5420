@@ -30,6 +30,10 @@ namespace Math {
     template< int M >
     double vectorAngle( Vector<M>, Vector<M> );
 
+    /* Computa a norma do vetor. */
+    template< int M >
+    double norm( Vector<M> );
+
 // Implementação
 template< int M >
 double innerProduct( Vector<M> u, Vector<M> v ) {
@@ -45,6 +49,10 @@ double vectorAngle( Vector<M> u, Vector<M> v ) {
     return std::acos( innerProduct(u, v) / std::sqrt(u.sqnorm()*v.sqnorm()) );
 }
 
+template< int M >
+double norm( Vector<M> v ) {
+    return std::sqrt( v.sqnorm() );
+}
 } // namespace Math
 
 #endif // VECTOR_H

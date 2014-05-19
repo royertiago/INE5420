@@ -63,13 +63,60 @@ LinearOperator<3> LinearFactory::AxisAlignment( Vector<3> front, Vector<3> up )
      * Não precisamos mais fazer projeções pois o vetor front já está
      * no plano correto, basta rotacionar para o eixo correto.
      *
-     * Para o próximo passo (fazer up coincidir com {1, 0, 0}, precisamos
+     * Para o próximo passo (fazer up coincidir com {0, 1, 0}, precisamos
      * saber como up se comporta sob a transformação até aqui: */
     Vector<3> upR = Vector<3>( r( Point<3>(up) ) ); // up [r]otated
-    if( upR[1] >= 0 )
-        r.backComposeWith( Rotation<3>(vectorAngle(upR, {1,0,0}), 1, 0) );
+    if( upR[0] >= 0 )
+        r.backComposeWith( Rotation<3>(vectorAngle(upR, {0,1,0}), 0, 1) );
     else
-        r.backComposeWith( Rotation<3>(vectorAngle(upR, {1,0,0}), 0, 1) );
+        r.backComposeWith( Rotation<3>(vectorAngle(upR, {0,1,0}), 1, 0) );
     
     return r;
+}
+
+LinearOperator<3> LinearFactory::InverseAxisAlignment( 
+        Vector<3> front, Vector<3> up )
+{
+    Vector<3> xyFproj = front;
+    xyFproj[2] = 0.0;
+    LinearOperator<3> t; // [t]emporary transform
+    LinearOperator<3> r; // [r]eturn transform
+    if( fabs(xyFproj[1]) > epsilon ) 
+        if( xyFproj[1] > 0 ) {
+            t = Rotation<3>( vectorAngle(xyFproj, {1,0,0}), 1, 0 );
+            r = Rotation<3>( -vectorAngle(xyFproj, {1,0,0}), 1, 0 );
+        }
+        else {
+            t = Rotation<3>( vectorAngle(xyFproj, {1,0,0}), 0, 1 );
+            r = Rotation<3>( -vectorAngle(xyFproj, {1,0,0}), 0, 1 );
+        }
+    else {
+        t = Scale<3>(1);
+        r = Scale<3>(1);
+    }
+    /* A ideia é a mesma. Faremos em t a mesma transformação feita
+     * em AxisAlignment e em r a transformação inversa. */
+
+    front = Vector<3>( t(Point<3>(front)) );
+    if( front[0] >= 0 ) {
+        t.backComposeWith( Rotation<3>(vectorAngle(front, {0,0,1}), 0, 2) );
+        r.frontComposeWith( Rotation<3>(-vectorAngle(front, {0,0,1}), 0, 2) );
+    }
+    else {
+        t.backComposeWith( Rotation<3>(vectorAngle(front, {0,0,1}), 2, 0) );
+        r.frontComposeWith( Rotation<3>(-vectorAngle(front, {0,0,1}), 2, 0) );
+    }
+    /* Note que temos que compor no sentido contrário: a última transformação
+     * feita é a primeira a ser desfeita. */
+
+    Vector<3> upR = Vector<3>( t( Point<3>(up) ) ); // up [r]otated
+    if( upR[0] >= 0 )
+        r.frontComposeWith( Rotation<3>(-vectorAngle(upR, {0,1,0}), 0, 1) );
+    else
+        r.frontComposeWith( Rotation<3>(-vectorAngle(upR, {0,1,0}), 1, 0) );
+    /* Não precisamos fazer o último cálculo com a transformação
+     * não-invertida, pois não a usaremos mais. */
+
+    return r; 
+    // Isto é mais custoso do que inverter no braço...
 }
