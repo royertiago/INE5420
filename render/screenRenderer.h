@@ -31,6 +31,9 @@ public:
             LineClipper, Drawable& );
 
     virtual ~ScreenRenderer() = default;
+
+    /* Altera o tipo de projeção utilizada. */
+    void setProjector( Projector<N> );
     
     // Métodos herdados:
     virtual void drawLine( Math::Point<N>, Math::Point<N> ) override;
@@ -49,6 +52,11 @@ ScreenRenderer<N>::ScreenRenderer( Viewport vp, const Window<N>& w,
     clip( c ),
     screen( s )
 {}
+
+template< int N >
+void ScreenRenderer<N>::setProjector( Projector<N> p ) {
+    project = p;
+}
 
 template< int N >
 void ScreenRenderer<N>::drawLine( Math::Point<N> o, Math::Point<N> d ) {

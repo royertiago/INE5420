@@ -4,8 +4,7 @@
 
 #include <cmath>
 
-#include "render/window.h"
-#include "math/linearOperator.h"
+#include "render/window2d.h"
 
 using std::sin;
 using std::cos;
@@ -15,7 +14,8 @@ Window<2>::Window() :
     y( 0 ),
     w( 2 ),
     h( 2 ),
-    t( 0 )
+    t( 0 ),
+    cached( false )
 {}
 
 void Window<2>::setCenter( Math::Point<2> p ) {

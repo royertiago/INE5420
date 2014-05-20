@@ -12,7 +12,7 @@
 
 DECLARE_TEST( LinearFactoryAxisAlignmentTest ) {
     bool b = true;
-    Test::TesterMatrix m(2);
+    Test::TesterMatrix m(4);
     using namespace Math;
     using namespace LinearFactory;
     Vector<3> x = {1, 0, 0};
@@ -81,6 +81,23 @@ DECLARE_TEST( LinearFactoryAxisAlignmentTest ) {
     op = AxisAlignment( -z-x, -y );
     b &= m.TEST_EQUALS( op, ex );
     b &= m.TEST_EQUALS( op * InverseAxisAlignment( -z-x, -y ), Scale<3>(1) );
+
+    // front apontando para -z-x, up apontando para y
+    ex = Rotation<3>(3*PI/4, 2, 0 );
+    op = AxisAlignment( -z-x, y );
+    b &= m.TEST_EQUALS( op, ex );
+    b &= m.TEST_EQUALS( op * InverseAxisAlignment( -z-x, y ), Scale<3>(1) );
+
+    // front apontando para -x-y-z, up apontando para 2y-x-z
+    ex = Rotation<3>(3*PI/4, 2, 0 );
+    ex.backComposeWith( Rotation<3>( atan(1/sqrt(2)), 2, 1 ) );
+        // teste do teste:
+        b &= m.TEST_EQUALS( ex(Point<3>(-x-y-z)), Point<3>(z*sqrt(3)) );
+        b &= m.TEST_EQUALS( ex(Point<3>(y*2-x-z)), Point<3>(y*sqrt(6)) );
+    op = AxisAlignment( -x-y-z, y*2-x-z );
+    b &= m.TEST_EQUALS( op, ex );
+    b &= m.TEST_EQUALS( op * InverseAxisAlignment( -z-x-y, y*2-x-z ),
+                        Scale<3>(1) );
 
     return b;
 }

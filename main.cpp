@@ -28,6 +28,7 @@
 #include "render/clipping/cohenSutherland.h"
 #include "render/projection/projector.h"
 #include "render/projection/parallel.h"
+#include "render/projection/perspective.h"
 #include "test/lib/testList.h"
 #include "view/pixel.h"
 #include "view/SDLScreen.h"
@@ -35,7 +36,7 @@
 using namespace Math;
 using std::vector;
 
-constexpr int D = 2; // Número de dimensões em que o programa trabalha.
+constexpr int D = 3; // Número de dimensões em que o programa trabalha.
 
 void waitEnter() {
     SDL_Event e;
@@ -70,7 +71,7 @@ int main( int argc, char * argv[] ) {
     v.ymin += 10;
     v.xmax -= 10;
     v.ymax -= 10;
-    Projector<D> p = Parallel<D>;
+    Projector<D> p = parallel<D>;
     LineClipper cs = CohenSutherland;
     ScreenRenderer<D> renderer( v, w, p, cs, sdl );
     DisplayFile<D> df;
@@ -87,24 +88,24 @@ int main( int argc, char * argv[] ) {
                 df.clear();
                 update();
             } ) );
-    bash.addCommand( "reset", CommandFactory::makeFunctional(
+/*    bash.addCommand( "reset", CommandFactory::makeFunctional(
             [&w, &update] () {
                 w.setCenter({0, 0});
                 w.setWidth(2.0);
                 w.setHeight(2.0);
                 w.setTheta(0.0);
                 update();
-            } ) );
+            } ) );*/
 
     /* add <command> */
     CommandMultiplexer * add = new CommandMultiplexer();
     bash.addCommand( "add", add );
 
-    add->addCommand( "point", CommandFactory::makeFunctional( 
+/*    add->addCommand( "point", CommandFactory::makeFunctional( 
             [&df, &update]( std::string name, Math::Point<D> p ) {
                 df.addObject( name, new DrawablePoint( p ) );
                 update();
-            } ) );
+            } ) );*/
     add->addCommand( "bezier", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, std::vector<Math::Point<D>> v ) {
                 df.addObject( name, new BezierSpline<D>( v ) );
@@ -193,7 +194,7 @@ int main( int argc, char * argv[] ) {
     CommandMultiplexer * moveWindow = new CommandMultiplexer();
     move->addCommand( "window", moveWindow );
 
-    moveWindow->addCommand( "up", CommandFactory::makeFunctional(
+/*    moveWindow->addCommand( "up", CommandFactory::makeFunctional(
             [&w, &update]( double amount ) {
                 w.moveUp( {0, amount} );
                 update();
@@ -212,7 +213,7 @@ int main( int argc, char * argv[] ) {
             [&w, &update]( double amount ) {
                 w.moveUp( {amount, 0} );
                 update();
-            } ) );
+            } ) );*/
 
     /* rotate <command> */
     CommandMultiplexer * rotate = new CommandMultiplexer();
@@ -238,11 +239,11 @@ int main( int argc, char * argv[] ) {
                         degrees/180*Math::PI, df.center( name ) ) );
                 update();
             } ) );
-    rotate->addCommand( "window", CommandFactory::makeFunctional(
+/*    rotate->addCommand( "window", CommandFactory::makeFunctional(
             [&w, &update]( double degrees ) {
                 w.rotate( degrees/180*Math::PI );
                 update();
-            } ) );
+            } ) );*/
 
 
     /* zoom <in/out> */
@@ -273,6 +274,21 @@ int main( int argc, char * argv[] ) {
     bash.addCommand( "delete", CommandFactory::makeFunctional(
             [&df, &update]( std::string name ) {
                 df.remove( name );
+                update();
+            } ) );
+
+    /* set <parallel/perspective> */
+    CommandMultiplexer * set = new CommandMultiplexer();
+    bash.addCommand( "set", set );
+
+    set->addCommand( "parallel", CommandFactory::makeFunctional(
+            [&renderer, &update]() {
+                renderer.setProjector( parallel<D> );
+                update();
+            } ) );
+    set->addCommand( "perspective", CommandFactory::makeFunctional(
+            [&renderer, &update]() {
+                renderer.setProjector( perspective );
                 update();
             } ) );
 

@@ -14,7 +14,7 @@
 #include "render/projection/projectedPoint.h"
 
 template< int N >
-ProjectedPoint Parallel( Math::Point<N> p ) {
+ProjectedPoint parallel( Math::Point<N> p ) {
     static_assert( N > 1, "Não é possível projetar de menos de 2 dimensões" );
     return ProjectedPoint{ p[0], p[1] };
 }

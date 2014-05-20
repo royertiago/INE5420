@@ -45,5 +45,6 @@ template< int N >
 class Window;
 
 #include "window2d.h"
+#include "window3d.h"
 
 #endif // WINDOW_H
