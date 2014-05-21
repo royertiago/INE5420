@@ -5,12 +5,12 @@
 #include "render/window3d.h"
 
 Window<3>::Window() :
-    center({2/3.0, 2/3.0, 1}),
+    center({1, 1, 1}),
     w( 2 ),
     h( 2 ),
     d( 1 ),
     front( -center ),
-    viewUp( Math::Vector<3>({-1, 13.0/4, -3.0/2}) ),
+    viewUp( Math::Vector<3>({-1, 2, -1}) ),
     cached( false )
 {}
 
@@ -29,11 +29,30 @@ void Window<3>::setHeight( double d ) {
     cached = false;
 }
 
+void Window<3>::setDistance( double D ) {
+    d = D;
+    cached = false;
+}
+
+void Window<3>::setFront( Math::Vector<3> v ) {
+    front = v;
+    cached = false;
+}
+
+void Window<3>::setUp( Math::Vector<3> v ) {
+    viewUp = v;
+    cached = false;
+}
+
 void Window<3>::move( Math::Vector<3> v ) {
     center[0] = center[0] + v[0];
     center[1] = center[1] + v[1];
     center[2] = center[2] + v[2];
     cached = false;
+}
+
+void Window<3>::moveFront( double d ) {
+    move( front * (d / norm(front)) );
 }
 
 void Window<3>::vscale( double factor ) {

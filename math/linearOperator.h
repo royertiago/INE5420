@@ -63,6 +63,21 @@ namespace LinearFactory {
      * O ângulo será tratado em radianos. */
     LinearOperator<2> Rotation2D( double angle, Point<2> center );
 
+    /* Constrói um operador linear que rotaciona os pontos em torno
+     * da origem do mundo, sobre o eixo de rotação especificado.
+     * O ângulo será tratado em radianos. */
+    LinearOperator<3> Rotation3D( double angle, Vector<3> axis );
+
+    /* Constrói um operador linear que rotaciona os pontos em torno
+     * do centro especificado, sobre o eixo de rotação especificado. */
+    LinearOperator<3> Rotation3D( double, Vector<3> axis, Point<3> center );
+
+    /* Constrói um operador linear que transforma os pontos de
+     * forma que axis esteja alinhado com o vetor unitário z.
+     *
+     * Note que tal operador não é único. */
+    LinearOperator<3> AxisAlignment( Vector<3> axis );
+
     /* Constrói um operador linear que transforma os pontos de 
      * forma que front esteja alinhado com o vetor unitário z
      * {0, 0, 1} e up alinhado com o vetor unitário y {0, 1, 0}.
@@ -71,9 +86,8 @@ namespace LinearFactory {
      * o plano que será mapeado para o plano yz. */
     LinearOperator<3> AxisAlignment( Vector<3> front, Vector<3> up );
 
-    /* Constrói o operador linear inverso de AxisAlignment,
-     * com os mesmos argumentos. */
-    LinearOperator<3> InverseAxisAlignment( Vector<3> front, Vector<3> up );
+    /* Constrói o operador linear inverso de AxisAlignment( axis ). */
+    LinearOperator<3> InverseAxisAlignment( Vector<3> axis );
 
 // Implementação
 template< int N >

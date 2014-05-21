@@ -41,14 +41,23 @@ public:
     /* Altera as dimensões da área de projeção. */
     void setWidth( double );
     void setHeight( double );
+    void setDistance( double );
+
+    /* Altera os vetores de visualização da window.
+     * front e up serão assumidos ortogonais. */
+    void setFront( Math::Vector<3> front );
+    void setUp( Math::Vector<3> up );
 
 
     /* Movimenta a window no sentido desejado.
      *
      * Note que a movimentação será a mesma, independente da
-     * orientação da window - isto é, a movimentação é independente
-     * do ângulo. Caso o ângulo seja importante, use Window::moveUp. */
+     * orientação da window. */
     void move( Math::Vector<3> v );
+
+    /* Movimenta a window para frente, a quantidade desejada.
+     * Aceita valores negativos. */
+    void moveFront( double );
 
     /* vertical scale: Multiplica a altura da área de projeção. */
     void vscale( double factor );

@@ -88,24 +88,26 @@ int main( int argc, char * argv[] ) {
                 df.clear();
                 update();
             } ) );
-/*    bash.addCommand( "reset", CommandFactory::makeFunctional(
+    bash.addCommand( "reset", CommandFactory::makeFunctional(
             [&w, &update] () {
-                w.setCenter({0, 0});
+                w.setCenter({1, 1, 1});
                 w.setWidth(2.0);
                 w.setHeight(2.0);
-                w.setTheta(0.0);
+                w.setDistance(1.0);
+                w.setFront({-1, -1, -1});
+                w.setUp({-1, 2, -1});
                 update();
-            } ) );*/
+            } ) );
 
     /* add <command> */
     CommandMultiplexer * add = new CommandMultiplexer();
     bash.addCommand( "add", add );
 
-/*    add->addCommand( "point", CommandFactory::makeFunctional( 
+    add->addCommand( "point", CommandFactory::makeFunctional( 
             [&df, &update]( std::string name, Math::Point<D> p ) {
-                df.addObject( name, new DrawablePoint( p ) );
+                df.addObject( name, new DrawablePoint<D>( p ) );
                 update();
-            } ) );*/
+            } ) );
     add->addCommand( "bezier", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, std::vector<Math::Point<D>> v ) {
                 df.addObject( name, new BezierSpline<D>( v ) );
@@ -168,25 +170,37 @@ int main( int argc, char * argv[] ) {
     move->addCommand( "up", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double amount ) {
                 df.transform( name, 
-                    LinearFactory::Translation<D>( {0, amount} ) );
+                    LinearFactory::Translation<D>( {0, amount, 0} ) );
                 update();
             } ) );
     move->addCommand( "down", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double amount ) {
                 df.transform( name, 
-                    LinearFactory::Translation<D>( {0, -amount} ) );
+                    LinearFactory::Translation<D>( {0, -amount, 0} ) );
                 update();
             } ) );
     move->addCommand( "left", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double amount ) {
                 df.transform( name, 
-                    LinearFactory::Translation<D>( {-amount, 0} ) );
+                    LinearFactory::Translation<D>( {-amount, 0, 0} ) );
                 update();
             } ) );
     move->addCommand( "right", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double amount ) {
                 df.transform( name, 
-                    LinearFactory::Translation<D>( {amount, 0} ) );
+                    LinearFactory::Translation<D>( {amount, 0, 0} ) );
+                update();
+            } ) );
+    move->addCommand( "front", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, double amount ) {
+                df.transform( name, 
+                    LinearFactory::Translation<D>( {0, 0, amount} ) );
+                update();
+            } ) );
+    move->addCommand( "back", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, double amount ) {
+                df.transform( name, 
+                    LinearFactory::Translation<D>( {0, 0, -amount} ) );
                 update();
             } ) );
 
@@ -194,6 +208,16 @@ int main( int argc, char * argv[] ) {
     CommandMultiplexer * moveWindow = new CommandMultiplexer();
     move->addCommand( "window", moveWindow );
 
+    moveWindow->addCommand( "vector", CommandFactory::makeFunctional(
+            [&w, &update]( Math::Vector<3> v ) {
+                w.move( v );
+                update();
+            } ) );
+    moveWindow->addCommand( "front", CommandFactory::makeFunctional(
+            [&w, &update]( double d ) {
+                w.moveFront( d );
+                update();
+            } ) );
 /*    moveWindow->addCommand( "up", CommandFactory::makeFunctional(
             [&w, &update]( double amount ) {
                 w.moveUp( {0, amount} );
@@ -220,9 +244,11 @@ int main( int argc, char * argv[] ) {
     bash.addCommand( "rotate", rotate );
 
     rotate->addCommand( "origin", CommandFactory::makeFunctional(
-            [&df, &update]( std::string name, double degrees ) {
-                df.transform( name, LinearFactory::Rotation<D>(
-                        degrees/180*Math::PI, 0, 1 ) );
+            [&df, &update]( std::string name, double degrees,
+                Math::Vector<D> axis ) 
+            {
+                df.transform( name, LinearFactory::Rotation3D(
+                        degrees/180*Math::PI, axis ) );
                 update();
             } ) );
     rotate->addCommand( "point", CommandFactory::makeFunctional(
