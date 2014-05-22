@@ -55,9 +55,11 @@ public:
      * orientação da window. */
     void move( Math::Vector<3> v );
 
-    /* Movimenta a window para frente, a quantidade desejada.
+    /* Movimenta a window na direção desejada, a quantidade desejada.
      * Aceita valores negativos. */
     void moveFront( double );
+    void moveUp( double );
+    void moveLeft( double );
 
     /* vertical scale: Multiplica a altura da área de projeção. */
     void vscale( double factor );
@@ -65,10 +67,18 @@ public:
     /* horizontal scale: Multiplica a largura da área de projeção. */
     void hscale( double factor );
 
+    /* distance scale: Multiplica a distância da área de projeção. */
+    void dscale( double factor );
+
     /* Transforma tanto o vetor front quanto viewUp.
      * O operador linear deve ser ortogonal; isto é, não deve quebrar
      * a ortogonalidade entre front e viewUp. */
     void rotate( const Math::LinearOperator<3>& );
+
+    /* Rotaciona a window no sentido desejado. */
+    void rotateUp( double d );
+    void rotateLeft( double d );
+    void rotateClockwise( double d );
 
 
     // Métodos padrão

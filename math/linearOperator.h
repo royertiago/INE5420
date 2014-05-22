@@ -66,7 +66,7 @@ namespace LinearFactory {
     /* Constrói um operador linear que rotaciona os pontos em torno
      * da origem do mundo, sobre o eixo de rotação especificado.
      * O ângulo será tratado em radianos. */
-    LinearOperator<3> Rotation3D( double angle, Vector<3> axis );
+    LinearOperator<3> Rotation3D( double, Vector<3> axis );
 
     /* Constrói um operador linear que rotaciona os pontos em torno
      * do centro especificado, sobre o eixo de rotação especificado. */

@@ -1,0 +1,55 @@
+hold
+move window back 0.333333333
+zoom distance 1.333333333333
+
+hold
+move window back 0.444444444
+zoom distance 1.333333333333
+
+hold
+move window back 0.592592593
+zoom distance 1.333333333333
+
+hold
+move window back 0.790123457
+zoom distance 1.333333333333
+
+hold
+move window back 1.053497942
+zoom distance 1.333333333333
+
+hold
+move window back 1.404663923
+zoom distance 1.333333333333
+
+hold
+move window back 1.872885231
+zoom distance 1.333333333333
+
+hold
+move window back -1.872885231
+zoom distance 0.75
+
+hold
+move window back -1.404663923
+zoom distance 0.75
+
+hold
+move window back -1.053497942
+zoom distance 0.75
+
+hold
+move window back -0.790123457
+zoom distance 0.75
+
+hold
+move window back -0.592592593
+zoom distance 0.75
+
+hold
+move window back -0.444444444
+zoom distance 0.75
+
+hold
+move window back -0.333333333
+zoom distance 0.75

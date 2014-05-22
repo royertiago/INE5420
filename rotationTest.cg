@@ -1,0 +1,32 @@
+hold
+move window vector {-1 0 0.414213562}
+rotate window left -45
+
+hold
+move window vector {-1 0 -0.414213562}
+rotate window left -45
+
+hold
+move window vector {-0.414213562 0 -1}
+rotate window left -45
+
+hold
+move window vector {0.414213562 0 -1}
+rotate window left -45
+
+hold
+move window vector {1 0 -0.414213562}
+rotate window left -45
+
+hold
+move window vector {1 0 0.414213562}
+rotate window left -45
+
+hold
+move window vector {0.414213562 0 1}
+rotate window left -45
+
+hold
+move window vector {-0.414213562 0 1}
+rotate window left -45
+# a orientação está invertida.

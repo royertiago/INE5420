@@ -31,5 +31,21 @@ DECLARE_TEST( ParseVectorTest ) {
     Math::Point<2> y = ParseType<Math::Point<2>>::parse( is );
     b &= t.TEST_EQUALS( y, (Math::Point<2>{89, 85}) );
 
+    data = "{0.25 0.5} {0.0 1.0} {0.75 0.5} {0.0 -1.0}";
+    istringstream js( data );
+
+    Math::Point<3> p = ParseType<Math::Point<3>>::parse( js );
+    b &= t.TEST_EQUALS( p, (Math::Point<3>{0.25, 0.5, 0}) );
+
+    Math::Vector<3> u = ParseType<Math::Vector<3>>::parse( js );
+    b &= t.TEST_EQUALS( u, (Math::Vector<3>{0.0, 1.0, 1}) );
+    /* Note que u[2] == 3, devido à interação desnecessariamente
+     * complexa entre vetor e ponto. */
+
+    Math::Point<3> q = ParseType<Math::Point<3>>::parse( js );
+    b &= t.TEST_EQUALS( q, (Math::Point<3>{0.75, 0.5, 0}) );
+
+    Math::Vector<3> z = ParseType<Math::Vector<3>>::parse( js );
+    b &= t.TEST_EQUALS( z, (Math::Vector<3>{0.0, -1.0, 1}) );
     return b;
 }

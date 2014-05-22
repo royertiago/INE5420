@@ -34,6 +34,10 @@ namespace Math {
     template< int M >
     double norm( Vector<M> );
 
+    /* Retorna o produto cruzado u x v.
+     * O produto cruzado é ortogonal simultaneamente a u e v. */
+    Vector<3> crossProduct( Vector<3> u, Vector<3> v );
+
 // Implementação
 template< int M >
 double innerProduct( Vector<M> u, Vector<M> v ) {

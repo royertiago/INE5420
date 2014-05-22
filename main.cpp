@@ -75,7 +75,14 @@ int main( int argc, char * argv[] ) {
     LineClipper cs = CohenSutherland;
     ScreenRenderer<D> renderer( v, w, p, cs, sdl );
     DisplayFile<D> df;
-    auto update = [&sdl, &df, &renderer](){ clear(sdl, df, renderer); };
+
+    bool hold = false;
+    auto update = [&sdl, &df, &renderer, &hold](){ 
+        if( !hold )
+            clear(sdl, df, renderer);
+        else
+            hold = false;
+    }; // hold barrará atualizações na visualização do mundo.
     update();
 
     Shell bash;
@@ -98,6 +105,8 @@ int main( int argc, char * argv[] ) {
                 w.setUp({-1, 2, -1});
                 update();
             } ) );
+    bash.addCommand( "hold", CommandFactory::makeFunctional(
+            [&hold](){ hold = true; } ) );
 
     /* add <command> */
     CommandMultiplexer * add = new CommandMultiplexer();
@@ -218,26 +227,31 @@ int main( int argc, char * argv[] ) {
                 w.moveFront( d );
                 update();
             } ) );
-/*    moveWindow->addCommand( "up", CommandFactory::makeFunctional(
+    moveWindow->addCommand( "back", CommandFactory::makeFunctional(
+            [&w, &update]( double d ) {
+                w.moveFront( -d );
+                update();
+            } ) );
+    moveWindow->addCommand( "up", CommandFactory::makeFunctional(
             [&w, &update]( double amount ) {
-                w.moveUp( {0, amount} );
+                w.moveUp( amount );
                 update();
             } ) );
     moveWindow->addCommand( "down", CommandFactory::makeFunctional(
             [&w, &update]( double amount ) {
-                w.moveUp( {0, -amount} );
+                w.moveUp( -amount );
                 update();
             } ) );
     moveWindow->addCommand( "left", CommandFactory::makeFunctional(
             [&w, &update]( double amount ) {
-                w.moveUp( {-amount, 0} );
+                w.moveLeft( amount );
                 update();
             } ) );
     moveWindow->addCommand( "right", CommandFactory::makeFunctional(
             [&w, &update]( double amount ) {
-                w.moveUp( {amount, 0} );
+                w.moveLeft( -amount );
                 update();
-            } ) );*/
+            } ) );
 
     /* rotate <command> */
     CommandMultiplexer * rotate = new CommandMultiplexer();
@@ -265,11 +279,41 @@ int main( int argc, char * argv[] ) {
                         degrees/180*Math::PI, df.center( name ) ) );
                 update();
             } ) );
-/*    rotate->addCommand( "window", CommandFactory::makeFunctional(
-            [&w, &update]( double degrees ) {
-                w.rotate( degrees/180*Math::PI );
+
+    /* rotate window <command> */
+    CommandMultiplexer * rotateWindow = new CommandMultiplexer();
+    rotate->addCommand( "window", rotateWindow );
+
+    rotateWindow->addCommand( "up", CommandFactory::makeFunctional(
+            [&w, &update]( double d ) {
+                w.rotateUp( d/180*Math::PI );
                 update();
-            } ) );*/
+            } ) );
+    rotateWindow->addCommand( "down", CommandFactory::makeFunctional(
+            [&w, &update]( double d ) {
+                w.rotateUp( -d/180*Math::PI );
+                update();
+            } ) );
+    rotateWindow->addCommand( "left", CommandFactory::makeFunctional(
+            [&w, &update]( double d ) {
+                w.rotateLeft( d/180*Math::PI );
+                update();
+            } ) );
+    rotateWindow->addCommand( "right", CommandFactory::makeFunctional(
+            [&w, &update]( double d ) {
+                w.rotateLeft( -d/180*Math::PI );
+                update();
+            } ) );
+    rotateWindow->addCommand( "clock", CommandFactory::makeFunctional(
+            [&w, &update]( double d ) {
+                w.rotateClockwise( d/180*Math::PI );
+                update();
+            } ) );
+    rotateWindow->addCommand( "counterclock", CommandFactory::makeFunctional(
+            [&w, &update]( double d ) {
+                w.rotateClockwise( -d/180*Math::PI );
+                update();
+            } ) );
 
 
     /* zoom <in/out> */
@@ -286,6 +330,11 @@ int main( int argc, char * argv[] ) {
             [&w, &update]( double percent ) {
                 w.vscale( 1 + percent/100 );
                 w.hscale( 1 + percent/100 );
+                update();
+            } ) );
+    zoom->addCommand( "distance", CommandFactory::makeFunctional(
+            [&w, &update]( double d ) {
+                w.dscale( d );
                 update();
             } ) );
 
