@@ -1,7 +1,7 @@
 /* cohenSutherland.h
  * 
  * Algoritmo de clipping de linhas. Possui assinatura compatível
- * com a de clippingArea.h.
+ * com a de lineClipper.h.
  */
 #ifndef COHEN_SUTHERLAND_H
 #define COHEN_SUTHERLAND_H

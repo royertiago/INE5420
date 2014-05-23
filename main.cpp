@@ -26,6 +26,7 @@
 #include "render/viewport.h"
 #include "render/window.h"
 #include "render/clipping/cohenSutherland.h"
+#include "render/clipping/tridimensional.h"
 #include "render/projection/projector.h"
 #include "render/projection/parallel.h"
 #include "render/projection/perspective.h"
@@ -72,8 +73,9 @@ int main( int argc, char * argv[] ) {
     v.xmax -= 10;
     v.ymax -= 10;
     Projector<D> p = parallel<D>;
-    LineClipper cs = CohenSutherland;
-    ScreenRenderer<D> renderer( v, w, p, cs, sdl );
+    PreLineClipper<D> ct = tridimensional;
+    PostLineClipper cs = CohenSutherland;
+    ScreenRenderer<D> renderer( v, w, p, ct, cs, sdl );
     DisplayFile<D> df;
 
     bool hold = false;
@@ -267,16 +269,19 @@ int main( int argc, char * argv[] ) {
             } ) );
     rotate->addCommand( "point", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double degrees, 
-                Math::Point<D> p ) 
+                Math::Vector<D> v, Math::Point<D> p ) 
             {
                 df.transform( name, 
-                    LinearFactory::Rotation2D( degrees/180*Math::PI, p ) );
+                    LinearFactory::Rotation3D( degrees/180*Math::PI, v, p ) );
                 update();
             } ) );
     rotate->addCommand( "center", CommandFactory::makeFunctional(
-            [&df, &update]( std::string name, double degrees ) {
-                df.transform( name, LinearFactory::Rotation2D(
-                        degrees/180*Math::PI, df.center( name ) ) );
+            [&df, &update]( std::string name, double degrees, 
+                Math::Vector<D> axis )
+            {
+                df.center( name );
+                df.transform( name, LinearFactory::Rotation3D(
+                        degrees/180*Math::PI, axis, df.center( name ) ) );
                 update();
             } ) );
 

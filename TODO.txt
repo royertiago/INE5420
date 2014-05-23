@@ -1,13 +1,4 @@
 GeometricObject::draw() pode ser const.
-Adicionar um "NamedDisplayFile", que permite nomear os nomes dos objetos.
-    Incluir métodos como add( TransformableObject * obj, string name ),
-    transform( string name, const LinearTransform<2> * ),
-    remove( string name ),
-    propagate( string name, void (*visitor)( TransformableObject * ) ).
-Organizar em subdiretórios
-Remover as definições de métodos das definições da classe
-    Usar inline se necessário
-Implementar ScreenRenderer::drawPolygon();
 Implementar testes:
     DisplayFile
     ScreenRenderer
@@ -20,11 +11,6 @@ Implementar testes:
     CommandMultiplexer
     FunctionalCommand
 
-
-Criar tipo PreClipper, que faz uma pré-clipagem de retas não-projetadas
-    com o intuito de remover pedaços que ficarão atrás da área de
-    visualização.
-
 Implementar utility/triangulation.h
 Implementar Matrix::slice()
     Pontos de uso: SplineFactory::Hermite, SplineFactory::BSpline,
@@ -35,7 +21,3 @@ Modificar classes que trabalham com vetores para usar std::vector ou
 Adicionar verificação this != other nos construtores de cópia.
 Criar MockResource para testar Polynomial contra vazamento de memória.
 Implementar Matrix::operator=( initializer_list<initializer_list<double>> )
-
-TesterMatrix
-    Este header inclui cstdio, o que não me parece ser muito bonito.
-    Veja testerDouble, por exemplo: cstdio só é incluído no .cpp.

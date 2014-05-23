@@ -18,7 +18,8 @@ class ScreenRenderer : public Renderer<N> {
     const Window<N>& w;
     const Viewport vp;
     Projector<N> project;
-    LineClipper clip;
+    PreLineClipper<N> preClip;
+    PostLineClipper postClip;
     Drawable& screen;
 
 public:
@@ -28,7 +29,7 @@ public:
      * A transformada de viewport é gerada automaticamente com base
      * na viewport passada. */
     ScreenRenderer( Viewport, const Window<N>&, Projector<N>,
-            LineClipper, Drawable& );
+            PreLineClipper<N>, PostLineClipper, Drawable& );
 
     virtual ~ScreenRenderer() = default;
 
@@ -45,11 +46,13 @@ public:
 // Implementação
 template< int N >
 ScreenRenderer<N>::ScreenRenderer( Viewport vp, const Window<N>& w,
-        Projector<N> p, LineClipper c, Drawable& s ) :
+        Projector<N> p, PreLineClipper<N> pre, PostLineClipper post, 
+        Drawable& s ) :
     w( w ),
     vp( vp ),
     project( p ),
-    clip( c ),
+    preClip( pre ),
+    postClip( post ),
     screen( s )
 {}
 
@@ -66,15 +69,19 @@ void ScreenRenderer<N>::drawLine( Math::Point<N> o, Math::Point<N> d ) {
     /* Agora, temos ambas as extremidades da linha a ser desenhada
      * em coordenadas da window. */
 
+    if( !preClip( wo, wd ) )
+        return;
+
     ProjectedPoint po = project( wo ); //Projected Origin
     ProjectedPoint pd = project( wd ); //Projected Destiny
     /* Agora as temos em coordenadas projetadas. */
 
-    if( clip(po, pd) ) {
-        Pixel vo = vp.transform( po ); //Viewport-cordinates Origin point
-        Pixel vd = vp.transform( pd ); //Viewport-cordinates Origin point
-        screen.paint( vo, vd );
-    }
+    if( !postClip(po, pd) )
+        return;
+
+    Pixel vo = vp.transform( po ); //Viewport-cordinates Origin point
+    Pixel vd = vp.transform( pd ); //Viewport-cordinates Origin point
+    screen.paint( vo, vd );
 }
 
 template< int N >

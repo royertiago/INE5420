@@ -1,0 +1,87 @@
+# Lista de comandos disponíveis.
+# Um comando começando com tralha é um comentário.
+# Note que deve haver um espaço entre a tralha e o texto subsequente
+
+# echo <texto>
+# Imprime o texto na tela.
+echo Teste.
+
+# clear
+# Elimina todos os elementos do display file.
+clear
+
+# load <file>
+# Executa os comandos do arquivo especificado.
+load cube.cg
+
+# reset
+# Reposiciona a window para sua posição original
+reset
+
+# hold
+# Faz com que o próximo comando não atualize o desenho na tela.
+hold
+
+
+# add [command]
+# Adiciona um elemento ao display file.
+
+# add point <name> <coordinate>
+add point ponto {0 0 1}
+
+# add bezier <name> {<control points>} - note que precisa das {} ao redor
+add bezier bz3 {{0 0} {0.25 1} {0.5 0.3} {0.75 0.6} {1 0.5} {0.75 0.3}}
+
+# add bspline <name> {<control points>}
+add bspline bs1 {{-0.2 0} {0 0} {0.2 0} {0.4 1} {0.6 0} {0.8 0} {1 0} {1.2 0}}
+
+# add polygon <name> {<points>}
+add polygon quadrado {{0 0 0} {0 0 1} {0 1 1} {0 1 0}}
+
+# add wireframe <name> {<points>} {<edges>} 
+# edges é uma lista de pares de inteiros
+add wireframe tetraedro {{0 0 0} {0 0 1} {0 1 0} {1 0 0}} {(0 1) (0 2) (0 3) (1 2) (1 3) (2 3)}
+
+# move [up/down/left/right/front/back] <name> <amount>
+# Movimenta o objeto especificado, em relação ao mundo
+move up ponto 0.5
+
+# move window [up/down/left/right/front/back] <amount>
+# Movimenta a window na direção especificada, em relação à
+# orientação atual da window.
+move window back 0.5
+
+# rotate origin <name> <degrees> <axis>
+# Rotaciona o objeto sobre um eixo que passa pela origem.
+rotate origin cube 45 {1 1 1}
+
+# rotate point <name> <degrees> <axis> <center>
+# Rotaciona o objeto especificado sobre um eixo, passando por um ponto.
+rotate point cube 5 {0 1 0} {0.5 0 0.5}
+
+# rotate center <name> <degrees> <axis>
+# Rotaciona o objeto sobre seu centro.
+rotate center quadrado 45 {0 0 1}
+
+# rotate window [up/down/left/right/clock/counterclock] <degrees>
+# Rotaciona a visualização da window.
+rotate window clock 5
+# zoom [in/out] <percent>
+# Diminui/aumenta o tamanho do plano de projeção.
+zoom in 50
+
+# zoom distance <factor>
+# Multiplica a distancia da área de projeção pelo fator especificado.
+zoom distance 1.2
+
+# scale <name> <factor>
+# Aumenta as dimensões do objeto especificado em torno de seu centro.
+scale cube 2
+
+# delete <name>
+# Remove o objeto referido do display file.
+delete ponto
+
+# set [parallel/perspective]
+# Altera o tipo de projeção usado.
+set perspective

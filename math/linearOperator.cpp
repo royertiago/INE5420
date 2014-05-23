@@ -2,12 +2,6 @@
  * Contém as implementações das funções não templatizadas.
  */
 
-#include <cstdio>
-#include <cmath>
-using std::sqrt;
-using std::fabs;
-using std::printf;
-
 #include "math/linearOperator.h"
 #include "math/constant.h"
 using namespace Math;
@@ -29,9 +23,9 @@ LinearOperator<3> LinearFactory::Rotation3D( double d, Vector<3> v ) {
 LinearOperator<3> LinearFactory::Rotation3D( double d, Vector<3> v, 
         Point<3> c )
 {
-    LinearOperator<2> o = Translation<3>( -c );
+    LinearOperator<3> o = Translation<3>( -c );
     o.backComposeWith( Rotation3D( d, v ) );
-    o.backComposeWith( Translation<3>( -c ) );
+    o.backComposeWith( Translation<3>( c ) );
     return o;
 }
 
