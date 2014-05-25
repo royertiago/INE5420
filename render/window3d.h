@@ -6,13 +6,12 @@
 
 #include "window.h"
 
-#include "math/point.h"
 #include "math/vector.h"
-#include "math/linearOperator.h"
+#include "math/affineOperator.h"
 
 template<>
 class Window<3> {
-    Math::Point<3> center;
+    Math::Vector<3> center;
     double w, h; // Largura e altura da área de projeção (view plane)
     double d; // Distância da àrea de projeção
     Math::Vector<3> front;
@@ -24,7 +23,7 @@ class Window<3> {
 
     /* Operador linear que faz o mapeamento
      * coordenadas do mundo => coordenadas de window */
-    mutable Math::LinearOperator<3> op;
+    mutable Math::AffineOperator<3> op;
     mutable bool cached; // Se op já foi calculado.
 
 public:
@@ -36,7 +35,7 @@ public:
 
 
     /* Altera o centro da window para o ponto passado. */
-    void setCenter( Math::Point<3> p );
+    void setCenter( Math::Vector<3> p );
 
     /* Altera as dimensões da área de projeção. */
     void setWidth( double );
@@ -73,7 +72,7 @@ public:
     /* Transforma tanto o vetor front quanto viewUp.
      * O operador linear deve ser ortogonal; isto é, não deve quebrar
      * a ortogonalidade entre front e viewUp. */
-    void rotate( const Math::LinearOperator<3>& );
+    void rotate( const Math::AffineOperator<3>& );
 
     /* Rotaciona a window no sentido desejado. */
     void rotateUp( double d );
@@ -83,7 +82,7 @@ public:
 
     // Métodos padrão
     double area() const;
-    Math::Point<3> map( Math::Point<3> ) const;
+    Math::Vector<3> map( Math::Vector<3> ) const;
 
 private:
     /* Método auxiliar, que calcula o valor da transformação linear op */

@@ -8,9 +8,8 @@
 
 #include <vector>
 #include "math/interpolation.h"
-#include "math/point.h"
+#include "math/vector.h"
 #include "math/polynomial.h"
-#include "render/renderer.h"
 #include "geometric/transformableObject.h"
 
 template< int N >
@@ -26,28 +25,22 @@ class BezierSpline : public TransformableObject<N> {
      *
      * Para K pontos de controle, precisaremos, portanto, de K-1
      * ordens de curvas salvas. */
-    std::vector<std::vector<Math::Polynomial<Math::Point<N>>>> polynomials;
-    std::vector<Math::Point<N>> controlPoints;
+    std::vector<std::vector<Math::Polynomial<Math::Vector<N>>>> polynomials;
+    std::vector<Math::Vector<N>> controlPoints;
     std::vector<std::vector<bool>> validPolynomials; // Memoização
     int order; // Ordem da spline
 
 public:
-    BezierSpline( std::vector<Math::Point<N>> controlPoints );
+    BezierSpline( std::vector<Math::Vector<N>> controlPoints );
     
-    BezierSpline( const BezierSpline& ) = default;
-    BezierSpline( BezierSpline&& ) = default;
-    BezierSpline<N>& operator=( const BezierSpline& ) = default;
-    BezierSpline<N>& operator=( BezierSpline&& ) = default;
-    ~BezierSpline() = default;
-
     /* Transforma um único ponto da spline.
      * Todos os segmentos serão reconstruídos. */
-    void transformPoint( int index, const Math::LinearOperator<N>& );
+    void transformPoint( int index, const Math::AffineOperator<N>& );
 
     // Métodos herdados
     virtual void draw( Renderer<N> * ) override;
-    virtual Math::Point<N> center() const override;
-    virtual void transform( const Math::LinearOperator<N>& ) override;
+    virtual Math::Vector<N> center() const override;
+    virtual void transform( const Math::AffineOperator<N>& ) override;
 
 private:
     /* Computa a curva de grau degree-1 do índice passado. */
@@ -55,7 +48,7 @@ private:
 };
 
 template< int N >
-BezierSpline<N>::BezierSpline( std::vector<Math::Point<N>> controlPoints ) :
+BezierSpline<N>::BezierSpline( std::vector<Math::Vector<N>> controlPoints ) :
     polynomials( controlPoints.size() - 1 ),
     controlPoints( controlPoints ),
     validPolynomials( controlPoints.size() - 1 )
@@ -76,7 +69,7 @@ BezierSpline<N>::BezierSpline( std::vector<Math::Point<N>> controlPoints ) :
 
 template< int N >
 void BezierSpline<N>::transformPoint( int index, 
-        const Math::LinearOperator<N>& op )
+        const Math::AffineOperator<N>& op )
 {
     controlPoints[index] = op( controlPoints[index] );
     for( auto& valid : validPolynomials )
@@ -90,12 +83,13 @@ void BezierSpline<N>::transformPoint( int index,
 template< int N >
 void BezierSpline<N>::draw( Renderer<N> * renderer ) {
     auto& p = polynomials[order-1][0];
-    double sqnorm = 0.0;
+    double snorm = 0.0;
     for( int i = 0; i < controlPoints.size() - 1; ++i )
-        sqnorm += (controlPoints[i] - controlPoints[i+1]).sqnorm();
+        snorm += norm(controlPoints[i] - controlPoints[i+1]);
 
-    int pixels = sqnorm * renderer->density();
-    double delta = 400.0/pixels; // Mesma heuristica de cubicSpline.h
+    int pixels = snorm * renderer->density();
+    double delta = 100.0/pixels; // Mesma heuristica de cubicSpline.h
+
     auto it = p.iterator( 0, delta );
     Math::Vector<N> current = *it;
     ++it;
@@ -105,16 +99,16 @@ void BezierSpline<N>::draw( Renderer<N> * renderer ) {
 }
 
 template< int N >
-Math::Point<N> BezierSpline<N>::center() const {
-    Math::Point<N> center;
-    for( const Math::Point<N>& p : controlPoints )
+Math::Vector<N> BezierSpline<N>::center() const {
+    Math::Vector<N> center;
+    for( const Math::Vector<N>& p : controlPoints )
         center = center + p;
-    return center * (1.0 / controlPoints.size() );
+    return center / controlPoints.size();
 }
     
 template< int N >
-void BezierSpline<N>::transform( const Math::LinearOperator<N>& op ) {
-    for( Math::Point<N>& p : controlPoints )
+void BezierSpline<N>::transform( const Math::AffineOperator<N>& op ) {
+    for( Math::Vector<N>& p : controlPoints )
         p = op( p );
     for( auto& valid : validPolynomials )
         for( int i = 0; i < valid.size(); ++i )
@@ -139,7 +133,5 @@ void BezierSpline<N>::calculate( int order, int index ) {
     }
     validPolynomials[order][index] = true;
 }
-
-
 
 #endif // BEZIER_SPLINE_H

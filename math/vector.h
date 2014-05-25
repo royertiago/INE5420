@@ -50,13 +50,14 @@ double innerProduct( Vector<M> u, Vector<M> v ) {
 
 template< int M >
 double vectorAngle( Vector<M> u, Vector<M> v ) {
-    return std::acos( innerProduct(u, v) / std::sqrt(u.sqnorm()*v.sqnorm()) );
+    return std::acos( innerProduct(u, v) / (norm(v) * norm(u)) );
 }
 
 template< int M >
 double norm( Vector<M> v ) {
-    return std::sqrt( v.sqnorm() );
+    return std::sqrt( innerProduct(v, v) );
 }
+
 } // namespace Math
 
 #endif // VECTOR_H

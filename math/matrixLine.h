@@ -20,108 +20,109 @@
 
 namespace Math {
 
-template< int N >
-struct MatrixLine {
-    std::array< double, N > & line;
+template< int N, typename T > class MatrixLine;
+template< int N, typename T > class ConstMatrixLine;
 
+template< int N, typename T >
+class MatrixLine {
+    std::array< T, N > & line; // Referência para a linha da matriz.
+
+public:
     /* Constrói uma MatrixLine que referencia o array especificado.
      * Note que esta classe pode modificar a linha passada. */
-    MatrixLine( std::array< double, N > & line );
+    MatrixLine( std::array< T, N > & line );
 
     /* Retorna uma referência para o índice especificado. */
-    double & operator[]( size_t index );
-    const double & operator[]( size_t index ) const;
+    T & operator[]( size_t index );
+    const T & operator[]( size_t index ) const;
 
     /* Retorna o valor do primeiro elemento da linha.
      * Disponível apenas caso haja um único valor na linha (N==1). */
-    operator double();
+    operator T() const;
 
     /* Altera o valor do primeiro elemento da linha e retorna
      * uma referência para este elemento.
      * Disponível apenas caso haja um único valor na linha (N==1). */
-    double & operator=( double d );
-
-    /* Divide o valor do primeiro elemento da linha por d e retorna
-     * uma referência para este elemento.
-     * Disponível apenas caso haja um único valor na linha (N==1). */
-    double & operator/=( double d );
+    T & operator=( T d );
 
     /* Copia a linha passada para esta. */
-    MatrixLine<N>& operator=( const MatrixLine& );
+    MatrixLine<N, T>& operator=( const MatrixLine& );
+    MatrixLine<N, T>& operator=( const ConstMatrixLine< N, T >& );
 };
 
-template< int N >
+template< int N, typename T >
 struct ConstMatrixLine {
-    std::array< double, N > const & line;
+    std::array< T, N > const & line;
 
     /* Constrói uma ConstMatrixLine que referencia o array especificado.
      * Esta classe não pode modificar a linha passada. */
-    ConstMatrixLine( std::array< double, N > const & line );
+    ConstMatrixLine( std::array< T, N > const & line );
 
     /* Retorna uma referência para o índice especificado. */
-    const double& operator[]( size_t index ) const;
+    const T& operator[]( size_t index ) const;
 
     /* Retorna o valor do primeiro elemento da linha.
      * Disponível apenas caso haja um único valor na linha (N==1). */
-    operator double();
+    operator T() const;
 };
 
 //Implementações de MatrixLine
 
-template< int N >
-MatrixLine<N>::MatrixLine( std::array<double, N>& line ):
+template< int N, typename T >
+MatrixLine<N, T>::MatrixLine( std::array<T, N>& line ):
     line( line )
 {}
 
-template< int N >
-double& MatrixLine<N>::operator[]( size_t index ) {
+template< int N, typename T >
+T& MatrixLine<N, T>::operator[]( size_t index ) {
     return line[index];
 }
 
-template< int N >
-const double& MatrixLine<N>::operator[]( size_t index ) const {
+template< int N, typename T >
+const T& MatrixLine<N, T>::operator[]( size_t index ) const {
     return line[index];
 }
 
-template< int N >
-MatrixLine<N>::operator double() {
-    static_assert( N == 1, "operator double() disponível apenas para N == 1" );
+template< int N, typename T >
+MatrixLine<N, T>::operator T() const {
+    static_assert( N==1, "Conversão implícita disponível apenas para N == 1");
     return line[0];
 }
 
-template< int N >
-double& MatrixLine<N>::operator=( double d ) {
-    static_assert( N == 1, "operator=(double) disponível apenas para N == 1" );
+template< int N, typename T >
+T& MatrixLine<N, T>::operator=( T d ) {
+    static_assert( N==1, "Atribuição disponível apenas para N == 1" );
     return line[0] = d;
 }
 
-template< int N >
-double& MatrixLine<N>::operator/=( double d ) {
-    static_assert( N == 1,"operator/=(double) disponível apenas para N == 1" );
-    return line[0] /= d;
+template< int N, typename T >
+MatrixLine<N, T>& MatrixLine<N, T>::operator=( const MatrixLine<N, T> & m ) {
+    line = m.line;
+    return *this;
 }
 
-template< int N >
-MatrixLine<N>& MatrixLine<N>::operator=( const MatrixLine<N> & m ) {
+template< int N, typename T >
+MatrixLine<N, T>& MatrixLine<N, T>::operator=( const ConstMatrixLine<N, T>& m )
+{
     line = m.line;
     return *this;
 }
 
 //Implementações de ConstMatrixLine
 
-template< int N >
-ConstMatrixLine<N>::ConstMatrixLine( std::array<double, N> const & line ):
+template< int N, typename T >
+ConstMatrixLine<N, T>::ConstMatrixLine( std::array<T, N> const & line ):
     line( line )
 {}
 
-template< int N >
-const double& ConstMatrixLine<N>::operator[]( size_t index ) const {
+template< int N, typename T >
+const T& ConstMatrixLine<N, T>::operator[]( size_t index ) const {
     return line[index];
 }
 
-template< int N >
-ConstMatrixLine<N>::operator double() {
-    static_assert( N == 1, "operator double() disponível apenas para N == 1" );
+template< int N, typename T >
+ConstMatrixLine<N, T>::operator T() const {
+    static_assert( N==1, "Conversão implícita disponível apenas para N == 1");
     return line[0];
 }
 

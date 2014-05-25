@@ -1,27 +1,26 @@
 /* linearFactoryAxisAlignment.test.cpp
- * Teste de unidade para as funções LinearFactory::AxisAlignment e
- * LinearFactory::InverseAxisAlignment.
+ * Teste de unidade para as funções AffineFactory::AxisAlignment e
+ * AffineFactory::InverseAxisAlignment.
  */
 
-#include "math/linearOperator.h"
+#include "math/affineFactory.h"
 
 #include "math/constant.h"
-#include "test/lib/declarationMacros.h"
-#include "test/lib/testMacro.h"
-#include "test/lib/testerMatrix.h"
+#include "test/lib/test.h"
+#include "test/affineTester.h"
 
-DECLARE_TEST( LinearFactoryAxisAlignmentTest ) {
+DECLARE_TEST( AffineFactoryAxisAlignmentTest ) {
     bool b = true;
-    Test::TesterMatrix m(4);
+    Test::AffineTester m(4);
     using namespace Math;
-    using namespace LinearFactory;
+    using namespace AffineFactory;
     Vector<3> x = {1, 0, 0};
     Vector<3> y = {0, 1, 0};
     Vector<3> z = {0, 0, 1};
 
     //  Não precisa alinhar nada; já está tudo alinhado.
-    LinearOperator<3> op = AxisAlignment( z, y );
-    b &= m.TEST_EQUALS( op, Scale<3>(1) );
+    AffineOperator<3> op = AxisAlignment( z, y );
+    b &= m.TEST_EQUALS( op, Identity<3>() );
 
     // view-up aponta para o eixo x em vez de para cima.
     op = AxisAlignment( z, x );
@@ -32,7 +31,7 @@ DECLARE_TEST( LinearFactoryAxisAlignmentTest ) {
     b &= m.TEST_EQUALS( op, Rotation<3>(PI/2, 1, 0) );
 
     // front aponta para eixo x e view-up para z.
-    LinearOperator<3> ex = Rotation<3>(PI/2, 0, 2 ); //[ex]pected
+    AffineOperator<3> ex = Rotation<3>(PI/2, 0, 2 ); //[ex]pected
     ex.backComposeWith( Rotation<3>(PI/2, 1, 0 ) );
     op = AxisAlignment( x, z );
     b &= m.TEST_EQUALS( op, ex );
@@ -80,9 +79,6 @@ DECLARE_TEST( LinearFactoryAxisAlignmentTest ) {
     // front apontando para -x-y-z, up apontando para 2y-x-z
     ex = Rotation<3>(3*PI/4, 2, 0 );
     ex.backComposeWith( Rotation<3>( atan(1/sqrt(2)), 2, 1 ) );
-        // teste do teste:
-        b &= m.TEST_EQUALS( ex(Point<3>(-x-y-z)), Point<3>(z*sqrt(3)) );
-        b &= m.TEST_EQUALS( ex(Point<3>(y*2-x-z)), Point<3>(y*sqrt(6)) );
     op = AxisAlignment( -x-y-z, y*2-x-z );
     b &= m.TEST_EQUALS( op, ex );
 

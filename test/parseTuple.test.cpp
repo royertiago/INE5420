@@ -4,9 +4,7 @@
 #include "command/parseTuple.h"
 
 #include <string>
-#include "test/lib/declarationMacros.h"
-#include "test/lib/testEquals.h"
-#include "test/lib/testMacro.h"
+#include "test/lib/test.h"
 
 DECLARE_TEST( ParseTupleTest ) {
     using std::string;

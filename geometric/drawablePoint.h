@@ -14,38 +14,35 @@ using std::cos;
 
 #include "geometric/transformableObject.h"
 #include "math/constant.h"
-#include "math/linearOperator.h"
-#include "math/point.h"
-#include "render/renderer.h"
+#include "math/affineOperator.h"
+#include "math/vector.h"
 
 template< int N >
 class DrawablePoint : public TransformableObject<N> {
-    Math::Point<N> p;
+    Math::Vector<N> p;
 
 public:
     /* Cria um DrawablePoint em p. */
-    DrawablePoint( Math::Point<N> p ) : p(p) {}
+    DrawablePoint( Math::Vector<N> p ) : p(p) {}
 
+    /* Cria um DrawablePoint na origem. */
     DrawablePoint() = default;
-    DrawablePoint( const DrawablePoint& ) = default;
-    DrawablePoint( DrawablePoint&& ) = default;
-    virtual ~DrawablePoint() = default;
 
     //Métodos herdados
     virtual void draw( Renderer<N>* ) override;
-    virtual void transform( const Math::LinearOperator<N>& ) override;
-    virtual Math::Point<N> center() const;
+    virtual void transform( const Math::AffineOperator<N>& ) override;
+    virtual Math::Vector<N> center() const;
 };
 
 //Implementação
 
 template< int N >
-void DrawablePoint<N>::transform( const Math::LinearOperator<N>& op ) {
+void DrawablePoint<N>::transform( const Math::AffineOperator<N>& op ) {
     p = op( p );
 }
 
 template< int N >
-Math::Point<N> DrawablePoint<N>::center() const {
+Math::Vector<N> DrawablePoint<N>::center() const {
     return p;
 }
 
@@ -55,16 +52,16 @@ void DrawablePoint<N>::draw( Renderer<N> * renderer ) {
     double density = renderer->density();
     static const double radius = 2 / sqrt(density);
     
-    Math::Point<N> alce = p;
-    alce[0] = alce[1] = alce[N] = 0.0;
+    Math::Vector<N> alce = p;
+    alce[0] = alce[1] = 0.0;
     // Usaremos 12 retas para desenhar o círculo:
     double theta = 2* PI / 12;
     for( int i = 0; i < 12; i++ ) {
         renderer->drawLine(
-            Math::Point<N>({ p[0] + radius * cos(i*theta),
-                             p[1] + radius * sin(i*theta)}) + alce,
-            Math::Point<N>({ p[0] + radius * cos((i+1)*theta), 
-                             p[1] + radius * sin((i+1)*theta)}) + alce
+            Math::Vector<N>{ p[0] + radius * cos(i*theta),
+                             p[1] + radius * sin(i*theta) } + alce,
+            Math::Vector<N>{ p[0] + radius * cos((i+1)*theta), 
+                             p[1] + radius * sin((i+1)*theta) } + alce
        );
     }
     /* Desta forma, variamos as duas primeiras coordenadas do ponto

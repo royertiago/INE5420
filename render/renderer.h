@@ -44,20 +44,20 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include "math/point.h"
+#include "math/vector.h"
 
 template< int N > // Dimensão dos objetos renderizados
 class Renderer {
 public:
     /* Desenha na tela o segmento de reta que passa pelos 
      * referidos pontos. */
-    virtual void drawLine( Math::Point<N> origin, Math::Point<N> destiny ) = 0;
+    virtual void drawLine( Math::Vector<N> p1, Math::Vector<N> p2 ) = 0;
 
     /* Desenha o triângulo cujas extremidades são os três
      * pontos passados. 
      * Para desenhar polígonos complexos, ver utility/triangulation.h */
-    virtual void drawTriangle( Math::Point<N> p1, Math::Point<N> p2, 
-            Math::Point<N> p3 ) = 0;
+    virtual void drawTriangle( Math::Vector<N> p1, Math::Vector<N> p2, 
+            Math::Vector<N> p3 ) = 0;
 
     /* Obtém a densidade da tela.
      *

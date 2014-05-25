@@ -7,8 +7,7 @@
 #ifndef GEOMETRIC_OBJECT_H
 #define GEOMETRIC_OBJECT_H
 
-template< int N >
-class Renderer;
+#include "render/renderer.h"
 
 template< int N >
 class GeometricObject {

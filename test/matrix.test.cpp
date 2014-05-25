@@ -5,10 +5,7 @@
  * são testadas em vector.test.cpp */
 
 #include "math/matrix.h"
-#include "test/lib/declarationMacros.h"
-#include "test/lib/testMacro.h"
-#include "test/lib/testEquals.h"
-#include "test/lib/testerMatrix.h"
+#include "test/lib/test.h"
 
 DECLARE_TEST( MatrixTest ) {
     Test::TesterMatrix t; //Epsilon de máquina.
@@ -45,15 +42,9 @@ DECLARE_TEST( MatrixTest ) {
     b &= t.TEST_EQUALS( mult, (Matrix<2, 4>{{ 8, 17, -3, 12},
                                            {11, 25, -7, 19}}) );
 
-    // Composição
-    m.frontComposeWith( Matrix<3, 3>{{ 1,  0,  0},
-                                     { 2,  4,  0},
-                                     {-1, -1, -1}} );
-    b &= t.TEST_EQUALS( m, (Matrix<2, 3>{{ 8, 17, -3},
-                                        {11, 25, -7}}) );
-
-    m.backComposeWith( Matrix<2, 2>{{1, 0},
-                                    {-1, 2}} );
+    // Atribuição
+    m = Matrix<2, 3>{{ 8, 17,  -3},
+                     {14, 33, -11}};
     b &= t.TEST_EQUALS( m, (Matrix<2, 3>{{ 8, 17,  -3},
                                          {14, 33, -11}}) );
 

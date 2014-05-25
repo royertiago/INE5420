@@ -9,47 +9,44 @@
 
 #include <vector>
 #include "render/renderer.h"
-#include "transformableObject.h"
-#include "math/linearOperator.h"
-#include "math/point.h"
+#include "geometric/transformableObject.h"
+#include "math/affineOperator.h"
+#include "math/vector.h"
 
 template< int N >
 class Polygon : public TransformableObject<N> {
-    std::vector<Math::Point<N>> vertices;
+    std::vector<Math::Vector<N>> vertices;
 
 public:
     /* Constrói o polígono com este vetor de pontos.
      * As arestas são constituídas de pontos adjacentes; o último
      * ponto é considerado ser adjacente do primeiro. */
-    Polygon( std::vector<Math::Point<N>> );
+    Polygon( std::vector<Math::Vector<N>> );
 
     // Métodos herdados
     virtual void draw( Renderer<N> * ) override;
-    virtual void transform( const Math::LinearOperator<N>& ) override;
-    virtual Math::Point<N> center() const override;
+    virtual void transform( const Math::AffineOperator<N>& ) override;
+    virtual Math::Vector<N> center() const override;
 };
 
 
 //Implementação
 template< int N >
-Polygon<N>::Polygon( std::vector<Math::Point<N>> vertices ) :
+Polygon<N>::Polygon( std::vector<Math::Vector<N>> vertices ) :
     vertices( vertices )
 {}
 
 template< int N >
-Math::Point<N> Polygon<N>::center() const {
-    Math::Point<N> c = vertices[0];
+Math::Vector<N> Polygon<N>::center() const {
+    Math::Vector<N> c = vertices[0];
     for( int i = 1; i < vertices.size(); ++i )
         c = c + vertices[i]; //TODO: implementar operadores adicionais
 
-
-    for( int j = 0; j < N; ++j )
-        c[j] /= vertices.size();
-    return c;
+    return c / vertices.size();
 }
 
 template< int N >
-void Polygon<N>::transform( const Math::LinearOperator<N>& op ) {
+void Polygon<N>::transform( const Math::AffineOperator<N>& op ) {
     for( int i = 0; i < vertices.size(); ++i )
         vertices[i] = op( vertices[i] );
 }
@@ -63,7 +60,7 @@ void Polygon<N>::draw( Renderer<N> * renderer ) {
      * renderizador ligará o último ponto com o primeiro (pois
      * vertexCount % vertexCount == 0) e, no caso patológico de o
      * polígono ter apenas um vértice, o renderizador ligará o ponto
-     * nele mesmo - enchendo um pixel. */
+     * nele mesmo - preenchendo um pixel. */
 }
 
 #endif // POLYGON_H

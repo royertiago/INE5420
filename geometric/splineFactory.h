@@ -5,7 +5,7 @@
 #ifndef SPLINE_FACTORY_H
 #define SPLINE_FACTORY_H
 
-#include "math/point.h"
+#include "geometric/cubicSpline.h"
 #include "math/vector.h"
 
 namespace SplineFactory {
@@ -14,8 +14,8 @@ namespace SplineFactory {
      * A curva interpolará os pontos p1 e p4 e tangenciará os segmentos
      * p1-p2 e p3-p4 nestes pontos, respectivamente. */
     template< int N >
-    CubicSpline<N> Bezier( Math::Point<N> p1, Math::Point<N> p2,
-                           Math::Point<N> p3, Math::Point<N> p4 );
+    CubicSpline<N> Bezier( Math::Vector<N> p1, Math::Vector<N> p2,
+                           Math::Vector<N> p3, Math::Vector<N> p4 );
 
     /* Gera uma curva de Hermite cujas extremidades são os pontos p1 e p4
      * e as tangentes são r1 e r4, respectivamente.
@@ -27,21 +27,21 @@ namespace SplineFactory {
      *   s(1) = p4
      *  s'(1) = r4 */
     template< int N >
-    CubicSpline<N> Hermite( Math::Point<N> p1, Math::Vector<N> r1, 
-                            Math::Point<N> p4, Math::Vector<N> r4 );
+    CubicSpline<N> Hermite( Math::Vector<N> p1, Math::Vector<N> r1, 
+                            Math::Vector<N> p4, Math::Vector<N> r4 );
 
     /* Gera um segmento de uma B-Spline cúbica, a partir dos
      * pontos de controle especificados. */
     template< int N >
-    CubicSpline<N> BSpline( Math::Point<N> p0, Math::Point<N> p1, 
-                            Math::Point<N> p2, Math::Point<N> p3 );
+    CubicSpline<N> BSpline( Math::Vector<N> p0, Math::Vector<N> p1, 
+                            Math::Vector<N> p2, Math::Vector<N> p3 );
 
 
 // Implementações
 
 template< int N >
-CubicSpline<N> Bezier( Math::Point<N> p1, Math::Point<N> p2,
-                       Math::Point<N> p3, Math::Point<N> p4 )
+CubicSpline<N> Bezier( Math::Vector<N> p1, Math::Vector<N> p2,
+                       Math::Vector<N> p3, Math::Vector<N> p4 )
 {
     /* É possível demonstrar que uma curva de Bézier é uma
      * curva de Hermite com os mesmos pontos inicial e final,
@@ -51,8 +51,8 @@ CubicSpline<N> Bezier( Math::Point<N> p1, Math::Point<N> p2,
 }
 
 template< int N >
-CubicSpline<N> Hermite( Math::Point<N> p1, Math::Vector<N> r1,
-                        Math::Point<N> p4, Math::Vector<N> r4 )
+CubicSpline<N> Hermite( Math::Vector<N> p1, Math::Vector<N> r1,
+                        Math::Vector<N> p4, Math::Vector<N> r4 )
 {
     using Math::Matrix;
     using Math::Vector;
@@ -86,7 +86,7 @@ CubicSpline<N> Hermite( Math::Point<N> p1, Math::Vector<N> r1,
     }
     Matrix<4, N> C = mh * G; // C é a matriz dos coeficientes
 
-    Vector<N> * c = new Vector<N>[4];
+    std::vector<Vector<N>> c(4);
     // Estes coeficientes passaremos para a spline
     for( int i = 0; i < N; ++i ) {
         c[3][i] = C[0][i];
@@ -103,8 +103,8 @@ CubicSpline<N> Hermite( Math::Point<N> p1, Math::Vector<N> r1,
 }
 
 template< int N >
-CubicSpline<N> BSpline( Math::Point<N> p0, Math::Point<N> p1, 
-                        Math::Point<N> p2, Math::Point<N> p3 )
+CubicSpline<N> BSpline( Math::Vector<N> p0, Math::Vector<N> p1, 
+                        Math::Vector<N> p2, Math::Vector<N> p3 )
 {
     using Math::Matrix;
     using Math::Vector;
@@ -123,7 +123,7 @@ CubicSpline<N> BSpline( Math::Point<N> p0, Math::Point<N> p1,
     }
     Matrix<4, N> C = mb * G;
 
-    Vector<N> * c = new Vector<N>[4];
+    std::vector<Vector<N>> c(4);
     for( int i = 0; i < N; ++i ) {
         c[3][i] = C[0][i];
         c[2][i] = C[1][i];

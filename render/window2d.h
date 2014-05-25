@@ -6,9 +6,8 @@
 
 #include "render/window.h"
 
-#include "math/point.h"
 #include "math/vector.h"
-#include "math/linearOperator.h"
+#include "math/affineOperator.h"
 #include "test/lib/declarationMacros.h"
 
 template<>
@@ -19,7 +18,7 @@ class Window<2> {
 
     /* Operador linear que faz o mapeamento
      * coordenadas do mundo => coordenadas de window */
-    mutable Math::LinearOperator<2> op;
+    mutable Math::AffineOperator<2> op;
     mutable bool cached; // Se op já foi calculado.
 
     TEST_FRIEND( Window2DTest );
@@ -31,7 +30,7 @@ public:
 
 
     /* Altera o centro da window para o ponto passado. */
-    void setCenter( Math::Point<2> p );
+    void setCenter( Math::Vector<2> p );
 
     /* Altera as dimensões da window. */
     void setWidth( double );
@@ -74,7 +73,7 @@ public:
 
     // Métodos padrão
     double area() const;
-    Math::Point<2> map( Math::Point<2> ) const;
+    Math::Vector<2> map( Math::Vector<2> ) const;
 
 private:
     /* Método auxiliar, que calcula o valor da transformação linear op */

@@ -10,9 +10,9 @@
 #define LINE_CLIPPING_H
 
 #include "render/projection/projectedPoint.h"
-#include "math/point.h"
+#include "math/vector.h"
 
-/* PreLineClipper<N> é uma função que recebe dois Math::Point<N>
+/* PreLineClipper<N> é uma função que recebe dois Math::Vector<N>
  * por referência e apara o segmento de reta que une os dois pontos,
  * de forma que a coordenada z dos pontos, após o aparo, seja maior
  * ou igual a 1.
@@ -30,7 +30,7 @@
  * false deve ser retornado. A implementação é livre para
  * modificar os objetos neste caso. */
 template< int N >
-using PreLineClipper = bool (*)( Math::Point<N>&, Math::Point<N>& );
+using PreLineClipper = bool (*)( Math::Vector<N>&, Math::Vector<N>& );
 
 /* PostLineClipper é uma função que recebe dois ProjectedPoint por referência
  * e efetua o clipping do segmento de reta cujas extremidades 
