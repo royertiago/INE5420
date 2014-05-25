@@ -11,13 +11,16 @@ Implementar testes:
     CommandMultiplexer
     FunctionalCommand
 
+Corrigir documentação após a mudança.
 Implementar utility/triangulation.h
-Implementar Matrix::slice()
-    Pontos de uso: SplineFactory::Hermite, SplineFactory::BSpline,
-    LinearFactory::makeTranslation.
 Implementar operadores de Matrix para propagar uma operação genérica.
 Modificar classes que trabalham com vetores para usar std::vector ou
     unique_ptr ou implementar um util/shared_array_ptr.h.
-Adicionar verificação this != other nos construtores de cópia.
-Criar MockResource para testar Polynomial contra vazamento de memória.
 Implementar Matrix::operator=( initializer_list<initializer_list<double>> )
+Reduzir tolerância nos testes.
+
+Perda de precisão do algoritmo forward differences é gritante para curvas
+    de Bézier: 
+        load tridim.cg
+        zoom in 50
+    é visível a distorção no ponto final da curva bz2.

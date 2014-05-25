@@ -10,38 +10,32 @@
 
 #include <vector>
 #include "render/renderer.h"
-#include "math/point.h"
-#include "math/linearOperator.h"
+#include "math/vector.h"
+#include "math/affineOperator.h"
 #include "geometric/cubicSpline.h"
 #include "geometric/splineFactory.h"
 #include "geometric/transformableObject.h"
 
 template< int N >
 class BSpline : public TransformableObject<N> {
-    std::vector<Math::Point<N>> controlPoints;
+    std::vector<Math::Vector<N>> controlPoints;
     std::vector<CubicSpline<N>> splines;
 
 public:
     /* Constrói uma B-Spline a partir dos pontos de controle passados. */
-    explicit BSpline( std::vector<Math::Point<N>> controlPoints );
-
-    BSpline( const BSpline& ) = default;
-    BSpline( BSpline&& ) = default;
-    BSpline<N>& operator=( const BSpline& ) = default;
-    BSpline<N>& operator=( BSpline&& ) = default;
-    ~BSpline() = default;
+    explicit BSpline( std::vector<Math::Vector<N>> controlPoints );
 
     /* Transforma um único ponto da spline.
      * Os segmentos afetados serão reconstruídos. */
-    void transformPoint( int index, const Math::LinearOperator<N>& );
+    void transformPoint( int index, const Math::AffineOperator<N>& );
 
     /* Adiciona um ponto de controle ao fim da spline. */
-    void addPoint( Math::Point<N> );
+    void addPoint( Math::Vector<N> );
 
     // Métodos herdados
     virtual void draw( Renderer<N> * ) override;
-    virtual Math::Point<N> center() const override;
-    virtual void transform( const Math::LinearOperator<N>& ) override;
+    virtual Math::Vector<N> center() const override;
+    virtual void transform( const Math::AffineOperator<N>& ) override;
 
 private:
     /* Recalcula o valor da B-Spline do índice passado. 
@@ -51,7 +45,7 @@ private:
 
 // Implementações
 template< int N >
-BSpline<N>::BSpline( std::vector<Math::Point<N>> controlPoints ) :
+BSpline<N>::BSpline( std::vector<Math::Vector<N>> controlPoints ) :
     controlPoints( controlPoints ),
     splines()
 {
@@ -62,14 +56,14 @@ BSpline<N>::BSpline( std::vector<Math::Point<N>> controlPoints ) :
 }
 
 template< int N >
-void BSpline<N>::transformPoint( int n, const Math::LinearOperator<N>& op ) {
+void BSpline<N>::transformPoint( int n, const Math::AffineOperator<N>& op ) {
     controlPoints[n] = op( controlPoints[n] );
     for( int i = n - 3; i <= n && i < splines.size(); ++i )
         calculate( i );
 }
 
 template< int N >
-void BSpline<N>::addPoint( Math::Point<N> p ) {
+void BSpline<N>::addPoint( Math::Vector<N> p ) {
     controlPoints.push_back( p );
     int i = controlPoints.size() - 4;
     splines.emplace_back( SplineFactory::BSpline<N>( controlPoints[i],
@@ -85,16 +79,16 @@ void BSpline<N>::draw( Renderer<N> * renderer ) {
 }
 
 template< int N >
-Math::Point<N> BSpline<N>::center() const {
-    Math::Point<N> center;
-    for( const Math::Point<N>& p : controlPoints )
+Math::Vector<N> BSpline<N>::center() const {
+    Math::Vector<N> center;
+    for( const Math::Vector<N>& p : controlPoints )
         center = center + p;
-    return center * (1.0 / controlPoints.size() );
+    return center / controlPoints.size();
 }
 
 template< int N >
-void BSpline<N>::transform( const Math::LinearOperator<N>& op ) {
-    for( Math::Point<N>& p : controlPoints )
+void BSpline<N>::transform( const Math::AffineOperator<N>& op ) {
+    for( Math::Vector<N>& p : controlPoints )
         p = op( p );
     for( int i = 0; i < splines.size(); ++i )
         calculate( i );

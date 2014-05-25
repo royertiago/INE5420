@@ -13,8 +13,8 @@ namespace Interpolation {
      * Para interpolar os pontos u e v a fórmula é
      * p(t) = (1-t) u + t * v
      *      = oneMinusT * u + identity * v; */
-    const static Polynomial<double> identity( new double[2]{0, 1}, 1 );
-    const static Polynomial<double> oneMinusT( new double[2]{1, -1}, 1 );
+    const static Polynomial<double> identity( std::vector<double>{0, 1} );
+    const static Polynomial<double> oneMinusT( std::vector<double>{1, -1} );
 
     /* Constrói um polinômio que irá interpolar os pontos u e v. */
     template< typename Coefficient >
@@ -31,7 +31,7 @@ namespace Interpolation {
 
 template< typename Coefficient >
 Polynomial<Coefficient> linear( Coefficient u, Coefficient v ) {
-    return Polynomial<Coefficient>( new Coefficient[2]{u, v-u}, 1 );
+    return Polynomial<Coefficient>( std::vector<Coefficient>{u, v-u} );
 }
 
 template< typename Coefficient >

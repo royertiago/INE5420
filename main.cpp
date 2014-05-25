@@ -15,13 +15,14 @@
 #include "geometric/BSpline.h"
 #include "geometric/cubicSpline.h"
 #include "geometric/drawablePoint.h"
-#include "geometric/hermiteSpline.h"
 #include "geometric/polygon.h"
 #include "geometric/splineFactory.h"
 #include "geometric/wireframe.h"
+#include "math/affineFactory.h"
+#include "math/affineOperator.h"
 #include "math/constant.h"
-#include "math/linearOperator.h"
 #include "math/polynomial.h"
+#include "math/vector.h"
 #include "render/screenRenderer.h"
 #include "render/viewport.h"
 #include "render/window.h"
@@ -115,27 +116,30 @@ int main( int argc, char * argv[] ) {
     bash.addCommand( "add", add );
 
     add->addCommand( "point", CommandFactory::makeFunctional( 
-            [&df, &update]( std::string name, Math::Point<D> p ) {
+            [&df, &update]( std::string name, Math::Vector<D> p ) {
                 df.addObject( name, new DrawablePoint<D>( p ) );
                 update();
             } ) );
     add->addCommand( "bezier", CommandFactory::makeFunctional(
-            [&df, &update]( std::string name, std::vector<Math::Point<D>> v ) {
+            [&df, &update]( std::string name, std::vector<Math::Vector<D>> v )
+            {
                 df.addObject( name, new BezierSpline<D>( v ) );
                 update();
             } ) );
     add->addCommand( "bspline", CommandFactory::makeFunctional(
-            [&df, &update]( std::string name, std::vector<Math::Point<D>> v ) {
+            [&df, &update]( std::string name, std::vector<Math::Vector<D>> v )
+            {
                 df.addObject( name, new BSpline<D>( v ) );
                 update();
             } ) );
     add->addCommand( "polygon", CommandFactory::makeFunctional(
-            [&df, &update]( std::string name, std::vector<Math::Point<D>> v ) {
+            [&df, &update]( std::string name, std::vector<Math::Vector<D>> v )
+            {
                 df.addObject( name, new Polygon<D>( v ) );
                 update();
             } ) );
     add->addCommand( "wireframe", CommandFactory::makeFunctional(
-            [&df, &update]( std::string name, std::vector<Math::Point<D>> v,
+            [&df, &update]( std::string name, std::vector<Math::Vector<D>> v,
                 std::vector<std::pair<int, int>> e )
             {
                 df.addObject( name, new Wireframe<D>( v, e ) );
@@ -147,8 +151,8 @@ int main( int argc, char * argv[] ) {
     add->addCommand( "cubic", cubic );
 
     cubic->addCommand( "bezier", CommandFactory::makeFunctional(
-            [&df, &update]( std::string name, Math::Point<D> p1,
-                Math::Point<D> p2, Math::Point<D> p3, Math::Point<D> p4 )
+            [&df, &update]( std::string name, Math::Vector<D> p1,
+                Math::Vector<D> p2, Math::Vector<D> p3, Math::Vector<D> p4 )
             {
                 CubicSpline<D> * spline = new CubicSpline<D>(
                     SplineFactory::Bezier<D>( p1, p2, p3, p4 ) );
@@ -156,8 +160,8 @@ int main( int argc, char * argv[] ) {
                 update();
             } ) );
     cubic->addCommand( "hermite", CommandFactory::makeFunctional(
-            [&df, &update]( std::string name, Math::Point<D> p1,
-                Math::Vector<D> r1, Math::Point<D> p4, Math::Vector<D> r4 )
+            [&df, &update]( std::string name, Math::Vector<D> p1,
+                Math::Vector<D> r1, Math::Vector<D> p4, Math::Vector<D> r4 )
             {
                 CubicSpline<D> * spline = new CubicSpline<D>(
                     SplineFactory::Hermite<D>( p1, r1, p4, r4 ) );
@@ -165,8 +169,8 @@ int main( int argc, char * argv[] ) {
                 update();
             } ) );
     cubic->addCommand( "bspline", CommandFactory::makeFunctional(
-            [&df, &update]( std::string name, Math::Point<D> p0,
-                Math::Point<D> p1, Math::Point<D> p2, Math::Point<D> p3 )
+            [&df, &update]( std::string name, Math::Vector<D> p0,
+                Math::Vector<D> p1, Math::Vector<D> p2, Math::Vector<D> p3 )
             {
                 CubicSpline<D> * spline = new CubicSpline<D>(
                     SplineFactory::BSpline<D>( p0, p1, p2, p3 ) );
@@ -181,37 +185,37 @@ int main( int argc, char * argv[] ) {
     move->addCommand( "up", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double amount ) {
                 df.transform( name, 
-                    LinearFactory::Translation<D>( {0, amount, 0} ) );
+                    AffineFactory::Translation<D>( {0, amount, 0} ) );
                 update();
             } ) );
     move->addCommand( "down", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double amount ) {
                 df.transform( name, 
-                    LinearFactory::Translation<D>( {0, -amount, 0} ) );
+                    AffineFactory::Translation<D>( {0, -amount, 0} ) );
                 update();
             } ) );
     move->addCommand( "left", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double amount ) {
                 df.transform( name, 
-                    LinearFactory::Translation<D>( {-amount, 0, 0} ) );
+                    AffineFactory::Translation<D>( {-amount, 0, 0} ) );
                 update();
             } ) );
     move->addCommand( "right", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double amount ) {
                 df.transform( name, 
-                    LinearFactory::Translation<D>( {amount, 0, 0} ) );
+                    AffineFactory::Translation<D>( {amount, 0, 0} ) );
                 update();
             } ) );
     move->addCommand( "front", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double amount ) {
                 df.transform( name, 
-                    LinearFactory::Translation<D>( {0, 0, amount} ) );
+                    AffineFactory::Translation<D>( {0, 0, amount} ) );
                 update();
             } ) );
     move->addCommand( "back", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double amount ) {
                 df.transform( name, 
-                    LinearFactory::Translation<D>( {0, 0, -amount} ) );
+                    AffineFactory::Translation<D>( {0, 0, -amount} ) );
                 update();
             } ) );
 
@@ -263,16 +267,16 @@ int main( int argc, char * argv[] ) {
             [&df, &update]( std::string name, double degrees,
                 Math::Vector<D> axis ) 
             {
-                df.transform( name, LinearFactory::Rotation3D(
+                df.transform( name, AffineFactory::Rotation3D(
                         degrees/180*Math::PI, axis ) );
                 update();
             } ) );
     rotate->addCommand( "point", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double degrees, 
-                Math::Vector<D> v, Math::Point<D> p ) 
+                Math::Vector<D> v, Math::Vector<D> p ) 
             {
                 df.transform( name, 
-                    LinearFactory::Rotation3D( degrees/180*Math::PI, v, p ) );
+                    AffineFactory::Rotation3D( degrees/180*Math::PI, v, p ) );
                 update();
             } ) );
     rotate->addCommand( "center", CommandFactory::makeFunctional(
@@ -280,7 +284,7 @@ int main( int argc, char * argv[] ) {
                 Math::Vector<D> axis )
             {
                 df.center( name );
-                df.transform( name, LinearFactory::Rotation3D(
+                df.transform( name, AffineFactory::Rotation3D(
                         degrees/180*Math::PI, axis, df.center( name ) ) );
                 update();
             } ) );
@@ -346,7 +350,7 @@ int main( int argc, char * argv[] ) {
 
     bash.addCommand( "scale", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, double factor ) {
-                df.transform( name, LinearFactory::Scale<D>(
+                df.transform( name, AffineFactory::Scale<D>(
                         factor, df.center( name ) ) );
                 update();
             } ) );

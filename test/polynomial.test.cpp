@@ -17,7 +17,7 @@ DECLARE_TEST( PolynomialTest ) {
     using Math::Vector;
     bool b = true;
 
-    Polynomial<double> p( new double[4]{0, 1, 0, 1}, 3 );
+    Polynomial<double> p( std::vector<double>{0, 1, 0, 1} );
     // p(x) = x^3 + x
     b &= Test::TEST_EQUALS( p[0], 0.0 );
     b &= Test::TEST_EQUALS( p[1], 1.0 );
@@ -29,7 +29,7 @@ DECLARE_TEST( PolynomialTest ) {
     b &= t.TEST_EQUALS( p(-1), -2.0 );
     b &= t.TEST_EQUALS( p(1.5), 4.875 );
 
-    p = Polynomial<double>( new double[3]{2, -3, 1}, 2 );
+    p = Polynomial<double>( std::vector<double>{2, -3, 1} );
     // p(x) = x^2 - 3x + 2
 
     b &= t.TEST_EQUALS( p(0), 2.0 );
@@ -37,13 +37,13 @@ DECLARE_TEST( PolynomialTest ) {
     b &= t.TEST_EQUALS( p(-1), 6.0 );
     b &= t.TEST_EQUALS( p(2), 0.0 );
 
-    p = Polynomial<double>( new double[2]{-1.0, 3.0}, 1 );
+    p = Polynomial<double>( std::vector<double>{-1.0, 3.0} );
     // p(x) = 3x - 1
     b &= t.TEST_EQUALS( p(0), -1.0 );
     b &= t.TEST_EQUALS( p(1), 2.0 );
 
     Vector<2> u{1.0, 1.0}, v{-1.0, -2.0};
-    Polynomial<Vector<2>> q( new Vector<2>[2]{v, u - v}, 1 );
+    Polynomial<Vector<2>> q( std::vector<Vector<2>>{v, u - v} );
     // q(t) = (1-t) * v + t * u
 
     b &= m.TEST_EQUALS( q[0], v );
@@ -55,26 +55,26 @@ DECLARE_TEST( PolynomialTest ) {
     b &= m.TEST_EQUALS( q(1.5), (Vector<2>{2, 2.5}) );
 
     // Operações algébricas
-    p = Polynomial<double>( new double[2]{1, 1}, 1 );
-    p = p * Polynomial<double>( new double[2]{-1, 1}, 1 );
-    Polynomial<double> r( new double[3]{-1, 0, 1}, 2 );
+    p = Polynomial<double>( std::vector<double>{1, 1} );
+    p = p * Polynomial<double>( std::vector<double>{-1, 1} );
+    Polynomial<double> r( std::vector<double>{-1, 0, 1} );
     // p e r devem representar o mesmo polinômio.
     b &= Test::TEST_EQUALS( p[0], r[0] );
     b &= Test::TEST_EQUALS( p[1], r[1] );
     b &= Test::TEST_EQUALS( p[2], r[2] );
 
-    p = Polynomial<double>( new double[3]{1, 1, 1}, 2 );
-    p = p * Polynomial<double>( new double[2]{-1, 1}, 1 );
-    r = Polynomial<double>( new double[4]{-1, 0, 0, 1}, 3 );
+    p = Polynomial<double>( std::vector<double>{1, 1, 1} );
+    p = p * Polynomial<double>( std::vector<double>{-1, 1} );
+    r = Polynomial<double>( std::vector<double>{-1, 0, 0, 1} );
     b &= Test::TEST_EQUALS( p[0], r[0] );
     b &= Test::TEST_EQUALS( p[1], r[1] );
     b &= Test::TEST_EQUALS( p[2], r[2] );
     b &= Test::TEST_EQUALS( p[3], r[3] );
 
-    p = Polynomial<double>( new double[2]{1, 1}, 1 );
-    p = p * Polynomial<double>( new double[3]{1, 0, 1}, 2 );
-    p = p * Polynomial<double>( new double[2]{-1, 1}, 1 );
-    r = Polynomial<double>( new double[5]{-1, 0, 0, 0, 1}, 4 );
+    p = Polynomial<double>( std::vector<double>{1, 1} );
+    p = p * Polynomial<double>( std::vector<double>{1, 0, 1} );
+    p = p * Polynomial<double>( std::vector<double>{-1, 1} );
+    r = Polynomial<double>( std::vector<double>{-1, 0, 0, 0, 1} );
     b &= Test::TEST_EQUALS( p[0], r[0] );
     b &= Test::TEST_EQUALS( p[1], r[1] );
     b &= Test::TEST_EQUALS( p[2], r[2] );

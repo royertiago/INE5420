@@ -6,8 +6,8 @@
 #ifndef TRIDIMENSIONAL_H
 #define TRIDIMENSIONAL_H
 
-#include "math/point.h"
+#include "math/vector.h"
 
-bool tridimensional( Math::Point<3>&, Math::Point<3>& );
+bool tridimensional( Math::Vector<3>&, Math::Vector<3>& );
 
 #endif // TRIDIMENSIONAL_H

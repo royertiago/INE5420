@@ -27,11 +27,8 @@ DECLARE_TEST( VectorTest ) {
     b &= Test::TEST_EQUALS( vec[0][0], 3.5 );
     b &= Test::TEST_EQUALS( vec[1][0], 2.5 );
     
-    vec[1] /= 4;
-    b &= Test::TEST_EQUALS( vec[1], 0.625 );
-
     double d = vec[1];
-    b &= Test::TEST_EQUALS( d, 0.625 );
+    b &= Test::TEST_EQUALS( d, 2.5 );
 
     vec[0] = d = vec[1] = 4.0;
     b &= Test::TEST_EQUALS( vec[0], 4.0 );
@@ -41,7 +38,7 @@ DECLARE_TEST( VectorTest ) {
     Math::Vector<3> u = {10.0, 11.0};
     b &= Test::TEST_EQUALS( u[0], 10.0 );
     b &= Test::TEST_EQUALS( u[1], 11.0 );
-    b &= Test::TEST_EQUALS( u[2], 1.0 );
+    b &= Test::TEST_EQUALS( u[2], 0.0 );
 
     return b;
 }

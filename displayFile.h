@@ -8,10 +8,9 @@
 #include <map>
 #include <string>
 #include <utility>
-
 #include "geometric/transformableObject.h"
-#include "math/linearOperator.h"
-#include "math/point.h"
+#include "math/affineOperator.h"
+#include "math/vector.h"
 #include "render/renderer.h"
 
 template< int N >
@@ -41,10 +40,10 @@ public:
     void clear();
 
     /* Transforma o objeto especificado pela string. */
-    void transform( std::string name, const Math::LinearOperator<N>& op );
+    void transform( std::string name, const Math::AffineOperator<N>& op );
 
     /* Informa o centro do objeto. */
-    Math::Point<N> center( std::string name );
+    Math::Vector<N> center( std::string name );
 
     /* Remove e deleta o objeto especificado do DisplayFile. */
     void remove( std::string name );
@@ -86,7 +85,7 @@ void DisplayFile<N>::clear() {
 
 template< int N >
 void DisplayFile<N>::transform( std::string n, 
-        const Math::LinearOperator<N>& op )
+        const Math::AffineOperator<N>& op )
 {
     auto iterator = objects.find( n );
     if( iterator == objects.end() )
@@ -96,7 +95,7 @@ void DisplayFile<N>::transform( std::string n,
 }
 
 template< int N >
-Math::Point<N> DisplayFile<N>::center( std::string name ) {
+Math::Vector<N> DisplayFile<N>::center( std::string name ) {
     return objects[name]->center();
 }
 

@@ -10,7 +10,7 @@
 #include "render/window.h"
 #include "render/clipping/lineClipper.h"
 #include "render/projection/projector.h"
-#include "math/point.h"
+#include "math/vector.h"
 #include "view/drawable.h"
 
 template< int N >
@@ -37,9 +37,9 @@ public:
     void setProjector( Projector<N> );
     
     // Métodos herdados:
-    virtual void drawLine( Math::Point<N>, Math::Point<N> ) override;
-    virtual void drawTriangle( Math::Point<N>, Math::Point<N>, 
-            Math::Point<N> ) override;
+    virtual void drawLine( Math::Vector<N>, Math::Vector<N> ) override;
+    virtual void drawTriangle( Math::Vector<N>, Math::Vector<N>, 
+            Math::Vector<N> ) override;
     virtual double density() const override;
 };
 
@@ -62,10 +62,10 @@ void ScreenRenderer<N>::setProjector( Projector<N> p ) {
 }
 
 template< int N >
-void ScreenRenderer<N>::drawLine( Math::Point<N> o, Math::Point<N> d ) {
+void ScreenRenderer<N>::drawLine( Math::Vector<N> o, Math::Vector<N> d ) {
     //Origin and Destiny
-    Math::Point<N> wo = w.map( o ); //World-coordinates Origin point
-    Math::Point<N> wd = w.map( d ); //World-coordinates Destiny point
+    Math::Vector<N> wo = w.map( o ); //World-coordinates Origin point
+    Math::Vector<N> wd = w.map( d ); //World-coordinates Destiny point
     /* Agora, temos ambas as extremidades da linha a ser desenhada
      * em coordenadas da window. */
 
@@ -90,8 +90,8 @@ double ScreenRenderer<N>::density() const {
 }
 
 template< int N >
-void ScreenRenderer<N>::drawTriangle( Math::Point<N>, Math::Point<N>, 
-        Math::Point<N> )
+void ScreenRenderer<N>::drawTriangle( Math::Vector<N>, Math::Vector<N>, 
+        Math::Vector<N> )
 {
     /* Gambiarra para que o código compile.
      * TODO: implementar este método. */

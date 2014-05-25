@@ -1,11 +1,7 @@
 /* parseVector.h
  * Especialização de ParseType que lê um Math::Vector.
  * A sintaxe é a mesma de um vector<double>; valores adicionais
- * serão ignorados, valores faltantes serão substituídos por 0.0,
- * exceto o último, que será substituído por 1.0.
- *
- * Note que, como Math::Vector é um typedef, assim como Math::Point,
- * esta classe automaticamente define especializações que leem pantos. */
+ * serão ignorados, valores faltantes serão substituídos por 0.0. */
 #ifndef PARSE_VECTOR_H
 #define PARSE_VECTOR_H
 
@@ -22,8 +18,6 @@ struct ParseType< Math::Vector<N> > {
         auto it = vec.begin();
         for( ; i < N && it != vec.end(); ++i, ++it )
             r[i] = *it;
-        if( i < N ) // i<N implica que o que parou o 'for' não foi i<N.
-            r[N-1] = 1.0;
 
         return r;
     }

@@ -10,11 +10,11 @@
 #ifndef PARALLEL_H
 #define PARALLEL_H
 
-#include "math/point.h"
+#include "math/vector.h"
 #include "render/projection/projectedPoint.h"
 
 template< int N >
-ProjectedPoint parallel( Math::Point<N> p ) {
+ProjectedPoint parallel( Math::Vector<N> p ) {
     static_assert( N > 1, "Não é possível projetar de menos de 2 dimensões" );
     return ProjectedPoint{ p[0], p[1] };
 }

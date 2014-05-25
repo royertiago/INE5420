@@ -5,6 +5,7 @@
 #include <cmath>
 
 #include "render/window2d.h"
+#include "math/affineFactory.h"
 
 using std::sin;
 using std::cos;
@@ -18,7 +19,7 @@ Window<2>::Window() :
     cached( false )
 {}
 
-void Window<2>::setCenter( Math::Point<2> p ) {
+void Window<2>::setCenter( Math::Vector<2> p ) {
     x = p[0];
     y = p[1];
     cached = false;
@@ -74,14 +75,14 @@ double Window<2>::area() const {
     return w * h;
 }
 
-Math::Point<2> Window<2>::map( Math::Point<2> p ) const {
+Math::Vector<2> Window<2>::map( Math::Vector<2> p ) const {
     if( !cached )
         computeTransform();
     return op( p );
 }
 
 void Window<2>::computeTransform() const {
-    using namespace LinearFactory;
+    using namespace AffineFactory;
     op = Translation<2>( {-x, -y} );
     /* Acabamos de deslocar o centro da window para o centro do mundo.
      * Agora, usaremos as transformações com base na origem do mundo
@@ -90,9 +91,8 @@ void Window<2>::computeTransform() const {
     op.backComposeWith( Rotation<2>( -t, 0, 1 ) );
     //Agora, os eixos de ambos estão na orientação correta.
 
-    Math::LinearOperator<2> scale = { { 2/w,   0, 0 },
-                                      {   0, 2/h, 0 },
-                                      {   0,   0, 1 } };
+    Math::Matrix<2, 2> scale = { { 2/w,   0 },
+                                 {   0, 2/h } };
 
     op.backComposeWith( scale );
     cached = true;

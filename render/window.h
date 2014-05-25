@@ -32,7 +32,7 @@
  * é exibido na tela.
  *
  * Todas as instanciações da window possuem os métodos
- *  Math::Point<N> map( Math::Point<N> ) const;
+ *  Math::Vector<N> map( Math::Vector<N> ) const;
  *  double area() const;
  * O primeiro método toma como parâmetro um ponto em coordenadas do
  * mundo e retornam este ponto, agora em coordenadas de window.

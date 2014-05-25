@@ -3,14 +3,14 @@
  */
 #include "tridimensional.h"
 
-bool tridimensional( Math::Point<3>& p, Math::Point<3>& q ) {
+bool tridimensional( Math::Vector<3>& p, Math::Vector<3>& q ) {
     if( p[2] >= 1 && q[2] >= 1 )
         return true;
     if( p[2] <= 1 && q[2] <= 1 )
         return false;
 
-    Math::Point<3>& u = p[2] >= 1 ? p : q;
-    Math::Point<3>& v = p[2] >= 1 ? q : p;
+    Math::Vector<3>& u = p[2] >= 1 ? p : q;
+    Math::Vector<3>& v = p[2] >= 1 ? q : p;
     /* Ou p ou q está antes do plano [z == 1]; u aponta para
      * o ponto que está após e v para o que estava antes. */
 

@@ -2,11 +2,9 @@
  * Teste de unidade para a classe PolynomialIterator
  */
 
+#include "math/polynomial.h"
 #include "math/polynomialIterator.h"
-#include "test/lib/declarationMacros.h"
-#include "test/lib/testEquals.h"
-#include "test/lib/testMacro.h"
-#include "test/lib/testerDouble.h"
+#include "test/lib/test.h"
 
 DECLARE_TEST( PolynomialIteratorTest ) {
     Test::TesterDouble t(2);
@@ -14,7 +12,7 @@ DECLARE_TEST( PolynomialIteratorTest ) {
     using Math::PolynomialIterator;
     bool b = true;
 
-    Polynomial<double> p( new double[3]{2, 1}, 1 );
+    Polynomial<double> p( std::vector<double>{2, 1} );
     PolynomialIterator<double> it = p.iterator( 0, 1 );
     b &= t.TEST_EQUALS( *it, p(0) );
     ++it;
@@ -26,7 +24,7 @@ DECLARE_TEST( PolynomialIteratorTest ) {
     ++it;
     b &= t.TEST_EQUALS( *it, p(4) );
 
-    p = Polynomial<double>( new double[3]{50, 10, 1}, 2 );
+    p = Polynomial<double>( std::vector<double>{50, 10, 1} );
     PolynomialIterator<double> jt = p.iterator( 0, 0.5 );
     b &= t.TEST_EQUALS( *jt, p(0) );
     ++jt;
@@ -49,7 +47,7 @@ DECLARE_TEST( PolynomialIteratorTest ) {
     ++jt;
     b &= t.TEST_EQUALS( *jt, p(7) );
 
-    p = Polynomial<double>( new double[5]{-100, 50, -10, 2, 1}, 4 );
+    p = Polynomial<double>( std::vector<double>{-100, 50, -10, 2, 1} );
     PolynomialIterator<double> kt = p.iterator( -5, 0.1 );
     t.setEpsilon( 1e-6 ); //Precisão cai muito rapidamente
 

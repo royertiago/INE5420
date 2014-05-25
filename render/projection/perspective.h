@@ -3,9 +3,9 @@
 #ifndef PERSPECTIVE_H
 #define PERSPECTIVE_H
 
-#include "math/point.h"
+#include "math/vector.h"
 #include "render/projection/projectedPoint.h"
 
-ProjectedPoint perspective( Math::Point<3> p );
+ProjectedPoint perspective( Math::Vector<3> p );
 
 #endif // PERSPECTIVE_H
