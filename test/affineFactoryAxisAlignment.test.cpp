@@ -11,7 +11,7 @@
 
 DECLARE_TEST( AffineFactoryAxisAlignmentTest ) {
     bool b = true;
-    Test::AffineTester m(4);
+    Test::AffineTester m(2);
     using namespace Math;
     using namespace AffineFactory;
     Vector<3> x = {1, 0, 0};

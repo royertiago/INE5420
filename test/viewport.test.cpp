@@ -1,9 +1,7 @@
 /* Teste de unidade de view/viewport.h. */
 
 #include "render/viewport.h"
-#include "test/lib/declarationMacros.h"
-#include "test/lib/testMacro.h"
-#include "test/lib/testEquals.h"
+#include "test/lib/test.h"
 #include "test/mock/testerDrawable.h"
 
 DECLARE_TEST( ViewportTest ) {

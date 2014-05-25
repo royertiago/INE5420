@@ -7,9 +7,7 @@
 #include <tuple>
 #include <vector>
 
-#include "test/lib/declarationMacros.h"
-#include "test/lib/testEquals.h"
-#include "test/lib/testMacro.h"
+#include "test/lib/test.h"
 
 // Funções usadas neste teste
 namespace {

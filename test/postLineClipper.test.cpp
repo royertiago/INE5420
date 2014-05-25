@@ -1,24 +1,17 @@
-/* lineClipper.test.cpp
- * Teste de unidade para o clipping de linhas
+/* postLineClipper.test.cpp
+ * Teste de unidade para o clipping de linhas.
  */
 
-#include "render/clipping/lineClipper.h"
 #include "render/clipping/cohenSutherland.h"
-
+#include "render/clipping/lineClipper.h"
 #include "render/projection/projectedPoint.h"
+#include "test/lib/test.h"
 
-#include "test/lib/declarationMacros.h"
-#include "test/lib/testEquals.h"
-#include "test/lib/testMacro.h"
-#include "test/lib/testerDouble.h"
-
-// Temos apenas um LineClipper, haverá refatoração
-// quando aparecer um segundo LineClipper
-DECLARE_TEST( LineClipperTest ) {
+DECLARE_TEST( PostLineClipperTest ) {
     bool b = true;
-    Test::TesterDouble d(2);
+    Test::TesterDouble d;
     
-    LineClipper clipper = &CohenSutherland;
+    PostLineClipper clipper = &CohenSutherland;
     
     ProjectedPoint r, s;
     

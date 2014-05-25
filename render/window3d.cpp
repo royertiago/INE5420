@@ -126,6 +126,6 @@ void Window<3>::computeTransform() const {
     Math::Matrix<3, 3> scale = { { 2/w,   0,   0 },
                                  {   0, 2/h,   0 },
                                  {   0,   0, 1/d } };
-    op.backComposeWith( AffineOperator<3>(scale) );
+    op.backComposeWith( scale );
     cached = true;
 }

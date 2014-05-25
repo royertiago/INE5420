@@ -3,12 +3,7 @@
  */
 #include "math/vector.h"
 
-#include "test/lib/declarationMacros.h"
-#include "test/lib/testerMatrix.h"
-#include "test/lib/testerDouble.h"
-#include "test/lib/testMacro.h"
-
-#include "debug.h"
+#include "test/lib/test.h"
 
 DECLARE_TEST( VectorCrossProductTest ) {
     bool b = true;

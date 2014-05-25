@@ -27,12 +27,6 @@ public:
      * void f( Format... ). */
     FunctionalCommand( Function f );
 
-    FunctionalCommand( const FunctionalCommand& ) = default;
-    FunctionalCommand( FunctionalCommand&& ) = default;
-    FunctionalCommand& operator=( const FunctionalCommand& ) = default;
-    FunctionalCommand& operator=( FunctionalCommand&& ) = default;
-    ~FunctionalCommand() = default;
-    
     // Métodos herdados
     virtual void interpret( std::istringstream& );
     virtual void setParent( CommandInterpreter * c );

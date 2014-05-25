@@ -34,6 +34,8 @@ public:
      * atual, esta leitura deve ser interrompida e a da istream passada 
      * iniciada. Isto permite que arquivos "incluam" outros arquivos. */
     virtual void readFrom( std::istream& ) = 0;
+
+    virtual ~CommandInterpreter() = default;
 };
 
 #endif // COMMAND_INTERPRETER_H

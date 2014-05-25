@@ -6,9 +6,7 @@
 
 #include <string>
 #include "command/commandFactory.h"
-#include "test/lib/declarationMacros.h"
-#include "test/lib/testEquals.h"
-#include "test/lib/testMacro.h"
+#include "test/lib/test.h"
 
 namespace {
     /* Todas as funções atualizarão este valor booleano para verdadeiro

@@ -2,11 +2,7 @@
 
 #include "render/window2d.h"
 
-#include "test/lib/declarationMacros.h"
-#include "test/lib/testEquals.h"
-#include "test/lib/testMacro.h"
-#include "test/lib/testerDouble.h"
-
+#include "test/lib/test.h"
 #include "math/constant.h"
 
 DECLARE_TEST( Window2DTest ) {

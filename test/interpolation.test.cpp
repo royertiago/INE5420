@@ -9,7 +9,7 @@
 
 DECLARE_TEST( InterpolationTest ) {
     bool b = true;
-    Test::TesterDouble d(2);
+    Test::TesterDouble d;
 
     Math::Polynomial<double> p = Interpolation::linear( 1.0, 2.0 );
     b &= d.TEST_EQUALS( p[0], 1 );

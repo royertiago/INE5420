@@ -4,9 +4,7 @@
 
 #include "math/vector.h"
 #include "math/constant.h"
-#include "test/lib/declarationMacros.h"
-#include "test/lib/testMacro.h"
-#include "test/lib/testerDouble.h"
+#include "test/lib/test.h"
 
 DECLARE_TEST( VectorCalculusTest ) {
     bool b = true;

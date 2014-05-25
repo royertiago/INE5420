@@ -12,12 +12,6 @@ class LoadCommand : public Command {
     CommandInterpreter * shell;
 
 public:
-    LoadCommand() = default;
-    LoadCommand( const LoadCommand& ) = default;
-    LoadCommand( LoadCommand&& ) = default;
-    LoadCommand& operator=( const LoadCommand& ) = default;
-    LoadCommand& operator=( LoadCommand&& ) = default;
-
     // Métodos herdados
     virtual void setParent( CommandInterpreter * );
     virtual void interpret( std::istringstream& );

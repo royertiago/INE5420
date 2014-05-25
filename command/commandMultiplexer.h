@@ -37,11 +37,7 @@ public:
     /* Constrói um interpretador de comandos vazio. */
     CommandMultiplexer() = default;
 
-    CommandMultiplexer( const CommandMultiplexer& ) = delete;
-    CommandMultiplexer( CommandMultiplexer&& ) = delete;
-    CommandMultiplexer& operator=( const CommandMultiplexer& ) = delete;
-    CommandMultiplexer& operator=( CommandMultiplexer&& ) = delete;
-    ~CommandMultiplexer();
+    virtual ~CommandMultiplexer();
 
     // Métodos herdados de Command
     virtual void interpret( std::istringstream& ) override;

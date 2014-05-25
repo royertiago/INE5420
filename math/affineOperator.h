@@ -7,8 +7,8 @@
  *
  * Operadores afins estão definidos apenas para double.
  */
-#ifndef LINEAR_OPERATOR_H
-#define LINEAR_OPERATOR_H
+#ifndef AFFINE_OPERATOR_H
+#define AFFINE_OPERATOR_H
 
 #include "math/matrix.h"
 #include "math/vector.h"
@@ -113,4 +113,4 @@ AffineOperator<N>& AffineOperator<N>::backComposeWith(
 } // namespace Math
 
 
-#endif // LINEAR_OPERATOR_H
+#endif // AFFINE_OPERATOR_H

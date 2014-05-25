@@ -7,7 +7,7 @@
 #include "test/lib/test.h"
 
 DECLARE_TEST( PolynomialIteratorTest ) {
-    Test::TesterDouble t(2);
+    Test::TesterDouble t;
     using Math::Polynomial;
     using Math::PolynomialIterator;
     bool b = true;

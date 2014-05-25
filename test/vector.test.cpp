@@ -6,9 +6,7 @@
  * classe MatrixLine.*/
 
 #include "math/vector.h"
-#include "test/lib/declarationMacros.h"
-#include "test/lib/testEquals.h"
-#include "test/lib/testMacro.h"
+#include "test/lib/test.h"
 
 DECLARE_TEST( VectorTest ) {
     bool b = true;

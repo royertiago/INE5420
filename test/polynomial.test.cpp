@@ -4,15 +4,11 @@
 
 #include "math/polynomial.h"
 #include "math/vector.h"
-#include "test/lib/declarationMacros.h"
-#include "test/lib/testEquals.h"
-#include "test/lib/testMacro.h"
-#include "test/lib/testerDouble.h"
-#include "test/lib/testerMatrix.h"
+#include "test/lib/test.h"
 
 DECLARE_TEST( PolynomialTest ) {
-    Test::TesterDouble t(2);
-    Test::TesterMatrix m(2);
+    Test::TesterDouble t;
+    Test::TesterMatrix m;
     using Math::Polynomial;
     using Math::Vector;
     bool b = true;
