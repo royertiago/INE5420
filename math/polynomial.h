@@ -31,6 +31,9 @@ public:
      * O grau do polinômio será o índice do último elemento. */
     Polynomial( std::vector<Coefficient> );
 
+    /* Constrói o polinômio nulo (que retorna apenas Coefficient()). */
+    Polynomial() = default;
+
     /* Acessa o coeficiente diretamente. 
      * Modificar o coeficiente invalida iteradores. */
     Coefficient& operator[]( size_t index );

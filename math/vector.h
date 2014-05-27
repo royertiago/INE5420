@@ -18,8 +18,8 @@ namespace Math {
      * e outra NxP e devolve uma MxP. Caso P seja 1, o valor retornado
      * será uma matriz Mx1 - o que, de acordo com a seguinte definição,
      * é um vetor: */
-    template< int M >
-    using Vector = Matrix< M, 1 >;
+    template< int M, typename T = double >
+    using Vector = Matrix< M, 1, T >;
 
     /* Computa o produto interno entre os dois vetores passados. */
     template< int M >

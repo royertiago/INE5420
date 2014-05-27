@@ -1,11 +1,16 @@
 /* splineFactory.h
  * Namespace que contém funções capazes de gerar splines cúbicas
- * a partir de pontos arbitrários no espaço.
+ * a partir de vetores arbitrários.
+ *
+ * Note que as funções estão templatizadas para tipo: qualquer
+ * classe que represente objetos de um espaço vetorial sobre
+ * os números reais (double) pode ser utilizada.
  */
 #ifndef SPLINE_FACTORY_H
 #define SPLINE_FACTORY_H
 
-#include "geometric/cubicSpline.h"
+#include "math/interpolation.h"
+#include "math/polynomial.h"
 #include "math/vector.h"
 
 namespace SplineFactory {
@@ -13,46 +18,102 @@ namespace SplineFactory {
     /* Gera uma curva cúbica de Bézier a partir dos pontos passados.
      * A curva interpolará os pontos p1 e p4 e tangenciará os segmentos
      * p1-p2 e p3-p4 nestes pontos, respectivamente. */
-    template< int N >
-    CubicSpline<N> Bezier( Math::Vector<N> p1, Math::Vector<N> p2,
-                           Math::Vector<N> p3, Math::Vector<N> p4 );
+    template< typename Vec >
+    Math::Polynomial<Vec> Bezier( Vec p1, Vec p2, Vec p3, Vec p4 );
+
+    /* Constrói uma curva de Bézier a partir dos pontos passados.
+     *
+     * Ao contrário da função anterior, esta não está limitada a construir 
+     * curvas de Bézier com grau 3, mas sim com qualquer grau arbitrário. */
+    template< typename Vec >
+    Math::Polynomial<Vec> Bezier( std::vector< Vec > );
 
     /* Gera uma curva de Hermite cujas extremidades são os pontos p1 e p4
      * e as tangentes são r1 e r4, respectivamente.
      *
      * A spline cúbica representará um polinômio cúbico s com coeficientes
-     * vetorias satisfazendo
+     * vetoriais satisfazendo
      *   s(0) = p1
      *  s'(0) = r1
      *   s(1) = p4
      *  s'(1) = r4 */
-    template< int N >
-    CubicSpline<N> Hermite( Math::Vector<N> p1, Math::Vector<N> r1, 
-                            Math::Vector<N> p4, Math::Vector<N> r4 );
+    template< typename Vec >
+    Math::Polynomial<Vec> Hermite( Vec p1, Vec r1, Vec p4, Vec r4 );
 
-    /* Gera um segmento de uma B-Spline cúbica, a partir dos
+    /* Constrói uma curva cúbica de Hermite cujas extremidades serão
+     * os pontos c[0] e c[2] e as tangentes serão c[1] e c[3].
+     *
+     * A função assume que c contém pelo menos quatro vetores. Vetores
+     * adicionais são ignorados. */
+    template< typename Vec >
+    Math::Polynomial<Vec> Hermite( std::vector<Vec> c );
+
+    /* Gera um segmento cúbico de uma B-Spline, a partir dos
      * pontos de controle especificados. */
-    template< int N >
-    CubicSpline<N> BSpline( Math::Vector<N> p0, Math::Vector<N> p1, 
-                            Math::Vector<N> p2, Math::Vector<N> p3 );
+    template< typename Vec >
+    Math::Polynomial<Vec> BSpline( Vec p0, Vec p1, Vec p2, Vec p3 );
+
+    /* Gera um segmento cúbigo de uma B-Spline, a partir dos
+     * pontos de controle especificados.
+     *
+     * A função assube que c contém pelo menos quatro vetores.
+     * Vetores adicionais são ignorados. */
+    template< typename Vec >
+    Math::Polynomial<Vec> BSpline( std::vector<Vec> c );
 
 
-// Implementações
+// Implementação
 
-template< int N >
-CubicSpline<N> Bezier( Math::Vector<N> p1, Math::Vector<N> p2,
-                       Math::Vector<N> p3, Math::Vector<N> p4 )
+template< typename Vec >
+Math::Polynomial<Vec> Bezier( Vec p1, Vec p2, Vec p3, Vec p4 )
 {
     /* É possível demonstrar que uma curva de Bézier é uma
      * curva de Hermite com os mesmos pontos inicial e final,
      * com o vetor tangente r1 sendo 3*(p2 - p1) e o vetor
      * tangente r4 sendo 3*(p4 - p3). */
-    return Hermite<N>( p1, (p2 - p1) * 3, p4, (p4 - p3) * 3 );
+    return Hermite<Vec>( p1, (p2 - p1) * 3, p4, (p4 - p3) * 3 );
 }
 
-template< int N >
-CubicSpline<N> Hermite( Math::Vector<N> p1, Math::Vector<N> r1,
-                        Math::Vector<N> p4, Math::Vector<N> r4 )
+template< typename Vec >
+Math::Polynomial<Vec> Bezier( std::vector< Vec > c ) {
+    // Casos simples
+    if( c.size() <= 1 ) // Constante
+        return Math::Polynomial<Vec>( std::vector<Vec>{c} );
+    if( c.size() == 2 ) // Linear
+        return Interpolation::linear( c[0], c[1] );
+    if( c.size() == 3 ) // Quadrático
+        return Interpolation::linear( 
+                Interpolation::linear(c[0], c[1]), 
+                Interpolation::linear(c[1], c[2]) );
+
+    /* Estas foram as curvas de Bézier de ordens 0, 1 e 2, respectivamente.
+     * Uma curva de Bézier de ordem N cujos pontos de controle são
+     * c[0], ..., c[N] é a interpolação linear das duas curvas de Bézier de
+     * ordem N-1 cujos pontos de controle são c[0], ..., c[N-1] e
+     * c[1], ..., c[N], respectivamente.
+     *
+     * No objeto bz, manteremos as curvas de Bézier das ordens já calculadas.
+     * Usando a outra função, podemos acelerar o processo: começaremos
+     * com as curvas cúbicas e cresceremos a ordem até chegar em c.size() - 1.
+     */
+    std::vector<std::vector<Math::Polynomial<Vec>>> bz(c.size()-3);
+    /* Especificamente: bz[d] conterá todas as curvas de Bézier de grau d + 3.
+     * bz[d][j] obedecerá aos pontos c[j], c[j+1], ..., c[j+d].
+     */
+    bz[0].resize( c.size() - 3 );
+    for( unsigned j = 0; j < bz[0].size(); ++j )
+        bz[0][j] = Bezier<Vec>( c[j], c[j+1], c[j+2], c[j+3] );
+
+    for( unsigned d = 1; d < bz.size(); ++d ) {
+        bz[d].resize( bz[d-1].size() - 1 );
+        for( unsigned j = 0; j < bz[d].size(); ++j )
+            bz[d][j] = Interpolation::linear( bz[d-1][j], bz[d-1][j+1] );
+    }
+    return bz[c.size()-4][0];
+}
+
+template< typename Vec >
+Math::Polynomial<Vec> Hermite( Vec p1, Vec r1, Vec p4, Vec r4 )
 {
     using Math::Matrix;
     using Math::Vector;
@@ -77,34 +138,18 @@ CubicSpline<N> Hermite( Math::Vector<N> p1, Math::Vector<N> r1,
      *  b == p4
      *  c == r1
      *  d == r4 */
-    Matrix<4, N> G;
-    for( int i = 0; i < N; ++i ) {
-        G[0][i] = p1[i];
-        G[1][i] = p4[i];
-        G[2][i] = r1[i];
-        G[3][i] = r4[i];
-    }
-    Matrix<4, N> C = mh * G; // C é a matriz dos coeficientes
-
-    std::vector<Vector<N>> c(4);
-    // Estes coeficientes passaremos para a spline
-    for( int i = 0; i < N; ++i ) {
-        c[3][i] = C[0][i];
-        c[2][i] = C[1][i];
-        c[1][i] = C[2][i];
-        c[0][i] = C[3][i];
-        /* A sequência de atribuições está invertida pois o coeficiente
-         * C[0] corresponde ao coeficiente e1, que está associado ao
-         * termo de maior grau; para a classe CubicSpline, o coeficiente
-         * do termo de maior grau é o último. */
-    }
-
-    return CubicSpline<N>( c, (p1 + p4) * 0.5 );
+    Vector<4, Vec> G = {p1, p4, r1, r4};
+    Vector<4, Vec> v = mh * G;
+    return Math::Polynomial<Vec>( std::vector<Vec>{v[3], v[2], v[1], v[0]} );
 }
 
-template< int N >
-CubicSpline<N> BSpline( Math::Vector<N> p0, Math::Vector<N> p1, 
-                        Math::Vector<N> p2, Math::Vector<N> p3 )
+template< typename Vec >
+Math::Polynomial<Vec> Hermite( std::vector<Vec> v ) {
+    return Hermite( v[0], v[1], v[2], v[3] );
+}
+
+template< typename Vec >
+Math::Polynomial<Vec> BSpline( Vec p0, Vec p1, Vec p2, Vec p3 )
 {
     using Math::Matrix;
     using Math::Vector;
@@ -112,25 +157,16 @@ CubicSpline<N> BSpline( Math::Vector<N> p0, Math::Vector<N> p1,
               Matrix<4, 4>{{-1,  3, -3,  1},
                            { 3, -6,  3,  0},
                            {-3,  0,  3,  0},
-                           { 1,  4,  1,  0}} * (1.0/6.0);
+                           { 1,  4,  1,  0}} /6.0;
 
-    Matrix<4, N> G;
-    for( int i = 0; i < N; ++i ) {
-        G[0][i] = p0[i];
-        G[1][i] = p1[i];
-        G[2][i] = p2[i];
-        G[3][i] = p3[i];
-    }
-    Matrix<4, N> C = mb * G;
+    Vector<4, Vec> G = {p0, p1, p2, p3};
+    Vector<4, Vec> v = mb * G;
+    return Math::Polynomial<Vec>( std::vector<Vec>{v[3], v[2], v[1], v[0]} );
+}
 
-    std::vector<Vector<N>> c(4);
-    for( int i = 0; i < N; ++i ) {
-        c[3][i] = C[0][i];
-        c[2][i] = C[1][i];
-        c[1][i] = C[2][i];
-        c[0][i] = C[3][i];
-    }
-    return CubicSpline<N>( c, (p0 + p3) * 0.5 );
+template< typename Vec >
+Math::Polynomial<Vec> BSpline( std::vector<Vec> v ) {
+    return BSpline( v[0], v[1], v[2], v[3] );
 }
 
 } // namespace SplineFactory

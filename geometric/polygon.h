@@ -39,7 +39,7 @@ Polygon<N>::Polygon( std::vector<Math::Vector<N>> vertices ) :
 template< int N >
 Math::Vector<N> Polygon<N>::center() const {
     Math::Vector<N> c = vertices[0];
-    for( int i = 1; i < vertices.size(); ++i )
+    for( unsigned i = 1; i < vertices.size(); ++i )
         c = c + vertices[i]; //TODO: implementar operadores adicionais
 
     return c / vertices.size();
@@ -47,13 +47,13 @@ Math::Vector<N> Polygon<N>::center() const {
 
 template< int N >
 void Polygon<N>::transform( const Math::AffineOperator<N>& op ) {
-    for( int i = 0; i < vertices.size(); ++i )
+    for( unsigned i = 0; i < vertices.size(); ++i )
         vertices[i] = op( vertices[i] );
 }
 
 template< int N >
 void Polygon<N>::draw( Renderer<N> * renderer ) {
-    for( int i = 0; i < vertices.size(); ++i )
+    for( unsigned i = 0; i < vertices.size(); ++i )
         renderer->drawLine( vertices[i], vertices[(i+1) % vertices.size()] );
     /* Ligar os vértices vertices[i] e vertices[(i+1) % vertexCount]
      * tem dois efeitos interessantes: ao chegar no último vértice, o

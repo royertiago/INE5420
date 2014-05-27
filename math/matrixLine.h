@@ -51,9 +51,10 @@ public:
 };
 
 template< int N, typename T >
-struct ConstMatrixLine {
+class ConstMatrixLine {
     std::array< T, N > const & line;
 
+public:
     /* Constrói uma ConstMatrixLine que referencia o array especificado.
      * Esta classe não pode modificar a linha passada. */
     ConstMatrixLine( std::array< T, N > const & line );

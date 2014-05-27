@@ -11,9 +11,7 @@
 #include "command/shell.h"
 #include "command/commandFactory.h"
 #include "command/commandMultiplexer.h"
-#include "geometric/bezierSpline.h"
-#include "geometric/BSpline.h"
-#include "geometric/cubicSpline.h"
+#include "geometric/splineCurve.h"
 #include "geometric/drawablePoint.h"
 #include "geometric/polygon.h"
 #include "geometric/splineFactory.h"
@@ -123,13 +121,28 @@ int main( int argc, char * argv[] ) {
     add->addCommand( "bezier", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, std::vector<Math::Vector<D>> v )
             {
-                df.addObject( name, new BezierSpline<D>( v ) );
+                df.addObject( name, 
+                    new SplineCurve<D>( v,
+                                SplineFactory::Bezier<Math::Vector<D>>,
+                                /*size:*/ 0, /*step:*/ 0 ) );
                 update();
             } ) );
     add->addCommand( "bspline", CommandFactory::makeFunctional(
             [&df, &update]( std::string name, std::vector<Math::Vector<D>> v )
             {
-                df.addObject( name, new BSpline<D>( v ) );
+                df.addObject( name, 
+                    new SplineCurve<D>( v,
+                                SplineFactory::BSpline<Math::Vector<D>>,
+                                /*size:*/ 4, /*step:*/ 1 ) );
+                update();
+            } ) );
+    add->addCommand( "hermite", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, std::vector<Math::Vector<D>> v )
+            {
+                df.addObject( name, 
+                    new SplineCurve<D>( v,
+                                SplineFactory::Hermite<Math::Vector<D>>,
+                                /*size:*/ 4, /*step:*/ 2 ) );
                 update();
             } ) );
     add->addCommand( "polygon", CommandFactory::makeFunctional(
@@ -143,38 +156,6 @@ int main( int argc, char * argv[] ) {
                 std::vector<std::pair<int, int>> e )
             {
                 df.addObject( name, new Wireframe<D>( v, e ) );
-                update();
-            } ) );
-
-    /* add cubic <command> */
-    CommandMultiplexer * cubic = new CommandMultiplexer();
-    add->addCommand( "cubic", cubic );
-
-    cubic->addCommand( "bezier", CommandFactory::makeFunctional(
-            [&df, &update]( std::string name, Math::Vector<D> p1,
-                Math::Vector<D> p2, Math::Vector<D> p3, Math::Vector<D> p4 )
-            {
-                CubicSpline<D> * spline = new CubicSpline<D>(
-                    SplineFactory::Bezier<D>( p1, p2, p3, p4 ) );
-                df.addObject( name, spline );
-                update();
-            } ) );
-    cubic->addCommand( "hermite", CommandFactory::makeFunctional(
-            [&df, &update]( std::string name, Math::Vector<D> p1,
-                Math::Vector<D> r1, Math::Vector<D> p4, Math::Vector<D> r4 )
-            {
-                CubicSpline<D> * spline = new CubicSpline<D>(
-                    SplineFactory::Hermite<D>( p1, r1, p4, r4 ) );
-                df.addObject( name, spline );
-                update();
-            } ) );
-    cubic->addCommand( "bspline", CommandFactory::makeFunctional(
-            [&df, &update]( std::string name, Math::Vector<D> p0,
-                Math::Vector<D> p1, Math::Vector<D> p2, Math::Vector<D> p3 )
-            {
-                CubicSpline<D> * spline = new CubicSpline<D>(
-                    SplineFactory::BSpline<D>( p0, p1, p2, p3 ) );
-                df.addObject( name, spline );
                 update();
             } ) );
 

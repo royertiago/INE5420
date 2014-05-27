@@ -15,7 +15,9 @@ Corrigir documentação após a mudança.
 Implementar utility/triangulation.h
 Modificar classes que trabalham com vetores para usar std::vector ou
     unique_ptr ou implementar um util/shared_array_ptr.h.
-Implementar Matrix::operator=( initializer_list<initializer_list<double>> )
+Implementar Matrix::operator=( initializer_list<initializer_list<double>> ).
+Por algum motivo, o clang não gostou muito dos operadores de Matrix -
+    ele diz ser chamada ambígua.
 
 Perda de precisão do algoritmo forward differences é gritante para curvas
     de Bézier: 

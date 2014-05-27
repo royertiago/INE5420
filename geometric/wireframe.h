@@ -39,7 +39,7 @@ Wireframe<N>::Wireframe( std::vector<Math::Vector<N>> vertices,
 template< int N >
 Math::Vector<N> Wireframe<N>::center() const {
     Math::Vector<N> c = vertices[0];
-    for( int i = 1; i < vertices.size(); ++i )
+    for( unsigned i = 1; i < vertices.size(); ++i )
         c = c + vertices[i];
 
     return c / vertices.size();
@@ -47,7 +47,7 @@ Math::Vector<N> Wireframe<N>::center() const {
 
 template< int N >
 void Wireframe<N>::transform( const Math::AffineOperator<N>& op ) {
-    for( int i = 0; i < vertices.size(); ++i )
+    for( unsigned i = 0; i < vertices.size(); ++i )
         vertices[i] = op( vertices[i] );
 }
 
