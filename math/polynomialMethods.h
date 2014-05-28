@@ -86,6 +86,23 @@ Polynomial<Coefficient> Polynomial<Coefficient>::operator*(
 }
 
 template< typename Coefficient >
+Polynomial<Coefficient> Polynomial<Coefficient>::operator*(
+        const double& d ) const
+{
+    std::vector<Coefficient> co( degree() + 1 );
+    for( int i = 0; i <= degree(); ++i )
+        co[i] = c[i] * d;
+    return Polynomial<Coefficient>( co );
+}
+
+template< typename Coefficient >
+Polynomial<Coefficient> operator*( const double& d, 
+        const Polynomial<Coefficient>& p )
+{
+    return p * d;
+}
+
+template< typename Coefficient >
 Polynomial<Coefficient> Polynomial<Coefficient>::operator+(
         const Polynomial<Coefficient>& rhs ) const
 {
@@ -103,6 +120,21 @@ Polynomial<Coefficient> Polynomial<Coefficient>::operator+(
     for( ; i <= larger.degree(); ++i )
         c[i] = larger[i];
     return Polynomial<Coefficient>( c );
+}
+
+template< typename Coefficient >
+Polynomial<Coefficient> Polynomial<Coefficient>::operator-() const {
+    std::vector<Coefficient> co( degree() + 1 );
+    for( int i = 0; i <= degree(); ++i )
+        co[i] = -c[i];
+    return Polynomial<Coefficient>( co );
+}
+
+template< typename Coefficient >
+Polynomial<Coefficient> Polynomial<Coefficient>::operator-(
+        const Polynomial<Coefficient>& rhs ) const
+{
+    return (*this) + (-rhs);
 }
 
 } // namespace Math

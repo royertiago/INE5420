@@ -80,11 +80,11 @@ Math::Polynomial<Vec> Bezier( std::vector< Vec > c ) {
     if( c.size() <= 1 ) // Constante
         return Math::Polynomial<Vec>( std::vector<Vec>{c} );
     if( c.size() == 2 ) // Linear
-        return Interpolation::linear( c[0], c[1] );
+        return Interpolation::linear<Vec>( c[0], c[1] );
     if( c.size() == 3 ) // Quadrático
-        return Interpolation::linear( 
-                Interpolation::linear(c[0], c[1]), 
-                Interpolation::linear(c[1], c[2]) );
+        return Interpolation::linear<Vec>( 
+                Interpolation::linear<Vec>(c[0], c[1]), 
+                Interpolation::linear<Vec>(c[1], c[2]) );
 
     /* Estas foram as curvas de Bézier de ordens 0, 1 e 2, respectivamente.
      * Uma curva de Bézier de ordem N cujos pontos de controle são

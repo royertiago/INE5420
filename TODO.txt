@@ -18,6 +18,8 @@ Modificar classes que trabalham com vetores para usar std::vector ou
 Implementar Matrix::operator=( initializer_list<initializer_list<double>> ).
 Por algum motivo, o clang não gostou muito dos operadores de Matrix -
     ele diz ser chamada ambígua.
+Remover operadores de dentro da classe Polynomials
+Remover ponteiros de PolynomialIterator
 
 Perda de precisão do algoritmo forward differences é gritante para curvas
     de Bézier: 

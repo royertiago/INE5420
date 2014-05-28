@@ -11,6 +11,7 @@
 #include "command/shell.h"
 #include "command/commandFactory.h"
 #include "command/commandMultiplexer.h"
+#include "geometric/bezierSurface.h"
 #include "geometric/splineCurve.h"
 #include "geometric/drawablePoint.h"
 #include "geometric/polygon.h"
@@ -156,6 +157,13 @@ int main( int argc, char * argv[] ) {
                 std::vector<std::pair<int, int>> e )
             {
                 df.addObject( name, new Wireframe<D>( v, e ) );
+                update();
+            } ) );
+    add->addCommand( "sbezier", CommandFactory::makeFunctional(
+            [&df, &update]( std::string name, 
+                std::vector<std::vector<Math::Vector<D>>> v )
+            {
+                df.addObject( name, new BezierSurface<D>( v ) );
                 update();
             } ) );
 

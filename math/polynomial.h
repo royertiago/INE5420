@@ -60,8 +60,10 @@ public:
      * sentido; é equivalente à multiplicar por um escalar que se
      * altera. */
     Polynomial<Coefficient> operator*( const Polynomial<double>& ) const;
-
+    Polynomial<Coefficient> operator*( const double& ) const;
     Polynomial<Coefficient> operator+( const Polynomial<Coefficient>& ) const;
+    Polynomial<Coefficient> operator-( const Polynomial<Coefficient>& ) const;
+    Polynomial<Coefficient> operator-() const;
     friend class Polynomial<double>; // Para uso no operator*
 };
 
