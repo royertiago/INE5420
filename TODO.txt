@@ -20,6 +20,8 @@ Por algum motivo, o clang não gostou muito dos operadores de Matrix -
     ele diz ser chamada ambígua.
 Remover operadores de dentro da classe Polynomials
 Remover ponteiros de PolynomialIterator
+Fazer algum tratamento de erros do usuário
+Unificar BSplineSurface e BezierSurface, como foi feito com SplineCurve.
 
 Perda de precisão do algoritmo forward differences é gritante para curvas
     de Bézier: 

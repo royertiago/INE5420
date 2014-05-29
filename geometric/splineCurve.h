@@ -2,7 +2,7 @@
  * Curva unidimensional polinomial genérica.
  * 
  * Objetos desta classe agrupam vários polinômios vetoriais criados
- * com SplineGenerator e as desenha na tela.
+ * com CurveGenerator e as desenha na tela.
  *
  * Esta classe é parametrizada, em tempo de execução, por dois inteiros:
  * size e step (tamanho e passo da spline). Dado um conjunto de pontos de 
@@ -25,7 +25,9 @@
  * primeiros size pontos de controle. Caso size == 0, todos os pontos 
  * de controle serão usados.
  * Isto permite que curvas de Bézier de grau arbitrário sejam
- * implementadas usando size == step == 0. 
+ * implementadas usando size == step == 0.
+ *
+ * Não há suporte para o caso step != 0, size == 0.
  */
 #ifndef SPLINE_CURVE_H
 #define SPLINE_CURVE_H
@@ -40,16 +42,16 @@
 template< int N >
 class SplineCurve : public TransformableObject<N> {
     std::vector<Math::Vector<N>> cp; // [c]ontrol [p]oints
-    SplineGenerator<N> sg;
+    CurveGenerator<N> cg;
     int size, step;
-    std::vector<Math::Polynomial<Math::Vector<N>>> p;
+    std::vector<PolynomialCurve<N>> p;
 
 public:
     /* Constrói uma spline com os referidos pontos de controle,
      * a partir do gerador de splines especificado, de acordo
      * com a descrição acima. */
     SplineCurve( std::vector<Math::Vector<N>> controlPoints, 
-            SplineGenerator<N> sg, int size, int step );
+            CurveGenerator<N> cg, int size, int step );
 
     // Métodos herdados
     virtual void draw( Renderer<N> * ) override;
@@ -70,9 +72,9 @@ private:
 // Implementação
 template< int N >
 SplineCurve<N>::SplineCurve( std::vector<Math::Vector<N>> controlPoints, 
-                             SplineGenerator<N> sg, int size, int step ) :
+                             CurveGenerator<N> cg, int size, int step ) :
     cp( controlPoints ),
-    sg( sg ),
+    cg( cg ),
     size( size ),
     step( step ),
     p( step == 0 ? 1 : (controlPoints.size()-size) / step + 1)
@@ -131,12 +133,12 @@ template< int N >
 void SplineCurve<N>::calculate() {
     if( step == 0 ) // TODO: separar em várias classes
         if( size == 0 )
-            p[0] = sg( cp );
+            p[0] = cg( cp );
         else
-            p[0] = sg( std::vector<Math::Vector<N>>( &cp[0], &cp[0] + size ) );
+            p[0] = cg( std::vector<Math::Vector<N>>( &cp[0], &cp[0] + size ) );
     else
         for( unsigned i = 0, b = 0; b + size <= cp.size(); ++i, b += step )
-            p[i] = sg( std::vector<Math::Vector<N>>( &cp[b], &cp[b] + size ) );
+            p[i] = cg( std::vector<Math::Vector<N>>( &cp[b], &cp[b] + size ) );
 }
 
 #endif // SPLINE_CURVE_H

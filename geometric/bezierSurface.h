@@ -5,6 +5,7 @@
 #define BEZIER_SURFACE_H
 
 #include <vector>
+#include "geometric/splineGenerator.h"
 #include "geometric/splineFactory.h"
 #include "geometric/transformableObject.h"
 #include "math/vector.h"
