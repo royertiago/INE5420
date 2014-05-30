@@ -35,17 +35,6 @@ DECLARE_TEST( PolynomialIteratorTest ) {
     b &= t.TEST_EQUALS( *jt, p(1.5) );
     ++jt;
     b &= t.TEST_EQUALS( *jt, p(2.0) );
-    jt.step( 1 );
-    ++jt;
-    b &= t.TEST_EQUALS( *jt, p(3) );
-    ++jt;
-    b &= t.TEST_EQUALS( *jt, p(4) );
-    ++jt;
-    b &= t.TEST_EQUALS( *jt, p(5) );
-    ++jt;
-    b &= t.TEST_EQUALS( *jt, p(6) );
-    ++jt;
-    b &= t.TEST_EQUALS( *jt, p(7) );
 
     p = Polynomial<double>( std::vector<double>{-100, 50, -10, 2, 1} );
     PolynomialIterator<double> kt = p.iterator( -5, 0.1 );
@@ -54,7 +43,6 @@ DECLARE_TEST( PolynomialIteratorTest ) {
     int i = 0;
     for( ; kt < 5; ++i, ++kt )
         b &= t.TEST_EQUALS( *kt, p(i * 0.1 - 5) );
-    kt.start( kt );
     for( ; kt < 10; ++i, ++kt )
         b &= t.TEST_EQUALS( *kt, p(i * 0.1 - 5) );
 

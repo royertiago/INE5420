@@ -16,15 +16,6 @@ Implementar utility/triangulation.h
 Modificar classes que trabalham com vetores para usar std::vector ou
     unique_ptr ou implementar um util/shared_array_ptr.h.
 Implementar Matrix::operator=( initializer_list<initializer_list<double>> ).
-Por algum motivo, o clang não gostou muito dos operadores de Matrix -
-    ele diz ser chamada ambígua.
 Remover operadores de dentro da classe Polynomials
-Remover ponteiros de PolynomialIterator
 Fazer algum tratamento de erros do usuário
 Unificar BSplineSurface e BezierSurface, como foi feito com SplineCurve.
-
-Perda de precisão do algoritmo forward differences é gritante para curvas
-    de Bézier: 
-        load tridim.cg
-        zoom in 50
-    é visível a distorção no ponto final da curva bz2.

@@ -52,11 +52,11 @@ template< int N >
 void BSplineSurface<N>::draw( Renderer<N>* r, const PolynomialSurface<N>& s ) {
     for( double x = 0; x <= 1; x += 0.2 )
         for( double y = 0; y < 1; y += 0.01 )
-            r->drawLine( s(x)(y), s(x)(y+0.01) );
+            r->drawLine( s(x, y), s(x, y+0.01) );
 
     for( double y = 0; y <= 1; y += 0.2 )
         for( double x = 0; x < 1; x += 0.01 )
-            r->drawLine( s(x)(y), s(x+0.01)(y) );
+            r->drawLine( s(x, y), s(x+0.01, y) );
 }
 
 template< int N >

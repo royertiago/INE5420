@@ -24,56 +24,40 @@
  * para reinicializar o iterador, utilize o método start cujo parâmetro
  * é o próprio iterador (start recebe um double e operator double() retorna
  * o ponto atual da iteração).
+ *
+ * Note que iterador é um template: ele aceita qualquer classe que possua
+ * operator(double) implementado. Entetanto, o algoritmo funciona corretamente
+ * apenas com polinômios.
+ *
+ * Devido à necessidade de informar o tipo exato do polinômio e do coeficiente
+ * na construção, existe uma função MakeIterator, que retorna um iterador.
+ * Como esta função está diretamente no namespace Math, o compilador
+ * é capaz de deduzir os parâmetros do template.
  */
 #ifndef POLYNOMIAL_ITERATOR_H
 #define POLYNOMIAL_ITERATOR_H
 
-namespace Math {
+#include <vector>
+#include <utility>
 
-template< typename Coefficient > class Polynomial;
+namespace Math {
 
 template< typename Coefficient >
 class PolynomialIterator {
-    const Polynomial< Coefficient > & p;
     // delta[i] guarda o valor de D^if(t). delta[0] = f(t).
-    mutable Coefficient * delta;
+    mutable std::vector<Coefficient> delta;
 
-    // t é o atual ponto em que está sendo calculado o vetor.
-    double t;
-
-    // h é a variação do iterador.
-    double h;
-
-    /* Inicialmente, a única posição valida é a inicial (delta[0]).
-     * Conforme operator++() vai sendo executado, podemos computar as
-     * variações, e as variações das variações, e assim por diante,
-     * até atingirmos o nível p.degree(), em que as variações das
-     * variações tornam-se constantes.
-     * Esta variável registra quantos níveis de variações já calculamos. */
-    mutable int validDeltas;
+    double t; // atual ponto em que está sendo calculado o vetor.
+    double h; // variação do iterador.
+    int d; // grau do polinômio
 
 public:
     /* Constrói um iterador para o polinômio passado.
      * t é o ponto inicial da iteração,
-     * h é o incremento. */
-    PolynomialIterator( const Polynomial<Coefficient> &, double t, double h );
-
-    PolynomialIterator( const PolynomialIterator & );
-
-    // Utilizar o iterador que sofreu o std::move causará erro de segmento. 
-    PolynomialIterator( PolynomialIterator&& );
-
-    ~PolynomialIterator(); // Precisamos gerenciar o ponteiro delta.
-
-
-    /* Altera o ponto inicial da iteração.
-     * Esta operação reseta o iterador; para calcular o próximo ponto,
-     * utilize operator++(). */
-    void start( double start );
-
-    /* Altera o valor do incremento.
-     * Esta operação reseta o iterador. */
-    void step( double step );
+     * h é o incremento,
+     * d é o grau do polinômio. */
+    template< typename Polynomial >
+    PolynomialIterator( const Polynomial&, double t, double h, int d );
 
     /* Informa qual é o ponto atual da iteração. */
     operator double() const;
@@ -85,8 +69,68 @@ public:
     void operator++();
 };
 
-} // namespace Math
+/* Retorna um iterador para o polinômio p.
+ * t é o ponto inicial da iteração,
+ * h é o incremento,
+ * d é o grau do polinômio. */
+template< typename Polynomial, typename Coefficient = 
+    decltype( std::declval<Polynomial>()(0.0) ) >
+PolynomialIterator<Coefficient> makeIterator( const Polynomial& p,
+        double t, double h, int d )
+{
+    return PolynomialIterator<Coefficient>( p, t, h, d );
+}
 
-#include "polynomialIteratorMethods.h"
+// Implementação
+
+template< typename Coefficient >
+template< typename Polynomial >
+PolynomialIterator<Coefficient>::PolynomialIterator(
+        const Polynomial& p, double t, double h, int d ) :
+    delta( d + 1 ),
+    /* Precisamos de d posições para cada um dos deltas, mais
+     * uma para o valor do próprio polinômio. */
+    t( t ),
+    h( h ),
+    d( d )
+{
+    t = t - d*h;
+    // Lembre-se de que estamos mexendo no argumento, não em this->t
+
+    for( int validDeltas = 0; validDeltas <= d; ++validDeltas ) {
+        // Existem mais deltas a serem atualizados.
+        Coefficient nextDelta = p(t);
+        for( int i = 0; i <= validDeltas; ++i ) {
+            /* delta[i] será modificado para nextDelta, mas antes precisamos
+             * computar qual é o próximo valor de nextDelta. */
+            Coefficient alce = nextDelta;
+            nextDelta = nextDelta - delta[i];
+            delta[i] = alce;
+        }
+        /* Note que a posição delta[validDeltas] já foi atualizada para
+         * o valor antigo de nextDelta. Lemos lixo para nextDelta antes,
+         * mas não tem problema, pois nunca mexemos com nextDelta de novo. */
+        t += h;
+    }
+}
+
+template< typename Coefficient >
+PolynomialIterator<Coefficient>::operator double() const {
+    return t;
+}
+
+template< typename Coefficient >
+Coefficient PolynomialIterator<Coefficient>::operator*() const {
+    return delta[0];
+}
+
+template< typename Coefficient >
+void PolynomialIterator<Coefficient>::operator++() {
+    t += h;
+    for( int i = d; i > 0; --i )
+        delta[i-1] = delta[i-1] + delta[i];
+}
+
+} // namespace Math
 
 #endif // POLYNOMIAL_ITERATOR_H

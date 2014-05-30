@@ -46,11 +46,11 @@ template< int N >
 void BezierSurface<N>::draw( Renderer<N>* render ) {
     for( double x = 0; x <= 1; x += 0.1 )
         for( double y = 0; y < 1; y += 0.01 )
-            render->drawLine( p(x)(y), p(x)(y+0.01) );
+            render->drawLine( p(x, y), p(x, y+0.01) );
 
     for( double y = 0; y <= 1; y += 0.1 )
         for( double x = 0; x < 1; x += 0.01 )
-            render->drawLine( p(x)(y), p(x+0.01)(y) );
+            render->drawLine( p(x, y), p(x+0.01, y) );
 }
 
 template< int N >
